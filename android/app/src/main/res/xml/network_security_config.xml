@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- HTTPS everywhere. The only exception is the Firebase Local Emulator
+     Suite on the development PC, reached from the Android emulator as
+     10.0.2.2 — used by test builds (USE_EMULATORS). -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">10.0.2.2</domain>
+    </domain-config>
+</network-security-config>
