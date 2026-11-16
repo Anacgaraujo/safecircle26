@@ -30,7 +30,7 @@
           "projectId": "safe-circle26",
           "configurations": {
             "android": "1:777613494014:android:a50b16411686ba6c6287af",
-            "ios": "1:777613494014:ios:4c97679667f39a1b6287af",
+            "ios": "1:777613494014:ios:34e9149d141b44a36287af",
             "web": "1:777613494014:web:529b99da6ee6b1d76287af"
           }
         }
@@ -38,7 +38,7 @@
       "ios": {
         "default": {
           "projectId": "safe-circle26",
-          "appId": "1:777613494014:ios:4c97679667f39a1b6287af",
+          "appId": "1:777613494014:ios:34e9149d141b44a36287af",
           "uploadDebugSymbols": false,
           "fileOutput": "ios/Runner/GoogleService-Info.plist"
         }
