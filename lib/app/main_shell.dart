@@ -31,11 +31,12 @@ class MainShell extends ConsumerStatefulWidget {
 }
 
 class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserver {
-  ScTab tab = ScTab.home;
   late bool _mapHome = ref.read(sessionProvider).mapHome;
 
   List<Journey> _watched = const [];
   List<SafetyAlert> _incoming = const [];
+
+  void _select(ScTab t) => ref.read(mainTabProvider.notifier).select(t);
 
   void _toggleHome() {
     setState(() => _mapHome = !_mapHome);
@@ -100,19 +101,20 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
 
   @override
   Widget build(BuildContext context) {
+    final tab = ref.watch(mainTabProvider);
     final Widget body = switch (tab) {
       ScTab.home => _mapHome
           ? MapHomeScreen(
-              onGoCircles: () => setState(() => tab = ScTab.circles),
+              onGoCircles: () => _select(ScTab.circles),
               onToggleHome: _toggleHome,
             )
           : HomeScreen(
-              onGoCircles: () => setState(() => tab = ScTab.circles),
+              onGoCircles: () => _select(ScTab.circles),
               onToggleHome: _toggleHome,
             ),
       ScTab.circles => const CirclesScreen(),
       ScTab.emergency => const EmergencyScreen(),
-      ScTab.profile => ProfileScreen(onGoCircles: () => setState(() => tab = ScTab.circles)),
+      ScTab.profile => ProfileScreen(onGoCircles: () => _select(ScTab.circles)),
     };
 
     final circles = ref.watch(myCirclesProvider).value;
@@ -122,7 +124,7 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
       body: SafeArea(bottom: false, child: body),
       bottomNavigationBar: ScBottomNav(
         active: tab,
-        onTab: (t) => setState(() => tab = t),
+        onTab: _select,
         onFab: () => Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => const JourneyFlow()),
         ),

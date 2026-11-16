@@ -5,6 +5,7 @@ import 'package:safecircle/core/session/session.dart';
 import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/widgets/async_view.dart';
 import 'package:safecircle/core/widgets/feather_icons.dart';
+import 'package:safecircle/core/widgets/sc_bottom_nav.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/circles/data/circle_repository.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
@@ -71,19 +72,7 @@ class PickCircleStep extends ConsumerWidget {
                 ),
                 const SizedBox(height: 22),
                 if (noCircles)
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: ScColors.borderDefault, width: 1.5),
-                    ),
-                    child: Text(
-                      'You need a circle first. Create one in the Circles tab.',
-                      textAlign: TextAlign.center,
-                      style: ScText.sans(size: 14, weight: FontWeight.w500, color: ScColors.textMuted),
-                    ),
-                  )
+                  const _NoCircleNotice()
                 else
                   for (final c in circles) ...[
                     _CircleChoice(
@@ -185,17 +174,59 @@ class PickCircleStep extends ConsumerWidget {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(26, 8, 26, 20),
-          child: ScButton(
-            label: starting ? 'Starting…' : 'Start journey',
-            leftIcon: starting ? null : FeatherIcons.navigation,
-            onPressed: !loaded || selected == null || lowContacts || noWatchers || starting
-                ? null
-                : () => onStart(selected),
+        // With no circle, JourneyFlow shows the tab bar here instead.
+        if (!noCircles)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(26, 8, 26, 20),
+            child: ScButton(
+              label: starting ? 'Starting…' : 'Start journey',
+              leftIcon: starting ? null : FeatherIcons.navigation,
+              onPressed: !loaded || selected == null || lowContacts || noWatchers || starting
+                  ? null
+                  : () => onStart(selected),
+            ),
           ),
-        ),
       ],
+    );
+  }
+}
+
+/// Tells the user to create a circle, showing the Circles tab as it appears
+/// in the tab bar below so it's obvious where to go.
+class _NoCircleNotice extends StatelessWidget {
+  const _NoCircleNotice();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: ScColors.borderDefault, width: 1.5),
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 8),
+            decoration: BoxDecoration(color: ScColors.brandTint, borderRadius: BorderRadius.circular(14)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CirclesIcon(size: 28, color: ScColors.brand),
+                const SizedBox(height: 4),
+                Text('Circles',
+                    style: ScText.sans(size: 11, weight: FontWeight.w800, color: ScColors.brand, spacing: .2)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            'You need a circle first. Tap the Circles tab below to create one.',
+            textAlign: TextAlign.center,
+            style: ScText.sans(size: 14, weight: FontWeight.w500, color: ScColors.textMuted),
+          ),
+        ],
+      ),
     );
   }
 }

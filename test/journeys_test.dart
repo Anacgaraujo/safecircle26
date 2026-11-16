@@ -2,6 +2,7 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:safecircle/core/widgets/sc_bottom_nav.dart';
 import 'package:safecircle/core/data/lookup_hash.dart';
 import 'package:safecircle/core/location/location_service.dart';
 import 'package:safecircle/core/session/session.dart';
@@ -303,6 +304,32 @@ void main() {
       expect(find.text('Add 2 emergency contacts before starting'), findsOneWidget);
       await tester.tap(find.text('Start journey'));
       await tester.pump();
+    });
+
+    testWidgets('without a circle it points to the Circles tab instead of starting', (tester) async {
+      Session.instance.setProfile(uid: 'ana', name: 'Ana', email: 'ana@example.com');
+      await tester.pumpWidget(ProviderScope(
+        overrides: [
+          myCirclesProvider.overrideWith((ref) => Stream.value(const <Circle>[])),
+          contactsProvider.overrideWith((ref) => Stream.value([Person(name: 'Carlos'), Person(name: 'Bia')])),
+        ],
+        child: MaterialApp(
+          home: Scaffold(
+            body: PickCircleStep(
+              checkIns: defaultCheckIns(now),
+              selectedCircleId: null,
+              starting: false,
+              onSelect: (_) {},
+              onBack: () {},
+              onStart: (_) => fail('must not start'),
+            ),
+          ),
+        ),
+      ));
+      await tester.pump();
+      expect(find.textContaining('Tap the Circles tab below'), findsOneWidget);
+      expect(find.byType(CirclesIcon), findsOneWidget);
+      expect(find.text('Start journey'), findsNothing);
     });
   });
 }

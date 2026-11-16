@@ -9,6 +9,7 @@ import 'package:safecircle/core/permissions/permissions.dart';
 import 'package:safecircle/core/session/session.dart';
 import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/widgets/async_view.dart';
+import 'package:safecircle/core/widgets/sc_bottom_nav.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/circles/data/circle_repository.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
@@ -238,6 +239,11 @@ class _JourneyFlowState extends ConsumerState<JourneyFlow> {
     return ScLocation(lat: live!.lastLat!, lng: live.lastLng!, label: live.lastPlace);
   }
 
+  void _leaveToTab(ScTab tab) {
+    ref.read(mainTabProvider.notifier).select(tab);
+    Navigator.of(context).popUntil((route) => route.isFirst);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (checkingResume) return const Scaffold(body: ScSpinner());
@@ -287,7 +293,21 @@ class _JourneyFlowState extends ConsumerState<JourneyFlow> {
       _JStep.history => JourneyHistoryView(onPlanNew: _planNew),
     };
 
+    // Without a circle the journey can't start, so show the app's tab bar
+    // here: the user sees the Circles tab and can jump straight to it.
+    final noCircles =
+        step == _JStep.circle && (ref.watch(myCirclesProvider).value?.isEmpty ?? false);
+
     return Scaffold(
+      bottomNavigationBar: noCircles
+          ? ScBottomNav(
+              active: ScTab.circles,
+              onTab: _leaveToTab,
+              onFab: () {},
+              coachmark: 'Create your first circle',
+              mapHome: ref.read(sessionProvider).mapHome,
+            )
+          : null,
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 340),
         switchInCurve: ScMotion.easeOut,

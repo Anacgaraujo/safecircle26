@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safecircle/core/widgets/feather_icons.dart';
 
 import 'package:safecircle/core/theme/sc_theme.dart';
@@ -36,6 +37,17 @@ class _CirclesPainter extends CustomPainter {
 }
 
 enum ScTab { home, circles, emergency, profile }
+
+/// The main shell's selected tab. Screens pushed over the shell (such as the
+/// journey flow) select a tab here and pop back to show it.
+final mainTabProvider = NotifierProvider.autoDispose<MainTabNotifier, ScTab>(MainTabNotifier.new);
+
+class MainTabNotifier extends Notifier<ScTab> {
+  @override
+  ScTab build() => ScTab.home;
+
+  void select(ScTab tab) => state = tab;
+}
 
 class ScBottomNav extends StatelessWidget {
   const ScBottomNav({
