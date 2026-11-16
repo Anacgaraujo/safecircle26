@@ -150,6 +150,32 @@ class JourneyRepository extends FirestoreRepository {
       .snapshots()
       .map((s) => s.docs.map((d) => Journey.fromMap(d.data(), d.id)).toList());
 
+  /// Deletes one of my finished journeys. Active journeys are never deleted
+  /// from history: they still protect the traveler.
+  Future<void> deleteFinishedJourney(String id) async {
+    final ref = _journeys.doc(id);
+    final data = (await ref.get()).data();
+    if (data == null || data['ownerId'] != uid || data['status'] != 'finished') return;
+    await ref.delete();
+  }
+
+  /// Deletes all of my finished journeys; returns how many were deleted.
+  Future<int> deleteAllFinishedJourneys() async {
+    final q = await _journeys
+        .where('ownerId', isEqualTo: uid)
+        .where('status', isEqualTo: 'finished')
+        .get();
+    // A Firestore batch holds at most 500 writes.
+    for (var i = 0; i < q.docs.length; i += 400) {
+      final batch = db.batch();
+      for (final d in q.docs.skip(i).take(400)) {
+        batch.delete(d.reference);
+      }
+      await batch.commit();
+    }
+    return q.docs.length;
+  }
+
   Future<Journey?> activeJourneyOf(String ownerUid) async {
     final q = await (ownerUid == uid
             ? _journeys.where('ownerId', isEqualTo: uid)

@@ -13,17 +13,67 @@ class JourneyHistoryView extends ConsumerWidget {
   const JourneyHistoryView({super.key, required this.onPlanNew});
   final VoidCallback onPlanNew;
 
+  Future<void> _deleteOne(BuildContext context, WidgetRef ref, Journey journey) async {
+    final when = journey.dateLabel.isEmpty ? 'this journey' : 'the journey from ${journey.dateLabel}';
+    final ok = await showScConfirm(
+      context,
+      title: 'Delete this journey?',
+      body: 'This removes $when from your history. This can’t be undone.',
+      confirmLabel: 'Delete journey',
+    );
+    if (!ok) return;
+    try {
+      await ref.read(journeyRepositoryProvider).deleteFinishedJourney(journey.id);
+    } catch (_) {
+      if (context.mounted) showScToast(context, 'Could not delete the journey. Try again.');
+    }
+  }
+
+  Future<void> _deleteAll(BuildContext context, WidgetRef ref, int count) async {
+    final ok = await showScConfirm(
+      context,
+      title: 'Delete all journeys?',
+      body: 'This removes all $count ${count == 1 ? 'journey' : 'journeys'} from your history. '
+          'This can’t be undone.',
+      confirmLabel: 'Delete all',
+    );
+    if (!ok) return;
+    try {
+      final n = await ref.read(journeyRepositoryProvider).deleteAllFinishedJourneys();
+      if (context.mounted) showScToast(context, 'Deleted $n ${n == 1 ? 'journey' : 'journeys'}.');
+    } catch (_) {
+      if (context.mounted) showScToast(context, 'Could not delete your journeys. Try again.');
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref.watch(journeyHistoryProvider).value?.length ?? 0;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(padding: const EdgeInsets.fromLTRB(24, 12, 24, 0), child: ScBackButton()),
         Padding(
-          padding: const EdgeInsets.fromLTRB(26, 6, 26, 0),
-          child: Text('Journey history',
-              style: ScText.sans(
-                  size: 28, weight: FontWeight.w800, color: ScColors.textHeading, height: 34, spacing: -0.6)),
+          padding: const EdgeInsets.fromLTRB(26, 6, 14, 0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text('Journey history',
+                    style: ScText.sans(
+                        size: 28,
+                        weight: FontWeight.w800,
+                        color: ScColors.textHeading,
+                        height: 34,
+                        spacing: -0.6)),
+              ),
+              if (count > 0)
+                TextButton(
+                  onPressed: () => _deleteAll(context, ref, count),
+                  child: Text('Delete all',
+                      style: ScText.sans(size: 15, weight: FontWeight.w700, color: ScColors.red500)),
+                ),
+            ],
+          ),
         ),
         Expanded(
           child: ScAsyncView(
@@ -34,7 +84,7 @@ class JourneyHistoryView extends ConsumerWidget {
                     padding: const EdgeInsets.fromLTRB(24, 20, 24, 10),
                     children: [
                       for (final h in history) ...[
-                        _HistoryCard(journey: h),
+                        _HistoryCard(journey: h, onDelete: () => _deleteOne(context, ref, h)),
                         const SizedBox(height: 12),
                       ],
                     ],
@@ -86,8 +136,9 @@ class _HistoryEmpty extends StatelessWidget {
 }
 
 class _HistoryCard extends StatelessWidget {
-  const _HistoryCard({required this.journey});
+  const _HistoryCard({required this.journey, required this.onDelete});
   final Journey journey;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +194,17 @@ class _HistoryCard extends StatelessWidget {
               const SizedBox(width: 7),
               Text(h.duration.isEmpty ? '—' : h.duration,
                   style: ScText.sans(size: 13.5, weight: FontWeight.w600, color: ScColors.textSecondary)),
+              const Spacer(),
+              SizedBox(
+                width: 32,
+                height: 32,
+                child: IconButton(
+                  tooltip: 'Delete journey',
+                  padding: EdgeInsets.zero,
+                  onPressed: onDelete,
+                  icon: const Icon(FeatherIcons.trash2, size: 17, color: ScColors.red500),
+                ),
+              ),
             ],
           ),
         ],

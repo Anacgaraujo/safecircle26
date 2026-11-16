@@ -253,6 +253,40 @@ void main() {
     });
   });
 
+  group('journey history', () {
+    late FakeFirebaseFirestore db;
+    JourneyRepository repo() {
+      final alerts = AlertRepository(db,
+          contacts: ContactsRepository(db, currentUid: () => 'ana'), currentUid: () => 'ana');
+      return JourneyRepository(db, alerts: alerts, currentUid: () => 'ana');
+    }
+
+    Future<void> add(String id, String owner, String status) =>
+        db.collection('journeys').doc(id).set({'ownerId': owner, 'status': status});
+
+    Future<List<String>> ids() async => (await db.collection('journeys').get()).docs.map((d) => d.id).toList();
+
+    setUp(() async {
+      db = FakeFirebaseFirestore();
+      await add('old1', 'ana', 'finished');
+      await add('old2', 'ana', 'finished');
+      await add('now', 'ana', 'active');
+      await add('bia1', 'bia', 'finished');
+    });
+
+    test('deletes one finished journey, never an active one or someone else\'s', () async {
+      await repo().deleteFinishedJourney('old1');
+      await repo().deleteFinishedJourney('now');
+      await repo().deleteFinishedJourney('bia1');
+      expect(await ids(), unorderedEquals(['old2', 'now', 'bia1']));
+    });
+
+    test('deletes all my finished journeys', () async {
+      expect(await repo().deleteAllFinishedJourneys(), 2);
+      expect(await ids(), unorderedEquals(['now', 'bia1']));
+    });
+  });
+
   group('screens', () {
     testWidgets('home lists the friend who needs attention first', (tester) async {
       final late = _journey('Carlos Lima', [
