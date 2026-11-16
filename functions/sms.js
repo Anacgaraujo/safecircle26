@@ -21,6 +21,7 @@ async function sendSms(to, body) {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: new URLSearchParams({ To: to, From: TWILIO_FROM_NUMBER.value(), Body: body }),
+    signal: AbortSignal.timeout(15000),
   });
   if (!res.ok) throw new Error(`Twilio ${res.status}: ${await res.text()}`);
 }

@@ -43,6 +43,9 @@ exports.sendCircleInviteTexts = onCall(
   {
     secrets: TWILIO_SECRETS,
     maxInstances: 5,
+    // The app must be able to reach it; the code below checks who is signed
+    // in. Set explicitly because a create that fails halfway leaves it unset.
+    invoker: 'public',
   },
   async (request) => {
     const uid = request.auth && request.auth.uid;
@@ -128,25 +131,30 @@ async function reserveAndSend({ uid, circleId, circleRef, circle, recipients }) 
   const limited = recipients.length - allowed;
   if (limited > 0) logger.warn('SMS daily limit reached', { uid, circleId, limited });
 
-  let sent = 0;
-  let failed = 0;
-  for (const r of recipients.slice(0, allowed)) {
-    const body = inviteMessage({
-      fromName: circle.ownerName,
-      circleName: circle.name,
-      email: r.email,
-      link: APP_INVITE_URL.value(),
-    });
-    try {
+  // All at once, so the last person on the list isn't seconds behind the first.
+  const results = await Promise.allSettled(
+    recipients.slice(0, allowed).map(async (r) => {
+      const body = inviteMessage({
+        fromName: circle.ownerName,
+        circleName: circle.name,
+        email: r.email,
+        link: APP_INVITE_URL.value(),
+      });
       await sendSms(r.phone, body);
       await circleRef.collection('smsInvites').doc(r.phone).set({
         sentAt: FieldValue.serverTimestamp(),
         byUid: uid,
       });
+    }),
+  );
+  let sent = 0;
+  let failed = 0;
+  for (const r of results) {
+    if (r.status === 'fulfilled') {
       sent++;
-    } catch (e) {
+    } else {
       failed++;
-      logger.error('SMS invite failed', { uid, circleId, error: String(e) });
+      logger.error('SMS invite failed', { uid, circleId, error: String(r.reason) });
     }
   }
   return { sent, failed, limited };

@@ -87,15 +87,14 @@ async function sendEmergency({ uid, phones, body, context }) {
   if (allowed < phones.length) {
     logger.warn('Emergency SMS limit reached', { uid, ...context, dropped: phones.length - allowed });
   }
+  // All at once, so the last person on the list isn't seconds behind the first.
+  const targets = phones.slice(0, allowed);
+  const results = await Promise.allSettled(targets.map((phone) => sendSms(phone, body)));
   const sentTo = [];
-  for (const phone of phones.slice(0, allowed)) {
-    try {
-      await sendSms(phone, body);
-      sentTo.push(phone);
-    } catch (e) {
-      logger.error('Emergency SMS failed', { uid, ...context, error: String(e) });
-    }
-  }
+  results.forEach((r, i) => {
+    if (r.status === 'fulfilled') sentTo.push(targets[i]);
+    else logger.error('Emergency SMS failed', { uid, ...context, error: String(r.reason) });
+  });
   return sentTo;
 }
 
