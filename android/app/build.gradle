@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.safecircle"
+    namespace = "com.safecircle26.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.safecircle"
+        applicationId = "com.safecircle26.app"
         minSdkVersion = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

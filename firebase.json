@@ -7,19 +7,27 @@
     "platforms": {
       "android": {
         "default": {
-          "projectId": "safe-circle-ae76b",
-          "appId": "1:863303575728:android:abe9f44a66ba827b4f7375",
+          "projectId": "safe-circle26",
+          "appId": "1:777613494014:android:a50b16411686ba6c6287af",
           "fileOutput": "android/app/google-services.json"
         }
       },
       "dart": {
         "lib/firebase_options.dart": {
-          "projectId": "safe-circle-ae76b",
+          "projectId": "safe-circle26",
           "configurations": {
-            "android": "1:863303575728:android:abe9f44a66ba827b4f7375",
-            "ios": "1:863303575728:ios:c13936050d1a20344f7375",
-            "web": "1:863303575728:web:045c0166453ac9194f7375"
+            "android": "1:777613494014:android:a50b16411686ba6c6287af",
+            "ios": "1:777613494014:ios:4c97679667f39a1b6287af",
+            "web": "1:777613494014:web:529b99da6ee6b1d76287af"
           }
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "safe-circle26",
+          "appId": "1:777613494014:ios:4c97679667f39a1b6287af",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
         }
       }
     }

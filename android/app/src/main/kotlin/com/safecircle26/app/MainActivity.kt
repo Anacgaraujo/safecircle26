@@ -1,4 +1,4 @@
-package com.example.safecircle
+package com.safecircle26.app
 
 import io.flutter.embedding.android.FlutterActivity
 
