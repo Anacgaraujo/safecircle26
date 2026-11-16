@@ -173,8 +173,8 @@ class PersonFormState extends State<PersonForm> {
         if (widget.showEmailField) ...[
           const SizedBox(height: 16),
           ScInput(
-            label: 'SafeCircle email (required)',
-            placeholder: 'The email they use in SafeCircle',
+            label: 'E-mail (required)',
+            placeholder: 'Email should match their account',
             leadingIcon: FeatherIcons.mail,
             keyboardType: TextInputType.emailAddress,
             controller: emailCtrl,

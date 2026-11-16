@@ -1,0 +1,19 @@
+{
+  "name": "safecircle-functions",
+  "description": "SafeCircle Cloud Functions: SMS invitations and emergency texts through Twilio.",
+  "private": true,
+  "main": "index.js",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "test": "node --test test/",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "dependencies": {
+    "firebase-admin": "^14.5.1",
+    "firebase-functions": "^7.4.0",
+    "libphonenumber-js": "^1.13.16"
+  }
+}

@@ -66,7 +66,9 @@ class _AddContactScreenState extends ConsumerState<AddContactScreen> {
                   Text(isEdit ? 'Edit contact' : 'Add emergency contact',
                       style: ScText.headline()),
                   const SizedBox(height: 6),
-                  Text("They'll be alerted on every journey, always.", style: ScText.sub()),
+                  Text(
+                      "They'll be alerted on every journey, always. We'll text them once to let them know you added them.",
+                      style: ScText.sub()),
                   const SizedBox(height: 24),
                   PersonForm(
                     initial: isEdit ? _current : null,

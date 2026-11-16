@@ -49,3 +49,7 @@ ios/Runner/GoogleService-Info.plist
 
 # Node (firebase-tools)
 node_modules/
+
+# Cloud Functions local secrets (emulator) and debug logs
+functions/*.local
+firebase-debug.log

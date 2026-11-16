@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -30,5 +31,6 @@ Future<void> initFirebase() async {
   if (kUseEmulators) {
     await FirebaseAuth.instance.useAuthEmulator(kEmulatorHost, 9099);
     FirebaseFirestore.instance.useFirestoreEmulator(kEmulatorHost, 8080);
+    FirebaseFunctions.instance.useFunctionsEmulator(kEmulatorHost, 5001);
   }
 }

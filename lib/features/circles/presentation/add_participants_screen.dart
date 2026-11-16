@@ -48,13 +48,15 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
     if (widget.draft.members.isEmpty || _saving) return;
     setState(() => _saving = true);
     try {
-      final missing = await ref
-          .read(circleServiceProvider)
-          .saveAndInvite(widget.draft, isNew: !widget.isExisting);
+      final service = ref.read(circleServiceProvider);
+      final missing = await service.saveAndInvite(widget.draft, isNew: !widget.isExisting);
+      final texted = await service.sendInviteTexts(widget.draft);
       if (!mounted) return;
-      if (missing.isNotEmpty) {
-        showScToast(context, 'No SafeCircle account for: ${missing.join(', ')}');
-      }
+      final notes = [
+        if (texted > 0) 'Text invitation sent to $texted ${texted == 1 ? 'person' : 'people'}.',
+        if (missing.isNotEmpty) 'No SafeCircle account yet for: ${missing.join(', ')}',
+      ];
+      if (notes.isNotEmpty) showScToast(context, notes.join(' '));
       if (!widget.isExisting) await startLiveSharingByDefault(context);
       if (!mounted) return;
       Navigator.of(context).pop();

@@ -49,6 +49,12 @@ flutter pub get
 flutter run
 ```
 
+## Text messages
+
+Cloud Functions text circle invitations, new emergency contacts, SOS and
+panic alerts, missed journey check-ins and the all-clear, through Twilio.
+Setup: [docs/SMS.md](docs/SMS.md).
+
 ## Map tiles
 
 Maps use MapTiler raster tiles. Copy `config/maps.example.json` to

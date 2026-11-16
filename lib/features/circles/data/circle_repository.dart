@@ -16,6 +16,10 @@ final myCirclesProvider = StreamProvider.autoDispose<List<Circle>>(
 final pendingInvitesProvider = StreamProvider.autoDispose<List<CircleInvite>>(
     (ref) => ref.watch(circleRepositoryProvider).pendingInvitesStream());
 
+/// For a circle I own: invitation status ('pending', 'accepted'…) by email.
+final sentInviteStatusProvider = StreamProvider.autoDispose.family<Map<String, String>, String>(
+    (ref, circleId) => ref.watch(circleRepositoryProvider).sentInviteStatusStream(circleId));
+
 class CircleRepository extends FirestoreRepository {
   CircleRepository(super.db, {super.currentUid, super.session});
 
@@ -136,6 +140,16 @@ class CircleRepository extends FirestoreRepository {
     });
     return true;
   }
+
+  Stream<Map<String, String>> sentInviteStatusStream(String circleId) => db
+      .collection('invites')
+      .where('fromUid', isEqualTo: uid)
+      .where('circleId', isEqualTo: circleId)
+      .snapshots()
+      .map((s) => {
+            for (final d in s.docs)
+              ((d.data()['toEmail'] ?? '') as String): ((d.data()['status'] ?? '') as String),
+          });
 
   Stream<List<CircleInvite>> pendingInvitesStream() => db
       .collection('invites')

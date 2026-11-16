@@ -64,6 +64,32 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
     }
   }
 
+  final _resending = <Person>{};
+
+  Future<void> _resend(Circle circle, Person member) async {
+    final phone = member.digits.isNotEmpty ? member.fullPhone : null;
+    final ok = await showScConfirm(
+      context,
+      title: 'Resend invitation to ${member.firstName}?',
+      body: phone != null
+          ? "We'll text $phone again and remind them in the app."
+          : "We'll remind them in the app. Add a phone number to text them too.",
+      confirmLabel: 'Resend',
+      icon: FeatherIcons.send,
+    );
+    if (!ok || !mounted) return;
+    setState(() => _resending.add(member));
+    try {
+      final result = await ref.read(circleServiceProvider).resendInvitation(circle, member);
+      if (mounted) showScToast(context, result.message(member.firstName));
+    } catch (e) {
+      debugPrint('[SafeCircle] resendInvitation: $e');
+      if (mounted) showScToast(context, 'Could not resend the invitation. Try again.');
+    } finally {
+      if (mounted) setState(() => _resending.remove(member));
+    }
+  }
+
   Future<void> _removeMember(Circle circle, Person member) async {
     final ok = await showScConfirm(
       context,
@@ -90,6 +116,14 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
     final (emoji, text) = circle.parts;
     final isOwner = circle.ownerId == session.uid;
     final people = circle.peopleSeenBy(session.uid, myEmail: session.userEmail);
+    final inviteStatus = isOwner && circle.id != null
+        ? ref.watch(sentInviteStatusProvider(circle.id!)).value ?? const <String, String>{}
+        : const <String, String>{};
+    bool canResend(Person p) =>
+        isOwner &&
+        p.uid != circle.ownerId &&
+        inviteStatus[(p.email ?? '').toLowerCase()] != 'accepted' &&
+        ((p.email ?? '').isNotEmpty || p.digits.isNotEmpty);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -167,6 +201,9 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
                       person: person,
                       subtitle: person.uid != null && person.uid == circle.ownerId
                           ? 'Circle owner'
+                          : null,
+                      onResend: canResend(person) && !_resending.contains(person)
+                          ? () => _resend(circle, person)
                           : null,
                       onDelete: isOwner ? () => _removeMember(circle, person) : null,
                     ),

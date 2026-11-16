@@ -69,7 +69,7 @@ class SosView extends ConsumerWidget {
                     width: 300,
                     child: Text(
                       enabled
-                          ? 'This alerts your circle in the app with your location. Contacts without SafeCircle get a one-tap SMS with your position.'
+                          ? 'This alerts your circle in the app and texts your circle and emergency contacts your location.'
                           : 'Add at least one emergency contact before you can send an alert.',
                       textAlign: TextAlign.center,
                       style: ScText.sans(size: 14.5, weight: FontWeight.w500, color: ScColors.textSubtle, height: 21),
