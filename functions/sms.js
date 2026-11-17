@@ -1,6 +1,7 @@
 // Twilio sending and daily cost guards, shared by every function that texts.
 const { defineSecret } = require('firebase-functions/params');
 const { getFirestore } = require('firebase-admin/firestore');
+const logger = require('firebase-functions/logger');
 
 const { dayKey, allowedCount } = require('./invite_texts');
 
@@ -23,7 +24,16 @@ async function sendSms(to, body) {
     body: new URLSearchParams({ To: to, From: TWILIO_FROM_NUMBER.value(), Body: body }),
     signal: AbortSignal.timeout(15000),
   });
-  if (!res.ok) throw new Error(`Twilio ${res.status}: ${await res.text()}`);
+  const reply = await res.json().catch(() => ({}));
+  // Only the last 4 digits, so logs don't collect people's phone numbers.
+  const to4 = `...${String(to).slice(-4)}`;
+  if (!res.ok) {
+    throw new Error(`Twilio ${res.status} to ${to4}: ${reply.code || ''} ${reply.message || ''}`.trim());
+  }
+  // "queued" only means Twilio accepted it; delivery problems (for example
+  // error 30034, number not registered for A2P 10DLC) show up in Twilio's
+  // Monitor -> Logs -> Messaging under this sid.
+  logger.info('SMS accepted by Twilio', { to: to4, sid: reply.sid, status: reply.status });
 }
 
 /**

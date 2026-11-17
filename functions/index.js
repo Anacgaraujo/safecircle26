@@ -70,7 +70,10 @@ exports.sendCircleInviteTexts = onCall(
     }
 
     const candidates = recipientsToText(circle);
-    if (candidates.length === 0) return { sent: 0, failed: 0, skipped: 0, limited: 0 };
+    if (candidates.length === 0) {
+      logger.info('No one to text: no valid phone numbers', { uid, circleId });
+      return { sent: 0, failed: 0, skipped: 0, limited: 0 };
+    }
 
     // One record per phone number per circle, so saving the circle again
     // never texts the same person twice.
@@ -78,7 +81,10 @@ exports.sendCircleInviteTexts = onCall(
     const sentSnaps = await db.getAll(...sentRefs);
     const pending = candidates.filter((_, i) => !sentSnaps[i].exists);
     const skipped = candidates.length - pending.length;
-    if (pending.length === 0) return { sent: 0, failed: 0, skipped, limited: 0 };
+    if (pending.length === 0) {
+      logger.info('No one to text: all already texted', { uid, circleId, skipped });
+      return { sent: 0, failed: 0, skipped, limited: 0 };
+    }
 
     const { sent, failed, limited } = await reserveAndSend({
       db, uid, circleId, circleRef, circle, recipients: pending,
@@ -91,7 +97,10 @@ exports.sendCircleInviteTexts = onCall(
 async function resendOne({ db, uid, circleId, circleRef, circle, resend }) {
   const phone = resend && toE164(resend.digits, resend.countryCode);
   const recipient = phone && recipientsToText(circle).find((r) => r.phone === phone);
-  if (!recipient) throw new HttpsError('not-found', 'That phone number is not in this circle.');
+  if (!recipient) {
+    logger.warn('Resend refused: number not in circle', { uid, circleId });
+    throw new HttpsError('not-found', 'That phone number is not in this circle.');
+  }
 
   if (recipient.email) {
     const joined = await db
@@ -101,7 +110,10 @@ async function resendOne({ db, uid, circleId, circleRef, circle, resend }) {
       .where('status', '==', 'accepted')
       .limit(1)
       .get();
-    if (!joined.empty) throw new HttpsError('failed-precondition', 'They already joined this circle.');
+    if (!joined.empty) {
+      logger.info('Resend refused: already joined', { uid, circleId });
+      throw new HttpsError('failed-precondition', 'They already joined this circle.');
+    }
   }
 
   const last = await circleRef.collection('smsInvites').doc(phone).get();
@@ -111,7 +123,10 @@ async function resendOne({ db, uid, circleId, circleRef, circle, resend }) {
     nowMs: Date.now(),
     cooldownMinutes: RESEND_COOLDOWN_MINUTES.value(),
   });
-  if (retryAfter > 0) return { sent: 0, failed: 0, skipped: 1, limited: 0, retryAfter };
+  if (retryAfter > 0) {
+    logger.info('Resend refused: too soon', { uid, circleId, retryAfter });
+    return { sent: 0, failed: 0, skipped: 1, limited: 0, retryAfter };
+  }
 
   const result = await reserveAndSend({
     db, uid, circleId, circleRef, circle, recipients: [recipient],
