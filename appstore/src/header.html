@@ -1,0 +1,28 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Poppins:wght@600;700;800&family=Roboto+Mono:wght@500;700&display=block" rel="stylesheet">
+<style>html,body{margin:0;overflow:hidden;-webkit-font-smoothing:antialiased}</style>
+<script src="kit.js"></script></head><body><div id="c"></div>
+<script>
+const clean = new URLSearchParams(location.search).get('clean') === '1';
+const phone = (name, opts, x, y, s, rot) => `<div style="position:absolute;left:${x}px;top:${y}px;width:417px;height:876px;transform:rotate(${rot}deg) scale(${s});transform-origin:50% 50%">
+  <div style="position:absolute;inset:0;border-radius:62px;background:#0B0B0D;box-shadow:0 0 0 2px #3a3a3e inset,0 50px 90px -20px rgba(0,0,0,.55)"></div>
+  <div style="position:absolute;left:12px;top:12px;border-radius:50px;overflow:hidden">${phoneScreen(name, opts)}</div></div>`;
+const rings = [520, 760, 1000, 1240].map((d, i) => `<div style="position:absolute;left:${(clean ? 960 : 1440) - d / 2}px;top:${540 - d / 2}px;width:${d}px;height:${d}px;border-radius:50%;border:2px solid rgba(255,255,255,${0.18 - i * 0.035})"></div>`).join('');
+const cx = clean ? 960 : 1440;
+const phones = clean
+  ? phone('journey', {}, cx - 208 - 470, 102, 0.86, -8) + phone('sos', {}, cx - 208 + 470, 102, 0.86, 8) + phone('map', {}, cx - 208, 60, 0.98, 0)
+  : phone('journey', {}, cx - 208 - 290, 150, 0.78, -8) + phone('sos', {}, cx - 208 + 290, 150, 0.78, 8) + phone('map', {}, cx - 208, 95, 0.92, 0);
+const feature = (i, t) => `<div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.14);border-radius:99px;padding:12px 22px 12px 14px;font:700 21px Manrope;color:#fff">${ic(i, 22, '#fff', 2.4)}${t}</div>`;
+document.getElementById('c').innerHTML = `<div style="position:relative;width:1920px;height:1080px;overflow:hidden;background:linear-gradient(120deg,#F43BB0 0%,#EC13A4 35%,#B80A80 75%,#37207B 130%)">
+  <div style="position:absolute;inset:0;background:radial-gradient(50% 60% at 15% 10%,rgba(255,255,255,.2),transparent 70%)"></div>
+  ${rings}${phones}
+  ${clean ? '' : `<div style="position:absolute;left:120px;top:0;bottom:0;width:720px;display:flex;flex-direction:column;justify-content:center">
+    <div style="display:flex;align-items:center;gap:20px"><img src="icon.png" style="width:96px;height:96px;border-radius:22px;box-shadow:0 14px 30px -10px rgba(0,0,0,.4)"><div style="font:700 44px Poppins;color:#fff;letter-spacing:-.5px">SafeCircle</div></div>
+    <div style="margin-top:44px;font:700 74px/1.06 Poppins;color:#fff;letter-spacing:-2px">Someone always knows <span style="color:#FFE0F4">you’re safe.</span></div>
+    <div style="margin-top:28px;font:600 28px/1.4 Manrope;color:rgba(255,255,255,.88);max-width:620px">Live location, journey check-ins and one-hold SOS for the people you trust.</div>
+    <div style="margin-top:40px;display:flex;flex-wrap:wrap;gap:14px;max-width:680px">${feature('map', 'Live map')}${feature('clock', 'Check-ins')}${feature('eye-off', 'Panic PIN')}${feature('shield', 'SOS')}</div>
+  </div>`}
+</div>`;
+document.fonts.ready.then(() => { document.body.dataset.ready = '1'; });
+</script></body></html>
