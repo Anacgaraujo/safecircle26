@@ -14,6 +14,7 @@ import 'package:safecircle/features/circles/domain/circle_invite.dart';
 import 'package:safecircle/features/journeys/data/journey_repository.dart';
 import 'package:safecircle/features/journeys/domain/friends_feed.dart';
 import 'package:safecircle/features/journeys/presentation/widgets/friend_journey_cards.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key, this.onGoCircles, this.showHeader = true, this.onToggleHome});
@@ -66,7 +67,7 @@ class HomeScreen extends ConsumerWidget {
           ),
         Padding(
           padding: const EdgeInsets.fromLTRB(24, 22, 24, 0),
-          child: Text("Friends' Journeys", style: ScText.title()),
+          child: Text(context.l10n.friendsJourneys, style: ScText.title()),
         ),
         Expanded(
           child: alertsAsync.hasError
@@ -83,7 +84,7 @@ class HomeScreen extends ConsumerWidget {
   void _openNotifications(
       BuildContext context, List<SafetyAlert> alerts, List<CircleInvite> invites) {
     if (alerts.isEmpty && invites.isEmpty) {
-      showScToast(context, 'No new notifications.');
+      showScToast(context, context.l10n.noNewNotifications);
       return;
     }
     showModalBottomSheet<void>(
@@ -107,7 +108,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              Text('Notifications',
+              Text(context.l10n.notifications,
                   style: ScText.sans(size: 20, weight: FontWeight.w800, color: ScColors.textHeading)),
               const SizedBox(height: 12),
               for (final a in alerts) ...[
@@ -116,7 +117,7 @@ class HomeScreen extends ConsumerWidget {
                   icon: alertIcon(a),
                   iconColor: ScColors.brand,
                   title: a.headline,
-                  sub: '${a.kindLabel} · ${a.timeLabel}',
+                  sub: '${a.kindLabel} · ${a.timeText}',
                   onTap: () {
                     Navigator.of(sheetContext).pop();
                     Navigator.of(context).push(
@@ -130,7 +131,7 @@ class HomeScreen extends ConsumerWidget {
                   tint: ScColors.amber100,
                   icon: FeatherIcons.userPlus,
                   iconColor: ScColors.amber800,
-                  title: 'Circle invite',
+                  title: context.l10n.circleInvite,
                   sub: i.summary,
                   onTap: () {
                     Navigator.of(sheetContext).pop();

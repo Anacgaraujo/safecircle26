@@ -11,6 +11,7 @@ import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/widgets/phone_field.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/core/permissions/permissions.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 const _kSocialLogin = false;
 
@@ -63,13 +64,13 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
   Future<void> _register() async {
     final name = nameCtrl.text.trim();
     final email = emailCtrl.text.trim();
-    if (name.isEmpty) return showScToast(context, 'Enter your name.');
-    if (email.isEmpty) return showScToast(context, 'Enter your email.');
+    if (name.isEmpty) return showScToast(context, context.l10n.enterYourName);
+    if (email.isEmpty) return showScToast(context, context.l10n.enterYourEmail);
     if (passCtrl.text.length < 6) {
-      return showScToast(context, 'Password must have at least 6 characters.');
+      return showScToast(context, context.l10n.passwordTooShort);
     }
     if (passCtrl.text != pass2Ctrl.text) {
-      return showScToast(context, "Passwords don't match.");
+      return showScToast(context, context.l10n.passwordsDontMatch);
     }
     setState(() => busy = true);
     try {
@@ -88,7 +89,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
 
   Future<void> _login() async {
     if (emailCtrl.text.trim().isEmpty || passCtrl.text.isEmpty) {
-      return showScToast(context, 'Enter your email and password.');
+      return showScToast(context, context.l10n.enterEmailAndPassword);
     }
     setState(() => busy = true);
     try {
@@ -103,13 +104,13 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
 
   Future<void> _recover() async {
     if (emailCtrl.text.trim().isEmpty) {
-      return showScToast(context, 'Enter your email.');
+      return showScToast(context, context.l10n.enterYourEmail);
     }
     setState(() => busy = true);
     try {
       await ref.read(authRepositoryProvider).sendPasswordReset(emailCtrl.text);
       if (mounted) {
-        showScToast(context, 'Recovery link sent. Check your inbox.');
+        showScToast(context, context.l10n.recoveryLinkSent);
         setState(() {
           busy = false;
           step = _Step.login;
@@ -135,7 +136,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
       if (mounted) _enterApp();
     } catch (e) {
       if (mounted) {
-        showScToast(context, 'Could not save your PINs. Try again.');
+        showScToast(context, context.l10n.couldNotSavePins);
         setState(() => busy = false);
       }
     }
@@ -222,7 +223,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Welcome to',
+                Text(context.l10n.welcomeTo,
                     style: ScText.sans(
                         size: 18,
                         weight: FontWeight.w700,
@@ -235,7 +236,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
                 SizedBox(
                   width: 300,
                   child: Text(
-                    "Build a trusted circle and let someone always know you're safe.",
+                    context.l10n.welcomeTagline,
                     style: ScText.sans(
                         size: 16,
                         weight: FontWeight.w500,
@@ -245,13 +246,13 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
                 ),
                 const Spacer(),
                 ScButton(
-                    label: 'Start',
+                    label: context.l10n.start,
                     rightIcon: FeatherIcons.arrowRight,
                     onPressed: () => _go(_Step.create)),
                 const SizedBox(height: 4),
                 Center(
                   child: ScButton(
-                    label: 'Skip intro',
+                    label: context.l10n.skipIntro,
                     variant: ScButtonVariant.link,
                     fullWidth: false,
                     onPressed: () => _go(_Step.login),
@@ -273,25 +274,25 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
         children: [
           ScBackButton(onTap: () => _go(_Step.welcome)),
           const SizedBox(height: 10),
-          Text('Create account', style: ScText.headline()),
+          Text(context.l10n.createAccount, style: ScText.headline()),
           const SizedBox(height: 6),
-          Text('Join SafeCircle in a few seconds.', style: ScText.sub()),
+          Text(context.l10n.joinInSeconds, style: ScText.sub()),
           const SizedBox(height: 24),
           ScInput(
-              label: 'Name',
-              placeholder: 'e.g. Alex Morgan',
+              label: context.l10n.name,
+              placeholder: context.l10n.nameExample,
               leadingIcon: FeatherIcons.user,
               controller: nameCtrl),
           const SizedBox(height: 16),
           ScInput(
-              label: 'Email',
-              placeholder: 'name@example.com',
+              label: context.l10n.email,
+              placeholder: context.l10n.emailExample,
               trailingIcon: FeatherIcons.mail,
               keyboardType: TextInputType.emailAddress,
               controller: emailCtrl),
           const SizedBox(height: 16),
           ScPhoneField(
-            label: 'Phone',
+            label: context.l10n.phone,
             initialCountryCode: phoneCountry,
             initialDigits: phoneDigits,
             onChanged: (code, d) {
@@ -301,27 +302,27 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
           ),
           const SizedBox(height: 16),
           ScInput(
-              label: 'Password',
+              label: context.l10n.password,
               placeholder: '••••••••',
               obscure: true,
               controller: passCtrl),
           const SizedBox(height: 16),
           ScInput(
-              label: 'Repeat password',
+              label: context.l10n.repeatPassword,
               placeholder: '••••••••',
               obscure: true,
               controller: pass2Ctrl),
           const Spacer(),
           const SizedBox(height: 26),
           ScButton(
-              label: busy ? 'Creating account…' : 'Register',
+              label: busy ? context.l10n.creatingAccount : context.l10n.register,
               rightIcon: busy ? null : FeatherIcons.arrowRight,
               onPressed: busy ? null : _register),
           const SizedBox(height: 16),
           Center(
             child: Text.rich(
               TextSpan(
-                text: 'Already have an account? ',
+                text: context.l10n.alreadyHaveAccount,
                 style: ScText.sans(
                     size: 14,
                     weight: FontWeight.w500,
@@ -330,7 +331,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
                   WidgetSpan(
                     child: GestureDetector(
                       onTap: () => _go(_Step.login),
-                      child: Text('Login',
+                      child: Text(context.l10n.login,
                           style: ScText.sans(
                               size: 14,
                               weight: FontWeight.w800,
@@ -356,32 +357,32 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
           Center(child: Image.asset('assets/images/logo.png', height: 96)),
           const SizedBox(height: 16),
           Center(
-            child: Text("Someone always knows you're safe.",
+            child: Text(context.l10n.loginTagline,
                 style: ScText.sub(), textAlign: TextAlign.center),
           ),
           const SizedBox(height: 22),
           ScInput(
-              label: 'Email',
-              placeholder: 'name@example.com',
+              label: context.l10n.email,
+              placeholder: context.l10n.emailExample,
               trailingIcon: FeatherIcons.mail,
               keyboardType: TextInputType.emailAddress,
               controller: emailCtrl),
           const SizedBox(height: 14),
           ScInput(
-              label: 'Password',
+              label: context.l10n.password,
               placeholder: '••••••••',
               obscure: true,
               controller: passCtrl),
           Align(
             alignment: Alignment.centerRight,
             child: ScButton(
-                label: 'Forgot?',
+                label: context.l10n.forgotPassword,
                 variant: ScButtonVariant.link,
                 fullWidth: false,
                 onPressed: () => _go(_Step.recover)),
           ),
           ScButton(
-              label: busy ? 'Logging in…' : 'Login',
+              label: busy ? context.l10n.loggingIn : context.l10n.login,
               rightIcon: busy ? null : FeatherIcons.arrowRight,
               onPressed: busy ? null : _login),
           if (_kSocialLogin) ...[
@@ -392,7 +393,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
                   child: Divider(color: ScColors.borderDefault, height: 1)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Text('Or, login with...',
+                child: Text(context.l10n.orLoginWith,
                     style: ScText.sans(
                         size: 12,
                         weight: FontWeight.w600,
@@ -417,7 +418,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
           Center(
             child: Text.rich(
               TextSpan(
-                text: "Don't have an account? ",
+                text: context.l10n.noAccountYet,
                 style: ScText.sans(
                     size: 14,
                     weight: FontWeight.w500,
@@ -426,7 +427,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
                   WidgetSpan(
                     child: GestureDetector(
                       onTap: () => _go(_Step.create),
-                      child: Text('Register!',
+                      child: Text(context.l10n.registerExclaim,
                           style: ScText.sans(
                               size: 14,
                               weight: FontWeight.w800,
@@ -444,7 +445,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
 
   Widget _socialButton(String label, String glyph) {
     return ScPressable(
-      onTap: () => showScToast(context, 'Social login coming soon.'),
+      onTap: () => showScToast(context, context.l10n.socialLoginSoon),
       pressedScale: .98,
       child: Container(
         height: 56,
@@ -482,23 +483,23 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
             child: const Icon(FeatherIcons.lock, size: 28, color: ScColors.brand),
           ),
           const SizedBox(height: 20),
-          Text('Recover password', style: ScText.headline()),
+          Text(context.l10n.recoverPassword, style: ScText.headline()),
           const SizedBox(height: 10),
           Text(
-            "Enter the email linked to your account and we'll send you a secure link to reset your password.",
+            context.l10n.recoverPasswordHint,
             style: ScText.sub(),
           ),
           const SizedBox(height: 24),
           ScInput(
-              label: 'Email',
-              placeholder: 'name@example.com',
+              label: context.l10n.email,
+              placeholder: context.l10n.emailExample,
               trailingIcon: FeatherIcons.mail,
               keyboardType: TextInputType.emailAddress,
               controller: emailCtrl),
           const Spacer(),
           const SizedBox(height: 26),
           ScButton(
-              label: busy ? 'Sending…' : 'Recover password',
+              label: busy ? context.l10n.sending : context.l10n.recoverPassword,
               rightIcon: busy ? null : FeatherIcons.send,
               onPressed: busy ? null : _recover),
         ],
@@ -562,7 +563,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
               stepDot(isPanic),
             ]),
             const SizedBox(height: 6),
-            Text('STEP ${isPanic ? 2 : 1} OF 2', style: ScText.micro()),
+            Text(context.l10n.stepOf(isPanic ? 2 : 1, 2), style: ScText.micro()),
             const SizedBox(height: 10),
             Container(
               width: 40,
@@ -574,7 +575,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
                   size: 20, color: ScColors.brand),
             ),
             const SizedBox(height: 8),
-            Text(isPanic ? 'Set your panic PIN' : 'Set your safety PIN',
+            Text(isPanic ? context.l10n.setPanicPin : context.l10n.setSafetyPin,
                 textAlign: TextAlign.center,
                 style: ScText.sans(
                     size: 22,
@@ -587,8 +588,8 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
               width: 320,
               child: Text(
                 isPanic
-                    ? "If you're forced to open the app, enter this PIN. The screen looks normal, but your circle is silently alerted."
-                    : "Use this PIN to confirm you're safe during check-ins.",
+                    ? context.l10n.panicPinHint
+                    : context.l10n.safetyPinHint,
                 textAlign: TextAlign.center,
                 style: ScText.sans(
                     size: 13,
@@ -612,7 +613,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
                         const SizedBox(width: 6),
                         Flexible(
                           child: Text(
-                              'That matches your safety PIN. Choose a different code.',
+                              context.l10n.panicPinMatchesSafety,
                               style: ScText.sans(
                                   size: 12.5,
                                   weight: FontWeight.w700,
@@ -620,7 +621,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
                                   height: 17)),
                         ),
                       ])
-                    : Text('Must be different from your safety PIN.',
+                    : Text(context.l10n.panicPinMustDiffer,
                         textAlign: TextAlign.center,
                         style: ScText.sans(
                             size: 12.5,
@@ -629,7 +630,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
                             height: 17)),
               ),
             ScButton(
-              label: isPanic ? (busy ? 'Saving…' : 'Finish') : 'Continue',
+              label: isPanic ? (busy ? context.l10n.saving : context.l10n.finish) : context.l10n.continueLabel,
               rightIcon: isPanic ? null : FeatherIcons.arrowRight,
               onPressed: pin.length == 4 && !busy
                   ? (isPanic ? _finishPanic : () => _go(_Step.pinPanic))
@@ -647,14 +648,14 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('GETTING STARTED',
+          Text(context.l10n.gettingStarted,
               style: ScText.sans(
                   size: 12,
                   weight: FontWeight.w700,
                   color: ScColors.brand,
                   spacing: .9)),
           const SizedBox(height: 8),
-          Text('Create your first Circle',
+          Text(context.l10n.createFirstCircle,
               style: ScText.sans(
                   size: 28,
                   weight: FontWeight.w800,
@@ -664,7 +665,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
           const SizedBox(height: 10),
           Text.rich(
             TextSpan(
-              text: 'Tap ',
+              text: context.l10n.tapPrefix,
               style: ScText.sans(
                   size: 15,
                   weight: FontWeight.w500,
@@ -672,19 +673,17 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
                   height: 23),
               children: [
                 TextSpan(
-                    text: 'Circles',
+                    text: context.l10n.tabCircles,
                     style: ScText.sans(
                         size: 15, weight: FontWeight.w800, color: ScColors.brand)),
-                const TextSpan(
-                    text:
-                        " in the bottom bar, give it a name, and add the people you trust. They'll get an invite to follow your journeys."),
+                TextSpan(text: context.l10n.createFirstCircleHint),
               ],
             ),
           ),
           const Spacer(),
           const SizedBox(height: 26),
           ScButton(
-              label: 'Next',
+              label: context.l10n.next,
               rightIcon: FeatherIcons.arrowRight,
               onPressed: () => _go(_Step.done)),
         ],
@@ -710,7 +709,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
             ),
           ),
           const SizedBox(height: 26),
-          Text("You're all set!",
+          Text(context.l10n.allSet,
               textAlign: TextAlign.center,
               style: ScText.sans(
                   size: 30,
@@ -723,14 +722,14 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
             child: SizedBox(
               width: 280,
               child: Text(
-                'Your SafeCircle is ready. Plan your first journey whenever you head out.',
+                context.l10n.allSetHint,
                 textAlign: TextAlign.center,
                 style: ScText.sub(),
               ),
             ),
           ),
           const SizedBox(height: 32),
-          ScButton(label: 'Enter SafeCircle', onPressed: _enterApp),
+          ScButton(label: context.l10n.enterSafeCircle, onPressed: _enterApp),
         ],
       ),
     );

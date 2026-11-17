@@ -12,6 +12,7 @@ import 'package:safecircle/features/places/application/place_service.dart';
 import 'package:safecircle/features/places/data/place_repository.dart';
 import 'package:safecircle/features/places/presentation/place_icons.dart';
 import 'package:safecircle/features/places/presentation/place_sheet.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class PlacesScreen extends ConsumerWidget {
   const PlacesScreen({super.key, required this.circle});
@@ -34,7 +35,7 @@ class PlacesScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Places',
+                  Text(context.l10n.places,
                       style: ScText.sans(
                           size: 26,
                           weight: FontWeight.w800,
@@ -42,7 +43,7 @@ class PlacesScreen extends ConsumerWidget {
                           spacing: -.6)),
                   const SizedBox(height: 6),
                   Text(
-                    'Your circle gets an alert when someone arrives at or leaves these places.',
+                    context.l10n.placesHint,
                     style: ScText.sans(
                         size: 14, weight: FontWeight.w500, color: ScColors.textSecondary, height: 20),
                   ),
@@ -60,7 +61,7 @@ class PlacesScreen extends ConsumerWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(28),
                         child: Text(
-                          'No places yet. Add home, school or work and the circle is told when someone gets there.',
+                          context.l10n.noPlacesYet,
                           textAlign: TextAlign.center,
                           style: ScText.sans(
                               size: 14,
@@ -87,7 +88,7 @@ class PlacesScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
               child: ScButton(
-                label: 'Add Place',
+                label: context.l10n.addPlace,
                 leftIcon: FeatherIcons.plus,
                 onPressed: circle == null
                     ? null
@@ -156,7 +157,7 @@ class _PlaceCard extends ConsumerWidget {
                           style: ScText.sans(size: 16, weight: FontWeight.w800)),
                       const SizedBox(height: 2),
                       Text(
-                          '${place.address.isEmpty ? 'Saved location' : place.address} · ${scFeet(place.radiusM)}',
+                          '${place.address.isEmpty ? context.l10n.savedLocation : place.address} · ${scFeet(place.radiusM)}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: ScText.sans(
@@ -172,7 +173,7 @@ class _PlaceCard extends ConsumerWidget {
                       await ref.read(placeServiceProvider).setEnabled(place, circle, v);
                     } catch (e) {
                       debugPrint('[SafeCircle] toggle place: $e');
-                      if (context.mounted) showScToast(context, 'Could not update the place.');
+                      if (context.mounted) showScToast(context, context.l10n.couldNotUpdatePlace);
                     }
                   },
                 ),

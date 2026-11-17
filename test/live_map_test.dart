@@ -166,6 +166,24 @@ void main() {
       expect(container.read(liveSharingProvider), isFalse, reason: 'a pause I chose is respected');
     });
 
+    test('the panic PIN only pretends to pause: the circle still sees you', () async {
+      final fake = _FakeSharing();
+      final container = ProviderContainer(overrides: [locationSharingProvider.overrideWithValue(fake)]);
+      addTearDown(container.dispose);
+      final sharing = container.read(liveSharingProvider.notifier);
+      await sharing.resume();
+
+      sharing.pauseUnderDuress();
+      expect(container.read(liveSharingProvider), isFalse, reason: 'looks paused on this phone');
+      expect(sharing.paused, isTrue);
+      expect(fake.isRunning, isTrue, reason: 'location keeps going to the circle');
+      expect(fake.paused, isFalse);
+
+      expect(await sharing.resume(), isTrue);
+      expect(container.read(liveSharingProvider), isTrue);
+      expect(sharing.paused, isFalse);
+    });
+
     test('resuming reports when location is off on the phone', () async {
       final container = ProviderContainer(
           overrides: [locationSharingProvider.overrideWithValue(_FakeSharing(locationOn: false))]);

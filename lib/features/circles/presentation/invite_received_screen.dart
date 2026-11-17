@@ -8,6 +8,7 @@ import 'package:safecircle/core/widgets/sc_bottom_nav.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/circles/data/circle_repository.dart';
 import 'package:safecircle/features/circles/domain/circle_invite.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class InviteReceivedScreen extends ConsumerStatefulWidget {
   const InviteReceivedScreen({super.key, required this.invite});
@@ -33,9 +34,8 @@ class _InviteReceivedScreenState extends ConsumerState<InviteReceivedScreen> {
         showScToast(
             context,
             e.toString().contains('permission-denied')
-                ? "Couldn't join: the app doesn't have access to this circle yet. "
-                    'Ask ${widget.invite.senderFirstName} to send the invite again.'
-                : 'Could not accept the invite. Try again.');
+                ? context.l10n.couldNotJoinNoAccess(widget.invite.senderFirstName)
+                : context.l10n.couldNotAcceptInvite);
         setState(() => _busy = false);
       }
     }
@@ -83,11 +83,11 @@ class _InviteReceivedScreenState extends ConsumerState<InviteReceivedScreen> {
                 ),
               ),
               const SizedBox(height: 22),
-              Text('CIRCLE INVITE',
+              Text(context.l10n.circleInviteEyebrow,
                   textAlign: TextAlign.center,
                   style: ScText.sans(size: 12, weight: FontWeight.w700, color: ScColors.brand, spacing: .9)),
               const SizedBox(height: 10),
-              Text('$fromFirst added you to the circle ${invite.circleName} on SafeCircle.',
+              Text(context.l10n.addedYouToCircle(fromFirst, invite.circleName),
                   textAlign: TextAlign.center,
                   style: ScText.sans(
                       size: 26,
@@ -97,19 +97,19 @@ class _InviteReceivedScreenState extends ConsumerState<InviteReceivedScreen> {
                       spacing: -0.5)),
               const SizedBox(height: 14),
               Text(
-                "Join and $fromFirst will be able to invite you to follow their journeys and get alerted if they're ever overdue. You can leave the circle at any time.",
+                context.l10n.joinHint(fromFirst),
                 textAlign: TextAlign.center,
                 style: ScText.sans(size: 14.5, weight: FontWeight.w500, color: ScColors.textSubtle, height: 22),
               ),
               const SizedBox(height: 34),
               ScButton(
-                label: _busy ? 'Joining…' : 'Accept',
+                label: _busy ? context.l10n.joining : context.l10n.accept,
                 leftIcon: _busy ? null : FeatherIcons.check,
                 onPressed: _busy ? null : _accept,
               ),
               const SizedBox(height: 12),
               ScButton(
-                label: 'Decline',
+                label: context.l10n.decline,
                 variant: ScButtonVariant.ghost,
                 onPressed: _busy ? null : _decline,
               ),

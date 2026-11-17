@@ -23,6 +23,7 @@ import 'package:safecircle/features/live_map/presentation/widgets/map_top_bar.da
 import 'package:safecircle/features/live_map/presentation/widgets/member_card.dart';
 import 'package:safecircle/features/live_map/presentation/widgets/safety_strip_view.dart';
 import 'package:safecircle/features/places/data/place_repository.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class MapHomeScreen extends ConsumerStatefulWidget {
   const MapHomeScreen({super.key, this.onGoCircles, this.onToggleHome});
@@ -266,8 +267,8 @@ class _MapHomeScreenState extends ConsumerState<MapHomeScreen> with TickerProvid
     showScToast(
         context,
         running
-            ? 'Sharing your live location with your circles.'
-            : 'Location is off — enable it to share your position.');
+            ? context.l10n.sharingWithCircles
+            : context.l10n.locationOffEnable);
   }
 
   Widget _buildSheet(List<MemberStatus> members, List<Circle> circles, String me, DateTime now) {
@@ -295,7 +296,7 @@ class _MapHomeScreenState extends ConsumerState<MapHomeScreen> with TickerProvid
                     if (mine >= 0) {
                       _focusOn(mine, members);
                     } else {
-                      showScToast(context, 'Your position is not being shared yet.');
+                      showScToast(context, context.l10n.positionNotShared);
                     }
                   },
                 ),

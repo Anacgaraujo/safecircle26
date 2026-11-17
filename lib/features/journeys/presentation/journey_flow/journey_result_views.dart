@@ -4,6 +4,7 @@ import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/widgets/feather_icons.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/journeys/domain/journey.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class CheckInConfirmedView extends StatelessWidget {
   const CheckInConfirmedView({
@@ -28,8 +29,8 @@ class CheckInConfirmedView extends StatelessWidget {
       }
     }
     final sub = next != null
-        ? 'Your circle has been notified. Next check-in at ${next.time}.'
-        : "You're all checked in for this journey. Have a safe trip.";
+        ? context.l10n.circleNotifiedNextAt(next.timeText)
+        : context.l10n.allCheckedIn;
     final confirmed = activeIndex != null ? checkIns[activeIndex] : null;
     final place = confirmed?.place ?? '';
 
@@ -61,7 +62,7 @@ class CheckInConfirmedView extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 26),
-          Text('Check-in confirmed!',
+          Text(context.l10n.checkInConfirmed,
               textAlign: TextAlign.center,
               style: ScText.sans(size: 28, weight: FontWeight.w800, color: ScColors.textHeading, spacing: -0.5)),
           const SizedBox(height: 12),
@@ -95,7 +96,7 @@ class CheckInConfirmedView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Location shared',
+                        Text(context.l10n.locationShared,
                             style: ScText.sans(size: 12.5, weight: FontWeight.w700, color: ScColors.textMuted)),
                         const SizedBox(height: 1),
                         Text(place,
@@ -108,7 +109,7 @@ class CheckInConfirmedView extends StatelessWidget {
             ),
           ],
           const SizedBox(height: 32),
-          ScButton(label: 'Back to journey', onPressed: onBack),
+          ScButton(label: context.l10n.backToJourney, onPressed: onBack),
         ],
       ),
     );
@@ -147,7 +148,7 @@ class JourneyFinishedView extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 26),
-          Text('Journey finished',
+          Text(context.l10n.journeyFinished,
               textAlign: TextAlign.center,
               style: ScText.sans(size: 30, weight: FontWeight.w800, color: ScColors.textHeading, spacing: -0.5)),
           const SizedBox(height: 12),
@@ -155,7 +156,7 @@ class JourneyFinishedView extends StatelessWidget {
             child: SizedBox(
               width: 290,
               child: Text(
-                "You're safe and your circle has been notified that you've arrived.",
+                context.l10n.journeyFinishedHint,
                 textAlign: TextAlign.center,
                 style: ScText.sans(size: 15.5, weight: FontWeight.w500, color: ScColors.textSubtle, height: 23),
               ),
@@ -163,7 +164,7 @@ class JourneyFinishedView extends StatelessWidget {
           ),
           const SizedBox(height: 38),
           ScButton(
-              label: 'Back home',
+              label: context.l10n.backHome,
               leftIcon: FeatherIcons.home,
               onPressed: () => Navigator.of(context).pop()),
         ],

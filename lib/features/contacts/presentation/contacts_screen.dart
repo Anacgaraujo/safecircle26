@@ -8,6 +8,7 @@ import 'package:safecircle/core/widgets/person_row.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/contacts/data/contacts_repository.dart';
 import 'package:safecircle/features/contacts/presentation/add_contact_screen.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class EmergencyContactsScreen extends ConsumerWidget {
   const EmergencyContactsScreen({super.key});
@@ -30,7 +31,7 @@ class EmergencyContactsScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Emergency contacts',
+                  Text(context.l10n.emergencyContacts,
                       style: ScText.sans(
                           size: 28,
                           weight: FontWeight.w800,
@@ -39,7 +40,7 @@ class EmergencyContactsScreen extends ConsumerWidget {
                           spacing: -0.6)),
                   const SizedBox(height: 8),
                   Text(
-                    'On any alert they are notified in the app (if they use SafeCircle) and you get one-tap buttons to call or text them your location.',
+                    context.l10n.emergencyContactsHint,
                     style: ScText.sub(),
                   ),
                 ],
@@ -59,7 +60,7 @@ class EmergencyContactsScreen extends ConsumerWidget {
                     const Icon(FeatherIcons.alertCircle, size: 20, color: ScColors.brand),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text('Add at least 2 emergency contacts to start a journey.',
+                      child: Text(context.l10n.addTwoContacts,
                           style: ScText.sans(
                               size: 13.5,
                               weight: FontWeight.w600,
@@ -72,7 +73,7 @@ class EmergencyContactsScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(26, 22, 26, 12),
               child: ScSectionLabel(
-                'Always alerted · $count ${count == 1 ? 'contact' : 'contacts'}',
+                context.l10n.alwaysAlerted(count),
                 icon: FeatherIcons.shield,
               ),
             ),
@@ -91,9 +92,9 @@ class EmergencyContactsScreen extends ConsumerWidget {
                         onDelete: () async {
                           final ok = await showScConfirm(
                             context,
-                            title: 'Remove ${c.name}?',
-                            body: 'They will no longer be alerted when you send an SOS.',
-                            confirmLabel: 'Remove contact',
+                            title: context.l10n.removePersonQuestion(c.name),
+                            body: context.l10n.removeContactBody,
+                            confirmLabel: context.l10n.removeContact,
                           );
                           if (ok) await ref.read(contactsRepositoryProvider).deleteContact(c.id!);
                         },
@@ -107,7 +108,7 @@ class EmergencyContactsScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(26, 8, 26, 20),
               child: ScButton(
-                label: 'Add emergency contact',
+                label: context.l10n.addEmergencyContact,
                 leftIcon: FeatherIcons.userPlus,
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => const AddContactScreen()),

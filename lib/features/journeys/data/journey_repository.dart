@@ -62,7 +62,8 @@ class JourneyRepository extends FirestoreRepository {
         'lastLng': location.lng,
         'lastPlace': location.label,
       },
-      'lastSeen': 'Last seen ${scClock(now)}',
+      'lastSeen': 'Last seen ${scClockEn(now)}',
+      'lastSeenAt': Timestamp.fromDate(now),
       'startedAt': FieldValue.serverTimestamp(),
     });
     return ref.id;
@@ -82,7 +83,8 @@ class JourneyRepository extends FirestoreRepository {
         'lastLng': location.lng,
         'lastPlace': location.label,
       },
-      'lastSeen': 'Last seen ${scClock(DateTime.now())}',
+      'lastSeen': 'Last seen ${scClockEn(DateTime.now())}',
+      'lastSeenAt': Timestamp.now(),
     });
     if (panic) await alerts.fireAlert(type: 'panic', location: location);
     await alerts.resolveMyAlerts(types: const {'overdue'});
@@ -109,7 +111,8 @@ class JourneyRepository extends FirestoreRepository {
         'lastLat': loc.lat,
         'lastLng': loc.lng,
         'lastPlace': loc.label,
-        'lastSeen': 'Last seen ${scClock(DateTime.now())}',
+        'lastSeen': 'Last seen ${scClockEn(DateTime.now())}',
+        'lastSeenAt': Timestamp.now(),
       });
 
   Future<void> raiseOverdueOnJourney(Journey j, CheckIn missed, {ScLocation? location}) async {

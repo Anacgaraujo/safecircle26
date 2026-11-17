@@ -14,6 +14,7 @@ import 'package:safecircle/features/circles/domain/circle.dart';
 import 'package:safecircle/features/live_map/domain/tracking.dart';
 import 'package:safecircle/features/places/application/place_service.dart';
 import 'package:safecircle/features/places/presentation/place_icons.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class PlaceSheet extends ConsumerStatefulWidget {
   const PlaceSheet({super.key, required this.circle, this.existing});
@@ -65,15 +66,15 @@ class _PlaceSheetState extends ConsumerState<PlaceSheet> {
 
   Future<void> _save() async {
     if (!_arrive && !_leave) {
-      showScToast(context, 'Pick at least one alert.');
+      showScToast(context, context.l10n.pickOneAlert);
       return;
     }
     if (_lat == null || _lng == null) {
-      showScToast(context, 'Waiting for a location — try again in a moment.');
+      showScToast(context, context.l10n.waitingForLocation);
       return;
     }
     setState(() => _busy = true);
-    final name = _name.text.trim().isEmpty ? 'New place' : _name.text.trim();
+    final name = _name.text.trim().isEmpty ? context.l10n.newPlace : _name.text.trim();
     final place = widget.existing ??
         Place(circleId: widget.circle.id ?? '', name: name, lat: _lat!, lng: _lng!);
     place
@@ -89,12 +90,12 @@ class _PlaceSheetState extends ConsumerState<PlaceSheet> {
       await ref.read(placeServiceProvider).save(place, widget.circle);
       if (!mounted) return;
       Navigator.of(context).pop();
-      showScToast(context, '$name added · circle will be alerted');
+      showScToast(context, context.l10n.placeAdded(name));
     } catch (e) {
       debugPrint('[SafeCircle] savePlace: $e');
       if (mounted) {
         setState(() => _busy = false);
-        showScToast(context, 'Could not save the place. Try again.');
+        showScToast(context, context.l10n.couldNotSavePlace);
       }
     }
   }
@@ -104,9 +105,9 @@ class _PlaceSheetState extends ConsumerState<PlaceSheet> {
     if (id == null) return;
     final ok = await showScConfirm(
       context,
-      title: 'Delete ${widget.existing!.name}?',
-      body: 'Your circle will no longer be alerted about arrivals and departures here.',
-      confirmLabel: 'Delete place',
+      title: context.l10n.deleteNamedQuestion(widget.existing!.name),
+      body: context.l10n.deletePlaceBody,
+      confirmLabel: context.l10n.deletePlace,
     );
     if (!ok || !mounted) return;
     setState(() => _busy = true);
@@ -138,12 +139,12 @@ class _PlaceSheetState extends ConsumerState<PlaceSheet> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text(widget.existing == null ? 'New place' : 'Edit place',
+              Text(widget.existing == null ? context.l10n.newPlace : context.l10n.editPlace,
                   style: ScText.sans(size: 20, weight: FontWeight.w800)),
               const SizedBox(height: 14),
               ScInput(
-                label: 'Name',
-                placeholder: "e.g. Gym, Grandma's house",
+                label: context.l10n.name,
+                placeholder: context.l10n.placeNameExample,
                 controller: _name,
                 leadingIcon: FeatherIcons.mapPin,
               ),
@@ -182,7 +183,7 @@ class _PlaceSheetState extends ConsumerState<PlaceSheet> {
                       ? Container(
                           color: ScColors.surfaceSunken,
                           alignment: Alignment.center,
-                          child: Text(_locating ? 'Getting your location…' : 'No location yet',
+                          child: Text(_locating ? context.l10n.gettingLocation : context.l10n.noLocationYet,
                               style: ScText.sans(
                                   size: 13, weight: FontWeight.w600, color: ScColors.textMuted)),
                         )
@@ -226,7 +227,7 @@ class _PlaceSheetState extends ConsumerState<PlaceSheet> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: ScButton(
-                  label: 'Use my current location',
+                  label: context.l10n.useCurrentLocation,
                   variant: ScButtonVariant.link,
                   fullWidth: false,
                   onPressed: _useCurrentLocation,
@@ -235,7 +236,7 @@ class _PlaceSheetState extends ConsumerState<PlaceSheet> {
               const SizedBox(height: 4),
               Row(
                 children: [
-                  Text('ALERT RADIUS',
+                  Text(context.l10n.alertRadius,
                       style: ScText.sans(
                           size: 11,
                           weight: FontWeight.w700,
@@ -259,7 +260,7 @@ class _PlaceSheetState extends ConsumerState<PlaceSheet> {
                 children: [
                   Expanded(
                     child: _RuleToggle(
-                      label: 'Arrives',
+                      label: context.l10n.arrives,
                       icon: FeatherIcons.logIn,
                       on: _arrive,
                       onTap: () => setState(() => _arrive = !_arrive),
@@ -268,7 +269,7 @@ class _PlaceSheetState extends ConsumerState<PlaceSheet> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: _RuleToggle(
-                      label: 'Leaves',
+                      label: context.l10n.leaves,
                       icon: FeatherIcons.logOut,
                       on: _leave,
                       onTap: () => setState(() => _leave = !_leave),
@@ -277,12 +278,12 @@ class _PlaceSheetState extends ConsumerState<PlaceSheet> {
                 ],
               ),
               const SizedBox(height: 16),
-              ScButton(label: 'Save Place', onPressed: _busy ? null : _save),
+              ScButton(label: context.l10n.savePlace, onPressed: _busy ? null : _save),
               if (widget.existing != null) ...[
                 const SizedBox(height: 6),
                 Center(
                   child: ScButton(
-                    label: 'Delete place',
+                    label: context.l10n.deletePlace,
                     variant: ScButtonVariant.link,
                     fullWidth: false,
                     onPressed: _busy ? null : _delete,

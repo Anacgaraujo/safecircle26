@@ -25,6 +25,7 @@ import 'package:safecircle/features/journeys/presentation/journey_flow/pick_circ
 import 'package:safecircle/features/journeys/presentation/journey_flow/plan_timing_step.dart';
 import 'package:safecircle/features/journeys/presentation/journey_history_view.dart';
 import 'package:safecircle/features/live_map/data/tracking_service.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class JourneyFlow extends ConsumerStatefulWidget {
   const JourneyFlow({super.key, this.startAtHistory = false});
@@ -113,7 +114,7 @@ class _JourneyFlowState extends ConsumerState<JourneyFlow> {
     if (starting) return;
     final past = firstPastCheckIn(checkIns, DateTime.now());
     if (past != null) {
-      showScToast(context, '"${past.label}" is already in the past — adjust its time.');
+      showScToast(context, context.l10n.checkInInPast(past.label));
       return;
     }
     if (!await ensureJourneyPermissions(context)) return;
@@ -125,7 +126,7 @@ class _JourneyFlowState extends ConsumerState<JourneyFlow> {
           await _service.start(circle: circle, checkIns: checkIns, note: noteCtrl.text.trim());
       if (!mounted) return;
       if (started.location == null) {
-        showScToast(context, 'Location unavailable — journey starts without a map position.');
+        showScToast(context, context.l10n.journeyStartsWithoutLocation);
       }
       setState(() {
         journeyId = started.id;
@@ -138,7 +139,7 @@ class _JourneyFlowState extends ConsumerState<JourneyFlow> {
       });
     } catch (_) {
       if (mounted) {
-        showScToast(context, 'Could not start the journey. Try again.');
+        showScToast(context, context.l10n.couldNotStartJourney);
         setState(() => starting = false);
       }
     }
@@ -304,7 +305,7 @@ class _JourneyFlowState extends ConsumerState<JourneyFlow> {
               active: ScTab.circles,
               onTab: _leaveToTab,
               onFab: () {},
-              coachmark: 'Create your first circle',
+              coachmark: context.l10n.createYourFirstCircle,
               mapHome: ref.read(sessionProvider).mapHome,
             )
           : null,

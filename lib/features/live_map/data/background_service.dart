@@ -11,6 +11,7 @@ import 'package:safecircle/core/data/repositories.dart';
 import 'package:safecircle/features/journeys/data/journey_monitor.dart';
 import 'package:safecircle/core/notifications/notification_service.dart';
 import 'package:safecircle/features/live_map/data/tracking_service.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 bool get backgroundServiceSupported =>
     !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
@@ -25,8 +26,8 @@ class BackgroundLocationService {
     if (!backgroundServiceSupported) return;
     await NotificationService.instance.createServiceChannel(
       _serviceChannelId,
-      'Location sharing',
-      'Shown while SafeCircle shares your location with your circle.',
+      appL10n.locationSharingChannel,
+      appL10n.locationSharingChannelDescription,
     );
     await FlutterBackgroundService().configure(
       androidConfiguration: AndroidConfiguration(
@@ -35,8 +36,8 @@ class BackgroundLocationService {
         autoStartOnBoot: false,
         isForegroundMode: true,
         notificationChannelId: _serviceChannelId,
-        initialNotificationTitle: 'SafeCircle is sharing your location',
-        initialNotificationContent: 'Your circle can see where you are.',
+        initialNotificationTitle: appL10n.sharingNotificationTitle,
+        initialNotificationContent: appL10n.sharingNotificationBody,
         foregroundServiceNotificationId: _serviceNotificationId,
         foregroundServiceTypes: [AndroidForegroundType.location],
       ),

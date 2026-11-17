@@ -4,6 +4,7 @@ import 'package:safecircle/core/widgets/feather_icons.dart';
 import 'package:safecircle/core/platform/local_image.dart';
 
 import 'package:safecircle/core/theme/sc_theme.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 enum ScButtonVariant { primary, secondary, ghost, danger, ink, link }
 
@@ -439,7 +440,7 @@ class PinKeypad extends StatelessWidget {
           _key('0'),
           Semantics(
             button: true,
-            label: 'Delete',
+            label: context.l10n.delete,
             child: ScPressable(
               onTap: onDelete,
               pressedScale: .92,
@@ -505,7 +506,7 @@ Future<bool> showScConfirm(
             ),
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: Text('Cancel',
+              child: Text(context.l10n.cancel,
                   style: ScText.sans(size: 14, weight: FontWeight.w700, color: ScColors.textMuted)),
             ),
           ],
@@ -558,8 +559,8 @@ void showScToast(BuildContext context, String message) {
 }
 
 class ScBackButton extends StatelessWidget {
-  const ScBackButton({super.key, this.label = 'Back', this.onTap});
-  final String label;
+  const ScBackButton({super.key, this.label, this.onTap});
+  final String? label;
   final VoidCallback? onTap;
 
   @override
@@ -569,7 +570,7 @@ class ScBackButton extends StatelessWidget {
       child: TextButton.icon(
         onPressed: onTap ?? () => Navigator.of(context).maybePop(),
         icon: const Icon(FeatherIcons.arrowLeft, size: 20, color: ScColors.textSecondary),
-        label: Text(label, style: ScText.sans(size: 15, weight: FontWeight.w700, color: ScColors.textSecondary)),
+        label: Text(label ?? context.l10n.back, style: ScText.sans(size: 15, weight: FontWeight.w700, color: ScColors.textSecondary)),
         style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8)),
       ),
     );
@@ -636,7 +637,7 @@ class ScStreamError extends StatelessWidget {
         ? 'Firestore needs an index for this list (see firestore.indexes.json).'
         : denied
             ? 'Access denied by Firestore rules (publish firestore.rules).'
-            : 'Check your connection and try again.';
+            : context.l10n.checkConnection;
     return Center(
       child: Padding(
         padding: EdgeInsets.all(compact ? 16 : 32),
@@ -645,7 +646,7 @@ class ScStreamError extends StatelessWidget {
           children: [
             const Icon(FeatherIcons.alertCircle, size: 40, color: ScColors.red500),
             const SizedBox(height: 12),
-            Text("Couldn't load this",
+            Text(context.l10n.couldNotLoadThis,
                 textAlign: TextAlign.center,
                 style: ScText.sans(size: 16, weight: FontWeight.w800, color: ScColors.textHeading)),
             const SizedBox(height: 6),

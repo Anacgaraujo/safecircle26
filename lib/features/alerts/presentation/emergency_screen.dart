@@ -10,6 +10,7 @@ import 'package:safecircle/features/alerts/data/alert_repository.dart';
 import 'package:safecircle/features/alerts/domain/safety_alert.dart';
 import 'package:safecircle/features/alerts/presentation/widgets/alert_sent_view.dart';
 import 'package:safecircle/features/alerts/presentation/widgets/sos_view.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class EmergencyScreen extends ConsumerStatefulWidget {
   const EmergencyScreen({super.key, this.holdSeconds = 1.5});
@@ -49,7 +50,7 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen>
       final a = open.first;
       setState(() {
         sent = true;
-        sentAt = a.timeLabel;
+        sentAt = a.timeText;
         reached = a.watcherCount;
         location = (a.lat != null && a.lng != null)
             ? ScLocation(lat: a.lat!, lng: a.lng!, label: a.location)
@@ -88,7 +89,7 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen>
       debugPrint('[SafeCircle] fireSos: $e');
       if (mounted) {
         setState(() => sent = false);
-        showScToast(context, 'Could not send the alert. Check your connection and try again.');
+        showScToast(context, context.l10n.couldNotSendAlert);
       }
     }
   }

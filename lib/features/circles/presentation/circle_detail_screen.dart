@@ -11,6 +11,7 @@ import 'package:safecircle/features/circles/data/circle_repository.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
 import 'package:safecircle/features/circles/presentation/add_participants_screen.dart';
 import 'package:safecircle/features/circles/presentation/circle_name_screen.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class CircleDetailScreen extends ConsumerStatefulWidget {
   const CircleDetailScreen({super.key, required this.circle});
@@ -31,10 +32,9 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
   Future<void> _delete(Circle circle) async {
     final ok = await showScConfirm(
       context,
-      title: 'Delete ${circle.name}?',
-      body: 'Everyone in this circle stops following your journeys and alerts. '
-          'This can’t be undone.',
-      confirmLabel: 'Delete circle',
+      title: context.l10n.deleteCircleQuestion(circle.name),
+      body: context.l10n.deleteCircleBody,
+      confirmLabel: context.l10n.deleteCircle,
     );
     if (!ok) return;
     if (circle.id != null) {
@@ -44,13 +44,12 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
   }
 
   Future<void> _leave(Circle circle) async {
-    final owner = circle.ownerName ?? 'the owner';
+    final owner = circle.ownerName ?? context.l10n.theOwner;
     final ok = await showScConfirm(
       context,
-      title: 'Leave ${circle.name}?',
-      body: "You'll stop following $owner's journeys and alerts, and this circle "
-          'stops seeing your location. $owner can invite you again.',
-      confirmLabel: 'Leave circle',
+      title: context.l10n.leaveCircleQuestion(circle.name),
+      body: context.l10n.leaveCircleBody(owner),
+      confirmLabel: context.l10n.leaveCircle,
       icon: FeatherIcons.logOut,
     );
     if (!ok) return;
@@ -60,7 +59,7 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
       }
       if (mounted) Navigator.of(context).pop();
     } catch (_) {
-      if (mounted) showScToast(context, 'Could not leave the circle. Try again.');
+      if (mounted) showScToast(context, context.l10n.couldNotLeaveCircle);
     }
   }
 
@@ -70,11 +69,11 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
     final phone = member.digits.isNotEmpty ? member.fullPhone : null;
     final ok = await showScConfirm(
       context,
-      title: 'Resend invitation to ${member.firstName}?',
+      title: context.l10n.resendInvitationQuestion(member.firstName),
       body: phone != null
-          ? "We'll text $phone again and remind them in the app."
-          : "We'll remind them in the app. Add a phone number to text them too.",
-      confirmLabel: 'Resend',
+          ? context.l10n.resendInvitationTextBody(phone)
+          : context.l10n.resendInvitationAppBody,
+      confirmLabel: context.l10n.resend,
       icon: FeatherIcons.send,
     );
     if (!ok || !mounted) return;
@@ -84,7 +83,7 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
       if (mounted) showScToast(context, result.message(member.firstName));
     } catch (e) {
       debugPrint('[SafeCircle] resendInvitation: $e');
-      if (mounted) showScToast(context, 'Could not resend the invitation. Try again.');
+      if (mounted) showScToast(context, context.l10n.couldNotResendInvitation);
     } finally {
       if (mounted) setState(() => _resending.remove(member));
     }
@@ -93,9 +92,9 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
   Future<void> _removeMember(Circle circle, Person member) async {
     final ok = await showScConfirm(
       context,
-      title: 'Remove ${member.name}?',
-      body: 'They will no longer follow your journeys or receive your alerts.',
-      confirmLabel: 'Remove',
+      title: context.l10n.removePersonQuestion(member.name),
+      body: context.l10n.removePersonBody,
+      confirmLabel: context.l10n.remove,
       icon: FeatherIcons.userMinus,
     );
     if (!ok || !mounted) return;
@@ -105,7 +104,7 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
       await removal;
     } catch (e) {
       debugPrint('[SafeCircle] removeMember: $e');
-      if (mounted) showScToast(context, 'Could not remove the participant. Try again.');
+      if (mounted) showScToast(context, context.l10n.couldNotRemoveParticipant);
     }
   }
 
@@ -133,7 +132,7 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
               padding: const EdgeInsets.fromLTRB(20, 6, 20, 0),
               child: Row(
                 children: [
-                  Expanded(child: ScBackButton(label: 'Circles')),
+                  Expanded(child: ScBackButton(label: context.l10n.tabCircles)),
                   if (isOwner) ...[
                     IconButton(
                       onPressed: () => _delete(circle),
@@ -180,7 +179,7 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
                                 spacing: -0.5)),
                         const SizedBox(height: 3),
                         Text(
-                            '${people.length} ${people.length == 1 ? 'participant' : 'participants'}',
+                            context.l10n.participantCount(people.length),
                             style: ScText.sans(size: 13, weight: FontWeight.w600, color: ScColors.textMuted)),
                       ],
                     ),
@@ -190,7 +189,7 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(26, 26, 26, 12),
-              child: const ScSectionLabel('Participants', icon: FeatherIcons.users),
+              child: ScSectionLabel(context.l10n.participants, icon: FeatherIcons.users),
             ),
             Expanded(
               child: ListView(
@@ -200,7 +199,7 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
                     PersonRow(
                       person: person,
                       subtitle: person.uid != null && person.uid == circle.ownerId
-                          ? 'Circle owner'
+                          ? context.l10n.circleOwner
                           : null,
                       onResend: canResend(person) && !_resending.contains(person)
                           ? () => _resend(circle, person)
@@ -218,7 +217,7 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
                 children: [
                   if (isOwner) ...[
                     ScButton(
-                      label: 'Add more participants',
+                      label: context.l10n.addMoreParticipants,
                       leftIcon: FeatherIcons.userPlus,
                       onPressed: () async {
                         await Navigator.of(context).push(
@@ -233,14 +232,14 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
                     TextButton.icon(
                       onPressed: () => _delete(circle),
                       icon: const Icon(FeatherIcons.trash2, size: 18, color: ScColors.red500),
-                      label: Text('Delete this circle',
+                      label: Text(context.l10n.deleteThisCircle,
                           style: ScText.sans(size: 15, weight: FontWeight.w700, color: ScColors.red500)),
                     ),
                   ] else
                     TextButton.icon(
                       onPressed: () => _leave(circle),
                       icon: const Icon(FeatherIcons.logOut, size: 18, color: ScColors.red500),
-                      label: Text('Leave this circle',
+                      label: Text(context.l10n.leaveThisCircle,
                           style: ScText.sans(size: 15, weight: FontWeight.w700, color: ScColors.red500)),
                     ),
                 ],

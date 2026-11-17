@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:safecircle/app/main_shell.dart';
@@ -8,6 +9,7 @@ import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/auth/data/auth_repository.dart';
 import 'package:safecircle/features/auth/data/session_loader.dart';
 import 'package:safecircle/features/auth/presentation/onboarding_screen.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class SafeCircleApp extends StatelessWidget {
   const SafeCircleApp({super.key});
@@ -15,8 +17,15 @@ class SafeCircleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SafeCircle',
+      onGenerateTitle: (context) => context.l10n.appTitle,
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: buildScTheme(),
       home: const AuthGate(),
     );
@@ -73,20 +82,20 @@ class _SessionError extends ConsumerWidget {
             children: [
               Image.asset('assets/images/logo.png', height: 64),
               const SizedBox(height: 28),
-              Text("We couldn't load your account",
+              Text(context.l10n.couldNotLoadAccount,
                   textAlign: TextAlign.center,
                   style: ScText.sans(
                       size: 20, weight: FontWeight.w800, color: ScColors.textHeading)),
               const SizedBox(height: 10),
-              Text('Check your internet connection and try again.',
+              Text(context.l10n.checkInternet,
                   textAlign: TextAlign.center,
                   style: ScText.sub()),
               const SizedBox(height: 32),
-              ScButton(label: 'Try again', onPressed: onRetry),
+              ScButton(label: context.l10n.tryAgain, onPressed: onRetry),
               const SizedBox(height: 8),
               Center(
                 child: ScButton(
-                  label: 'Log out',
+                  label: context.l10n.logOut,
                   variant: ScButtonVariant.link,
                   fullWidth: false,
                   onPressed: () => ref.read(authRepositoryProvider).logout(),

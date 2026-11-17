@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:safecircle/core/location/location_service.dart';
 import 'package:safecircle/core/permissions/permissions.dart';
+import 'package:safecircle/core/session/session.dart';
 import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/utils/actions.dart';
 import 'package:safecircle/core/widgets/feather_icons.dart';
+import 'package:safecircle/core/widgets/pin_prompt.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
+import 'package:safecircle/features/alerts/data/alert_repository.dart';
+import 'package:safecircle/features/journeys/domain/pin_check.dart';
 import 'package:safecircle/features/live_map/application/live_sharing.dart';
 import 'package:safecircle/features/live_map/domain/map_rules.dart';
 import 'package:safecircle/features/live_map/domain/tracking.dart';
 import 'package:safecircle/features/trips/presentation/trip_history_screen.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class MemberCard extends ConsumerWidget {
   const MemberCard({super.key, required this.status, required this.isMe, required this.now, this.phone});
@@ -42,7 +48,7 @@ class MemberCard extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(isMe ? 'You' : status.name,
+                    Text(isMe ? context.l10n.you : status.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: ScText.sans(
@@ -62,7 +68,7 @@ class MemberCard extends ConsumerWidget {
               const Icon(FeatherIcons.mapPin, size: 15, color: ScColors.brand),
               const SizedBox(width: 7),
               Expanded(
-                child: Text(status.place.isEmpty ? 'Locating…' : status.place,
+                child: Text(status.place.isEmpty ? context.l10n.locating : status.place,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: ScText.sans(size: 14.5, weight: FontWeight.w700)),
@@ -90,7 +96,7 @@ class MemberCard extends ConsumerWidget {
             pressedScale: .99,
             onTap: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => TripHistoryScreen(
-                    userId: status.uid, name: isMe ? 'You' : status.name))),
+                    userId: status.uid, name: isMe ? context.l10n.you : status.name))),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
@@ -100,7 +106,7 @@ class MemberCard extends ConsumerWidget {
                   const Icon(FeatherIcons.navigation, size: 15, color: ScColors.textSecondary),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text('Trip history · ${status.todayLabel}',
+                    child: Text(context.l10n.tripHistoryToday(status.todayLabel),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: ScText.sans(
@@ -116,11 +122,11 @@ class MemberCard extends ConsumerWidget {
             Builder(builder: (context) {
               final on = ref.watch(liveSharingProvider);
               return ScButton(
-                label: on ? 'Pause sharing' : 'Resume sharing',
+                label: on ? context.l10n.pauseSharing : context.l10n.resumeSharing,
                 variant: on ? ScButtonVariant.secondary : ScButtonVariant.primary,
                 height: 46,
                 leftIcon: on ? FeatherIcons.pause : FeatherIcons.play,
-                onPressed: () => _toggleSharing(context, ref.read(liveSharingProvider.notifier), on),
+                onPressed: () => _toggleSharing(context, ref, on),
               );
             })
           else
@@ -128,7 +134,7 @@ class MemberCard extends ConsumerWidget {
               children: [
                 Expanded(
                   child: ScButton(
-                    label: 'Call',
+                    label: context.l10n.call,
                     height: 46,
                     leftIcon: FeatherIcons.phoneCall,
                     onPressed: () => callPhone(context, phone),
@@ -137,7 +143,7 @@ class MemberCard extends ConsumerWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: ScButton(
-                    label: 'Message',
+                    label: context.l10n.message,
                     variant: ScButtonVariant.secondary,
                     height: 46,
                     leftIcon: FeatherIcons.messageCircle,
@@ -151,7 +157,8 @@ class MemberCard extends ConsumerWidget {
     );
   }
 
-  Future<void> _toggleSharing(BuildContext context, LiveSharing sharing, bool on) async {
+  Future<void> _toggleSharing(BuildContext context, WidgetRef ref, bool on) async {
+    final sharing = ref.read(liveSharingProvider.notifier);
     if (!on) {
       if (!await ensureLiveSharingPermissions(context)) return;
       final running = await sharing.resume();
@@ -159,22 +166,46 @@ class MemberCard extends ConsumerWidget {
         showScToast(
             context,
             running
-                ? 'Sharing your live location again.'
-                : 'Location is off on this phone — turn it on in Settings.');
+                ? context.l10n.sharingAgain
+                : context.l10n.locationOffOnPhone);
       }
       return;
     }
-    final ok = await showScConfirm(
-      context,
-      title: 'Pause location sharing?',
-      body: "Your circle won't see where you are until you resume. "
-          'Journeys, check-ins and SOS keep working.',
-      confirmLabel: 'Pause',
-      icon: FeatherIcons.pause,
-    );
-    if (!ok) return;
-    await sharing.pause();
-    if (context.mounted) showScToast(context, 'Location sharing paused.');
+    // Pausing needs a PIN, so nobody can quietly stop the circle from seeing
+    // where you are. The panic PIN looks the same here but keeps sharing and
+    // silently alerts the circle.
+    final session = ref.read(sessionProvider);
+    final hasPins = session.safetyPin.isNotEmpty || session.panicPin.isNotEmpty;
+    final PinResult? result;
+    if (hasPins) {
+      result = await askForPin(context,
+          title: context.l10n.pauseSharingQuestion,
+          body: '${context.l10n.pauseSharingBody} ${context.l10n.enterPinToPause}');
+    } else {
+      final ok = await showScConfirm(
+        context,
+        title: context.l10n.pauseSharingQuestion,
+        body: context.l10n.pauseSharingBody,
+        confirmLabel: context.l10n.pause,
+        icon: FeatherIcons.pause,
+      );
+      result = ok ? PinResult.safety : null;
+    }
+    if (result == null || result == PinResult.wrong) return;
+    if (result == PinResult.panic) {
+      sharing.pauseUnderDuress();
+      final alerts = ref.read(alertRepositoryProvider);
+      LocationService.instance
+          .getCurrent()
+          .then((loc) => alerts.fireAlert(type: 'panic', location: loc))
+          .catchError((Object e) {
+        debugPrint('[SafeCircle] duress alert: $e');
+        return 0;
+      });
+    } else {
+      await sharing.pause();
+    }
+    if (context.mounted) showScToast(context, context.l10n.sharingPaused);
   }
 }
 
@@ -243,10 +274,10 @@ class _BatteryBadge extends StatelessWidget {
         const SizedBox(height: 1),
         Text(
           status.charging
-              ? 'Charging'
+              ? context.l10n.charging
               : status.lowBattery
-                  ? 'Low battery'
-                  : 'Battery',
+                  ? context.l10n.lowBattery
+                  : context.l10n.battery,
           style: ScText.sans(size: 11, weight: FontWeight.w600, color: color),
         ),
       ],

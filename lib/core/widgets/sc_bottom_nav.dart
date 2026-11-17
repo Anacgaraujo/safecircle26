@@ -4,6 +4,7 @@ import 'package:safecircle/core/widgets/feather_icons.dart';
 
 import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class CirclesIcon extends StatelessWidget {
   const CirclesIcon({super.key, this.size = 24, this.color = ScColors.textMuted});
@@ -121,16 +122,16 @@ class ScBottomNav extends StatelessWidget {
             children: [
               Expanded(
                 child: Row(children: [
-                  _tab(context, ScTab.home, mapHome ? 'Map' : 'Journeys',
+                  _tab(context, ScTab.home, mapHome ? context.l10n.tabMap : context.l10n.tabJourneys,
                       mapHome ? FeatherIcons.map : FeatherIcons.list),
-                  _tab(context, ScTab.circles, 'Circles', null),
+                  _tab(context, ScTab.circles, context.l10n.tabCircles, null),
                 ]),
               ),
               const SizedBox(width: 72),
               Expanded(
                 child: Row(children: [
-                  _tab(context, ScTab.emergency, 'Emergency', FeatherIcons.shield),
-                  _tab(context, ScTab.profile, 'Profile', FeatherIcons.user),
+                  _tab(context, ScTab.emergency, context.l10n.tabEmergency, FeatherIcons.shield),
+                  _tab(context, ScTab.profile, context.l10n.tabProfile, FeatherIcons.user),
                 ]),
               ),
             ],
@@ -143,7 +144,7 @@ class ScBottomNav extends StatelessWidget {
           child: Center(
             child: Semantics(
               button: true,
-              label: 'Plan a journey',
+              label: context.l10n.planAJourney,
               child: ScPressable(
               onTap: onFab,
               pressedScale: .92,

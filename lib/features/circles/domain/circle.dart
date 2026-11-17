@@ -1,6 +1,7 @@
 import 'package:characters/characters.dart';
 
 import 'package:safecircle/core/utils/phone.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class Person {
   Person({
@@ -67,7 +68,7 @@ class Circle {
     bool isMe(Person p) =>
         p.uid == me || (email.isNotEmpty && p.email?.toLowerCase() == email);
     return [
-      Person(name: ownerName ?? 'Circle owner', uid: ownerId),
+      Person(name: ownerName ?? appL10n.circleOwner, uid: ownerId),
       ...members.where((p) => !isMe(p)),
     ];
   }

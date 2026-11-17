@@ -8,6 +8,7 @@ import 'package:safecircle/core/utils/phone.dart';
 import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/widgets/phone_field.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class PersonForm extends StatefulWidget {
   const PersonForm({super.key, this.initial, required this.onChanged, this.showEmailField = false});
@@ -86,7 +87,7 @@ class PersonFormState extends State<PersonForm> {
       });
       _notify();
     } catch (_) {
-      if (mounted) showScToast(context, 'Could not open your contacts.');
+      if (mounted) showScToast(context, context.l10n.couldNotOpenContacts);
     }
   }
 
@@ -96,8 +97,8 @@ class PersonFormState extends State<PersonForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ScInput(
-          label: 'Name',
-          placeholder: 'e.g. Jessica Moore',
+          label: context.l10n.name,
+          placeholder: context.l10n.nameExampleContact,
           leadingIcon: FeatherIcons.user,
           controller: nameCtrl,
           onChanged: (_) {
@@ -107,7 +108,7 @@ class PersonFormState extends State<PersonForm> {
         ),
         const SizedBox(height: 16),
 
-        Text('Photo', style: ScText.sans(size: 14, weight: FontWeight.w700)),
+        Text(context.l10n.photo, style: ScText.sans(size: 14, weight: FontWeight.w700)),
         const SizedBox(height: 8),
         ScPressable(
           pressedScale: .99,
@@ -120,7 +121,7 @@ class PersonFormState extends State<PersonForm> {
                 _notify();
               }
             } catch (_) {
-              if (context.mounted) showScToast(context, 'Could not open the photo library.');
+              if (context.mounted) showScToast(context, context.l10n.couldNotOpenPhotos);
             }
           },
           child: Container(
@@ -137,7 +138,7 @@ class PersonFormState extends State<PersonForm> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    photo != null ? 'Photo added' : 'Add a photo',
+                    photo != null ? context.l10n.photoAdded : context.l10n.addPhoto,
                     style: ScText.sans(
                         size: 16,
                         weight: FontWeight.w500,
@@ -173,8 +174,8 @@ class PersonFormState extends State<PersonForm> {
         if (widget.showEmailField) ...[
           const SizedBox(height: 16),
           ScInput(
-            label: 'E-mail (required)',
-            placeholder: 'Email should match their account',
+            label: context.l10n.emailRequired,
+            placeholder: context.l10n.emailShouldMatch,
             leadingIcon: FeatherIcons.mail,
             keyboardType: TextInputType.emailAddress,
             controller: emailCtrl,
@@ -188,7 +189,7 @@ class PersonFormState extends State<PersonForm> {
             child: TextButton.icon(
               onPressed: _importFromContacts,
               icon: const Icon(FeatherIcons.users, size: 18, color: ScColors.brand),
-              label: Text('Import from contacts', style: ScText.sans(size: 15, weight: FontWeight.w700, color: ScColors.brand)),
+              label: Text(context.l10n.importFromContacts, style: ScText.sans(size: 15, weight: FontWeight.w700, color: ScColors.brand)),
             ),
           ),
         ],

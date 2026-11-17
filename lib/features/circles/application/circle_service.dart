@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:safecircle/features/circles/data/circle_repository.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 final circleServiceProvider = Provider<CircleService>((ref) => CircleService(
       ref.watch(circleRepositoryProvider),
@@ -50,17 +51,18 @@ class ResendResult {
   final bool hasAccount;
 
   String message(String firstName) {
-    if (joined) return '$firstName already joined this circle.';
-    if (texted) return 'Invitation texted to $firstName again.';
+    if (joined) return appL10n.resendAlreadyJoined(firstName);
+    if (texted) return appL10n.resendTexted(firstName);
     if (retryAfter > 0) {
       final minutes = (retryAfter / 60).ceil();
-      return 'You just texted $firstName. Try again in $minutes ${minutes == 1 ? 'minute' : 'minutes'}.';
+      return appL10n.resendTooSoon(firstName, minutes);
     }
-    if (limited) return 'Daily text limit reached. Try again tomorrow.';
-    final inApp = hasAccount ? ' The in-app invitation is still waiting for them.' : '';
-    if (textFailed) return 'Could not text $firstName.$inApp';
-    if (hasAccount) return 'In-app invitation sent to $firstName again.';
-    return 'No SafeCircle account yet for $firstName. Add a phone number to text them.';
+    if (limited) return appL10n.resendLimited;
+    if (textFailed) {
+      return hasAccount ? appL10n.resendFailedInAppWaiting(firstName) : appL10n.resendFailed(firstName);
+    }
+    if (hasAccount) return appL10n.resendInApp(firstName);
+    return appL10n.resendNoAccount(firstName);
   }
 }
 

@@ -10,6 +10,7 @@ import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/auth/domain/auth_error.dart';
 import 'package:safecircle/features/profile/application/profile_service.dart';
 import 'package:safecircle/features/profile/domain/profile_rules.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 enum ProfileFormKind { editProfile, email, password, safetyPin, panicPin }
 
@@ -55,6 +56,7 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
   Future<void> _save() async {
     if (saving) return;
     final profile = ref.read(profileServiceProvider);
+    final l10n = context.l10n;
     setState(() => saving = true);
     try {
       final done = switch (widget.kind) {
@@ -62,19 +64,19 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
             .updateProfile(
                 name: a.text,
                 phone: phoneDigits.isEmpty ? '' : formatPhone(phoneCode, phoneDigits))
-            .then((_) => 'Profile updated'),
+            .then((_) => l10n.profileUpdated),
         ProfileFormKind.email => await profile
             .changeEmail(newEmail: a.text, password: b.text)
-            .then((_) => 'Verification link sent to ${a.text.trim().toLowerCase()} — confirm it to switch.'),
+            .then((_) => l10n.verificationLinkSent(a.text.trim().toLowerCase())),
         ProfileFormKind.password => await profile
             .changePassword(current: a.text, next: b.text, repeat: c.text)
-            .then((_) => 'Password changed'),
+            .then((_) => l10n.passwordChanged),
         ProfileFormKind.safetyPin => await profile
             .changePin(PinKind.safety, current: a.text, next: b.text)
-            .then((_) => 'Safety PIN updated'),
+            .then((_) => l10n.safetyPinUpdated),
         ProfileFormKind.panicPin => await profile
             .changePin(PinKind.panic, current: a.text, next: b.text)
-            .then((_) => 'Panic PIN updated'),
+            .then((_) => l10n.panicPinUpdated),
       };
       if (mounted) {
         Navigator.of(context).pop();
@@ -91,38 +93,39 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
   @override
   Widget build(BuildContext context) {
     final app = ref.read(sessionProvider);
+    final l10n = context.l10n;
     final (title, hint, fields) = switch (widget.kind) {
       ProfileFormKind.editProfile => (
-          'Edit profile',
-          'Update how your circle sees you. Your phone lets friends call you during a journey.',
+          l10n.editProfile,
+          l10n.editProfileHint,
           <(String, String, bool, TextEditingController)>[],
         ),
       ProfileFormKind.email => (
-          'Change email',
-          "We'll send a verification link to the new address. Sign-in and invites move to it once confirmed. Current: ${app.userEmail}",
+          l10n.changeEmail,
+          l10n.changeEmailHint(app.userEmail),
           [
-            ('New email', 'you@email.com', false, a),
-            ('Current password', '••••••••', true, b),
+            (l10n.newEmail, l10n.emailExample, false, a),
+            (l10n.currentPassword, '••••••••', true, b),
           ],
         ),
       ProfileFormKind.password => (
-          'Change password',
-          'Use at least 6 characters.',
+          l10n.changePassword,
+          l10n.useSixCharacters,
           [
-            ('Current password', '••••••••', true, a),
-            ('New password', '••••••••', true, b),
-            ('Confirm new password', '••••••••', true, c),
+            (l10n.currentPassword, '••••••••', true, a),
+            (l10n.newPassword, '••••••••', true, b),
+            (l10n.confirmNewPassword, '••••••••', true, c),
           ],
         ),
       ProfileFormKind.safetyPin => (
-          'Change safety PIN',
-          'This PIN confirms you are OK at each check-in.',
-          [('Current PIN', '••••', true, a), ('New PIN', '••••', true, b)],
+          l10n.changeSafetyPin,
+          l10n.safetyPinHintShort,
+          [(l10n.currentPin, '••••', true, a), (l10n.newPin, '••••', true, b)],
         ),
       ProfileFormKind.panicPin => (
-          'Change panic PIN',
-          'Entering this PIN looks normal but silently alerts your circle.',
-          [('Current panic PIN', '••••', true, a), ('New panic PIN', '••••', true, b)],
+          l10n.changePanicPin,
+          l10n.panicPinHintShort,
+          [(l10n.currentPanicPin, '••••', true, a), (l10n.newPanicPin, '••••', true, b)],
         ),
     };
 
@@ -150,10 +153,10 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
                   Text(hint, style: ScText.sans(size: 13.5, weight: FontWeight.w500, color: ScColors.textMuted, height: 19)),
                   const SizedBox(height: 16),
                   if (widget.kind == ProfileFormKind.editProfile) ...[
-                    ScInput(label: 'Full name', controller: a),
+                    ScInput(label: l10n.fullName, controller: a),
                     const SizedBox(height: 16),
                     ScPhoneField(
-                      label: 'Phone',
+                      label: l10n.phone,
                       initialCountryCode: phoneCode,
                       initialDigits: phoneDigits,
                       onChanged: (code, d) {
@@ -169,7 +172,7 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
                     ],
                   const SizedBox(height: 6),
                   ScButton(
-                    label: saving ? 'Saving…' : 'Save changes',
+                    label: saving ? l10n.saving : l10n.saveChanges,
                     onPressed: saving ? null : _save,
                   ),
                 ],

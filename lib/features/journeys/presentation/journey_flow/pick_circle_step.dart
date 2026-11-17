@@ -12,6 +12,7 @@ import 'package:safecircle/features/circles/domain/circle.dart';
 import 'package:safecircle/features/contacts/data/contacts_repository.dart';
 import 'package:safecircle/features/contacts/presentation/contacts_screen.dart';
 import 'package:safecircle/features/journeys/domain/journey.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class PickCircleStep extends ConsumerWidget {
   const PickCircleStep({
@@ -64,9 +65,9 @@ class PickCircleStep extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Who's watching?", style: ScText.headline()),
+                      Text(context.l10n.whosWatching, style: ScText.headline()),
                       const SizedBox(height: 6),
-                      Text('Pick the circle that monitors this journey.', style: ScText.sub()),
+                      Text(context.l10n.pickCircleHint, style: ScText.sub()),
                     ],
                   ),
                 ),
@@ -97,7 +98,7 @@ class PickCircleStep extends ConsumerWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            "Nobody in this circle has accepted the invite yet, so no one could see this journey. Wait for a member to accept before starting.",
+                            context.l10n.nobodyAcceptedYet,
                             style: ScText.sans(
                                 size: 13.5, weight: FontWeight.w600, color: ScColors.amber800, height: 19),
                           ),
@@ -119,7 +120,7 @@ class PickCircleStep extends ConsumerWidget {
                         const Icon(FeatherIcons.alertCircle, size: 20, color: ScColors.brand),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: Text('Add 2 emergency contacts before starting',
+                          child: Text(context.l10n.addTwoContactsBeforeStart,
                               style: ScText.sans(
                                   size: 13.5,
                                   weight: FontWeight.w600,
@@ -134,7 +135,7 @@ class PickCircleStep extends ConsumerWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
                             decoration: BoxDecoration(
                                 color: ScColors.brand, borderRadius: BorderRadius.circular(999)),
-                            child: Text('Add',
+                            child: Text(context.l10n.add,
                                 style: ScText.sans(size: 12, weight: FontWeight.w700, color: Colors.white)),
                           ),
                         ),
@@ -147,7 +148,7 @@ class PickCircleStep extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('SCHEDULE', style: ScText.micro()),
+                      Text(context.l10n.schedule, style: ScText.micro()),
                       const SizedBox(height: 12),
                       for (final c in checkIns) ...[
                         Row(
@@ -160,7 +161,7 @@ class PickCircleStep extends ConsumerWidget {
                             const SizedBox(width: 11),
                             Expanded(
                                 child: Text(c.label, style: ScText.sans(size: 14, weight: FontWeight.w600))),
-                            Text(c.time,
+                            Text(c.timeText,
                                 style: ScText.mono(
                                     size: 14, weight: FontWeight.w600, color: ScColors.textSecondary)),
                           ],
@@ -179,7 +180,7 @@ class PickCircleStep extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(26, 8, 26, 20),
             child: ScButton(
-              label: starting ? 'Starting…' : 'Start journey',
+              label: starting ? context.l10n.starting : context.l10n.startJourneyButton,
               leftIcon: starting ? null : FeatherIcons.navigation,
               onPressed: !loaded || selected == null || lowContacts || noWatchers || starting
                   ? null
@@ -214,14 +215,14 @@ class _NoCircleNotice extends StatelessWidget {
               children: [
                 const CirclesIcon(size: 28, color: ScColors.brand),
                 const SizedBox(height: 4),
-                Text('Circles',
+                Text(context.l10n.tabCircles,
                     style: ScText.sans(size: 11, weight: FontWeight.w800, color: ScColors.brand, spacing: .2)),
               ],
             ),
           ),
           const SizedBox(height: 14),
           Text(
-            'You need a circle first. Tap the Circles tab below to create one.',
+            context.l10n.needCircleFirst,
             textAlign: TextAlign.center,
             style: ScText.sans(size: 14, weight: FontWeight.w500, color: ScColors.textMuted),
           ),
@@ -275,7 +276,7 @@ class _CircleChoice extends StatelessWidget {
                   Text(circle.name,
                       style: ScText.sans(size: 16, weight: FontWeight.w800, color: ScColors.textHeading)),
                   const SizedBox(height: 2),
-                  Text('$watching ${watching == 1 ? 'person' : 'people'} watching',
+                  Text(context.l10n.peopleWatching(watching),
                       style: ScText.sans(size: 13, weight: FontWeight.w500, color: ScColors.textMuted)),
                 ],
               ),

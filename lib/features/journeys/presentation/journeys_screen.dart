@@ -4,6 +4,7 @@ import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/widgets/feather_icons.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/journeys/presentation/friends_journeys_screen.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class JourneysScreen extends StatelessWidget {
   const JourneysScreen({super.key, this.onGoCircles});
@@ -22,7 +23,7 @@ class JourneysScreen extends StatelessWidget {
                 children: [
                   ScBackButton(onTap: () => Navigator.of(context).pop()),
                   const SizedBox(width: 12),
-                  Text('Journeys',
+                  Text(context.l10n.journeys,
                       style: ScText.sans(
                           size: 18, weight: FontWeight.w800, color: ScColors.textHeading)),
                   const Spacer(),

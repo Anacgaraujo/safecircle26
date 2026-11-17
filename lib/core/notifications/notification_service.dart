@@ -13,6 +13,7 @@ import 'package:safecircle/features/circles/domain/circle_invite.dart';
 import 'package:safecircle/features/live_map/domain/tracking.dart';
 import 'package:safecircle/core/session/session.dart';
 import 'package:safecircle/core/utils/formatters.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class NotificationService {
   NotificationService._();
@@ -29,14 +30,15 @@ class NotificationService {
 
   final Set<String> _notified = {};
 
-  static const _channel = AndroidNotificationDetails(
+  static AndroidNotificationDetails get _channel => AndroidNotificationDetails(
     'safecircle_alerts',
-    'SafeCircle alerts',
-    channelDescription: 'Check-in reminders and safety alerts',
+    appL10n.notificationChannelName,
+    channelDescription: appL10n.notificationChannelDescription,
     importance: Importance.max,
     priority: Priority.high,
   );
-  static const _details = NotificationDetails(android: _channel, iOS: DarwinNotificationDetails());
+  static NotificationDetails get _details =>
+      NotificationDetails(android: _channel, iOS: const DarwinNotificationDetails());
 
   Future<void> init() async {
     if (_ready) return;
@@ -93,8 +95,8 @@ class NotificationService {
       if (at.isAfter(now)) {
         await _scheduleAt(
           _reminderId(journeyId, i),
-          'Check-in due now',
-          "${c.label} · ${c.time} — open SafeCircle and confirm you're safe.",
+          appL10n.reminderDueTitle,
+          appL10n.reminderDueBody(c.label, c.timeText),
           at,
           now,
         );
@@ -103,8 +105,8 @@ class NotificationService {
       if (lastCall.isAfter(now)) {
         await _scheduleAt(
           _reminderId(journeyId, i, lastCall: true),
-          'Last call: confirm your check-in',
-          '${c.label} · ${c.time} — your circle will be alerted in 1 minute.',
+          appL10n.reminderLastCallTitle,
+          appL10n.reminderLastCallBody(c.label, c.timeText),
           lastCall,
           now,
         );
@@ -159,8 +161,8 @@ class NotificationService {
     try {
       await _show(
         424242,
-        'SafeCircle notifications are working',
-        'You will be alerted like this for check-ins, overdue friends and emergencies.',
+        appL10n.testNotificationTitle,
+        appL10n.testNotificationBody,
       );
       return true;
     } catch (e) {
@@ -199,7 +201,7 @@ class NotificationService {
       await _show(
         alert.id.hashCode & 0x7fffffff,
         alert.headline,
-        '${alert.kindLabel} · ${alert.timeLabel}'
+        '${alert.kindLabel} · ${alert.timeText}'
             '${alert.location.isEmpty ? '' : ' · ${alert.location}'}',
       );
     } catch (_) {}
@@ -212,8 +214,8 @@ class NotificationService {
     try {
       await _show(
         id.hashCode & 0x7fffffff,
-        'Circle invite',
-        '${invite.summary} — open SafeCircle to accept.',
+        appL10n.circleInvite,
+        appL10n.inviteNotificationBody(invite.summary),
       );
     } catch (_) {}
   }
@@ -224,8 +226,8 @@ class NotificationService {
     try {
       await _show(
         trip.startMillis.hashCode & 0x7fffffff,
-        'Speed alert on your last trip',
-        '${trip.title} · top ${scSpeed(trip.maxSpeedKmh)}',
+        appL10n.speedAlertTitle,
+        appL10n.speedAlertBody(trip.title, scSpeed(trip.maxSpeedKmh)),
       );
     } catch (_) {}
   }
@@ -246,8 +248,8 @@ class NotificationService {
     try {
       await _show(
         j.id.hashCode & 0x7fffffff,
-        '${j.ownerFirstName} missed a check-in',
-        '${missed?.label ?? 'Check-in'} is overdue — reach out.',
+        appL10n.alertHeadlineOverdue(j.ownerFirstName),
+        appL10n.checkInOverdueReachOut(missed?.label ?? appL10n.checkIn),
       );
     } catch (_) {}
   }

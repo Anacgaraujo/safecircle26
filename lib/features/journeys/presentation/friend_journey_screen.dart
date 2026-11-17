@@ -12,6 +12,7 @@ import 'package:safecircle/features/alerts/data/alert_repository.dart';
 import 'package:safecircle/features/journeys/data/journey_repository.dart';
 import 'package:safecircle/features/journeys/domain/journey.dart';
 import 'package:safecircle/features/journeys/domain/journey_schedule.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class FriendDetailScreen extends ConsumerWidget {
   const FriendDetailScreen({super.key, required this.journeyId, this.panicMode = false});
@@ -99,9 +100,9 @@ class _FriendDetailBody extends StatelessWidget {
                               width: 7, height: 7, decoration: BoxDecoration(color: pinColor, shape: BoxShape.circle)),
                           const SizedBox(width: 7),
                           Text(
-                              journey.lastSeen.isEmpty
-                                  ? 'Journey with ${journey.circleName}'
-                                  : '${journey.lastSeen}${journey.lastPlace.isEmpty ? '' : ' · ${journey.lastPlace}'}',
+                              journey.lastSeenText.isEmpty
+                                  ? context.l10n.journeyWith(journey.circleName)
+                                  : '${journey.lastSeenText}${journey.lastPlace.isEmpty ? '' : ' · ${journey.lastPlace}'}',
                               style: ScText.sans(size: 12, weight: FontWeight.w700, color: ScColors.textSecondary)),
                         ],
                       ),
@@ -166,7 +167,7 @@ class _FriendDetailBody extends StatelessWidget {
                                     size: 20, weight: FontWeight.w800, color: ScColors.textHeading, spacing: -.3)),
                             const SizedBox(height: 5),
                             _StatusPill(
-                              label: od ? (panicMode ? 'Silent alert' : 'Overdue') : 'On time',
+                              label: od ? (panicMode ? context.l10n.silentAlert : context.l10n.overdue) : context.l10n.onTime,
                               bg: od ? ScColors.brandTint : ScColors.green50,
                               fg: od ? ScColors.magenta600 : ScColors.green600,
                             ),
@@ -192,10 +193,10 @@ class _FriendDetailBody extends StatelessWidget {
                           Expanded(
                             child: Text(
                               panicMode
-                                  ? '$first used the panic PIN — they may be in danger. Call them or $kEmergencyNumber.'
+                                  ? context.l10n.usedPanicPin(first, kEmergencyNumber)
                                   : missed != null
-                                      ? 'Missed check-in at ${missed.time}. Reach out to $first.'
-                                      : 'A check-in was missed. Reach out to $first.',
+                                      ? context.l10n.missedCheckInAt(missed.timeText, first)
+                                      : context.l10n.aCheckInWasMissed(first),
                               style: ScText.sans(
                                   size: 13.5, weight: FontWeight.w700, color: ScColors.magenta600, height: 19),
                             ),
@@ -221,7 +222,7 @@ class _FriendDetailBody extends StatelessWidget {
                     ),
                   ],
                   const SizedBox(height: 22),
-                  const ScSectionLabel('Check-ins', icon: FeatherIcons.clock),
+                  ScSectionLabel(context.l10n.checkIns, icon: FeatherIcons.clock),
                   const SizedBox(height: 10),
                   Expanded(
                     child: ListView(
@@ -237,7 +238,7 @@ class _FriendDetailBody extends StatelessWidget {
                     children: [
                       Expanded(
                         child: ScButton(
-                          label: 'Call',
+                          label: context.l10n.call,
                           leftIcon: FeatherIcons.phoneCall,
                           onPressed: () => callPhone(context, journey.ownerPhone),
                         ),
@@ -245,7 +246,7 @@ class _FriendDetailBody extends StatelessWidget {
                       const SizedBox(width: 12),
                       Expanded(
                         child: ScButton(
-                          label: 'Message',
+                          label: context.l10n.message,
                           variant: ScButtonVariant.secondary,
                           leftIcon: FeatherIcons.messageCircle,
                           onPressed: () => messagePhone(context, journey.ownerPhone),
@@ -299,21 +300,21 @@ class _CheckInRow extends StatelessWidget {
           ScColors.green50,
           const Icon(FeatherIcons.check, size: 18, color: ScColors.green500),
           ScColors.textHeading,
-          'Confirmed',
+          context.l10n.confirmed,
           ScColors.green500,
         ),
       CheckInState.missed => (
           ScColors.brandTint,
           const Icon(FeatherIcons.alertCircle, size: 18, color: ScColors.brand),
           ScColors.magenta600,
-          'Missed',
+          context.l10n.missed,
           ScColors.brand,
         ),
       CheckInState.next => (
           checkIn.isDueNow(now) ? ScColors.amber100 : ScColors.brandTint,
           const _PulsingDot(),
           ScColors.textHeading,
-          checkIn.isDueNow(now) ? 'Due now' : 'Upcoming',
+          checkIn.isDueNow(now) ? context.l10n.dueNow : context.l10n.upcoming,
           checkIn.isDueNow(now) ? ScColors.amber800 : ScColors.brand,
         ),
       CheckInState.future => (
@@ -323,7 +324,7 @@ class _CheckInRow extends StatelessWidget {
               height: 8,
               decoration: const BoxDecoration(color: ScColors.borderDefault, shape: BoxShape.circle)),
           ScColors.textMuted,
-          'Upcoming',
+          context.l10n.upcoming,
           ScColors.textMuted,
         ),
     };
@@ -353,8 +354,8 @@ class _CheckInRow extends StatelessWidget {
                 const SizedBox(height: 1),
                 Text(
                     checkIn.confirmed && (checkIn.place ?? '').isNotEmpty
-                        ? '${checkIn.date} · ${checkIn.time} · ${checkIn.place}'
-                        : '${checkIn.date} · ${checkIn.time}',
+                        ? '${checkIn.dateText} · ${checkIn.timeText} · ${checkIn.place}'
+                        : '${checkIn.dateText} · ${checkIn.timeText}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: ScText.mono(size: 12.5, color: ScColors.textMuted)),

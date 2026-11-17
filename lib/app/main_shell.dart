@@ -22,6 +22,7 @@ import 'package:safecircle/features/live_map/application/live_sharing.dart';
 import 'package:safecircle/features/live_map/presentation/map_home_screen.dart';
 import 'package:safecircle/features/profile/data/user_repository.dart';
 import 'package:safecircle/features/profile/presentation/profile_screen.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class MainShell extends ConsumerStatefulWidget {
   const MainShell({super.key});
@@ -128,7 +129,7 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
         onFab: () => Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => const JourneyFlow()),
         ),
-        coachmark: showCoachmark ? 'Add your first circle' : null,
+        coachmark: showCoachmark ? context.l10n.addYourFirstCircle : null,
         mapHome: _mapHome,
       ),
     );

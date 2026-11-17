@@ -5,6 +5,7 @@ import 'package:safecircle/features/alerts/domain/safety_alert.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
 import 'package:safecircle/features/journeys/domain/journey.dart';
 import 'package:safecircle/features/live_map/domain/tracking.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 List<MemberStatus> visibleMembers(List<MemberStatus> all, Circle? circle, String me) {
   final ids = circle?.memberIds ?? const <String>[];
@@ -46,17 +47,17 @@ bool shouldFollow({
 }
 
 String freshnessLabel(MemberStatus s, DateTime now) {
-  if (s.updatedAt == null) return 'Waiting for the first update';
+  if (s.updatedAt == null) return appL10n.waitingFirstUpdate;
   final diff = now.difference(s.updatedAt!);
-  if (diff.inMinutes < 1) return 'Live · updated just now';
-  if (diff > kStaleAfter) return 'Last seen ${scClock(s.updatedAt!)}';
-  return 'Updated ${diff.inMinutes} min ago';
+  if (diff.inMinutes < 1) return appL10n.liveUpdatedJustNow;
+  if (diff > kStaleAfter) return appL10n.lastSeenAt(scClock(s.updatedAt!));
+  return appL10n.updatedMinAgo(diff.inMinutes);
 }
 
 String motionLabel(MemberStatus s, {required bool stale}) {
-  if (stale) return 'No recent update';
-  if (s.moving) return scMph(s.speedKmh) < 1 ? 'Moving' : 'Moving · ${scSpeed(s.speedKmh)}';
-  return s.since == null ? 'Stopped' : 'At place since ${scClock(s.since!)}';
+  if (stale) return appL10n.noRecentUpdate;
+  if (s.moving) return scMph(s.speedKmh) < 1 ? appL10n.moving : appL10n.movingAt(scSpeed(s.speedKmh));
+  return s.since == null ? appL10n.stopped : appL10n.atPlaceSince(scClock(s.since!));
 }
 
 enum SafetyLevel { alert, late, due, calm }
@@ -77,14 +78,14 @@ class SafetyStrip {
     final late = journeys.where((j) => j.isOverdue(now)).length;
     if (late > 0) {
       return SafetyStrip._(
-          SafetyLevel.late, '$late ${late == 1 ? 'friend needs' : 'friends need'} attention');
+          SafetyLevel.late, appL10n.friendsNeedAttention(late));
     }
     final due = journeys.where((j) => j.nextCheckIn?.isDueNow(now) ?? false).toList();
     if (due.length == 1) {
-      return SafetyStrip._(SafetyLevel.due, "${due.first.ownerFirstName}'s check-in is due");
+      return SafetyStrip._(SafetyLevel.due, appL10n.namesCheckInDue(due.first.ownerFirstName));
     }
-    if (due.length > 1) return SafetyStrip._(SafetyLevel.due, '${due.length} check-ins are due');
+    if (due.length > 1) return SafetyStrip._(SafetyLevel.due, appL10n.checkInsAreDue(due.length));
     final n = journeys.length;
-    return SafetyStrip._(SafetyLevel.calm, '$n ${n == 1 ? 'friend' : 'friends'} on a journey');
+    return SafetyStrip._(SafetyLevel.calm, appL10n.friendsOnJourney(n));
   }
 }

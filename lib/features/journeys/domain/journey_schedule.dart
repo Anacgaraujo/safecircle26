@@ -1,5 +1,6 @@
 import 'package:safecircle/core/utils/formatters.dart';
 import 'package:safecircle/features/journeys/domain/journey.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 DateTime roundUpToHalfHour(DateTime t) {
   final add = (30 - t.minute % 30) % 30;
@@ -7,6 +8,8 @@ DateTime roundUpToHalfHour(DateTime t) {
       .add(Duration(minutes: add == 0 ? 30 : add));
 }
 
+/// English day label saved with the check-in; screens show
+/// [CheckIn.dateText] in the phone's language instead.
 String dayLabel(DateTime at, DateTime now) {
   final days = DateTime(at.year, at.month, at.day)
       .difference(DateTime(now.year, now.month, now.day))
@@ -17,28 +20,28 @@ String dayLabel(DateTime at, DateTime now) {
 }
 
 CheckIn checkInAt(String label, DateTime at, {required DateTime now}) => CheckIn(
-    label: label, date: dayLabel(at, now), time: scClock(at), atMillis: at.millisecondsSinceEpoch);
+    label: label, date: dayLabel(at, now), time: scClockEn(at), atMillis: at.millisecondsSinceEpoch);
 
 void reschedule(CheckIn checkIn, DateTime at, {required DateTime now}) {
   checkIn
     ..date = dayLabel(at, now)
-    ..time = scClock(at)
+    ..time = scClockEn(at)
     ..atMillis = at.millisecondsSinceEpoch;
 }
 
 List<CheckIn> defaultCheckIns(DateTime now) {
   final base = roundUpToHalfHour(now);
   return [
-    checkInAt('First check-in', base.add(const Duration(hours: 1)), now: now),
-    checkInAt('Second check-in', base.add(const Duration(hours: 2, minutes: 30)), now: now),
-    checkInAt('Check-out', base.add(const Duration(hours: 4)), now: now),
+    checkInAt(appL10n.firstCheckIn, base.add(const Duration(hours: 1)), now: now),
+    checkInAt(appL10n.secondCheckIn, base.add(const Duration(hours: 2, minutes: 30)), now: now),
+    checkInAt(appL10n.checkOut, base.add(const Duration(hours: 4)), now: now),
   ];
 }
 
 void addCheckIn(List<CheckIn> checkIns, DateTime now) {
   checkIns.insert(
       checkIns.length - 1,
-      checkInAt('Check-in ${checkIns.length}',
+      checkInAt(appL10n.numberedCheckIn(checkIns.length),
           roundUpToHalfHour(now).add(const Duration(hours: 3)),
           now: now));
 }

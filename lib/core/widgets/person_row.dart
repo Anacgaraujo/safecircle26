@@ -4,6 +4,7 @@ import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/widgets/feather_icons.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class PersonRow extends StatelessWidget {
   const PersonRow(
@@ -42,7 +43,7 @@ class PersonRow extends StatelessWidget {
           ),
           if (onResend != null)
             IconButton(
-              tooltip: 'Resend invitation',
+              tooltip: context.l10n.resendInvitation,
               onPressed: onResend,
               icon: const Icon(FeatherIcons.send, size: 18, color: ScColors.brand),
             ),

@@ -1,3 +1,5 @@
+import 'package:safecircle/l10n/l10n.dart';
+
 class Country {
   const Country(this.code, this.dial, this.flag, this.name);
   final String code;
@@ -15,7 +17,29 @@ const kCountries = [
   Country('GB', '+44', '🇬🇧', 'United Kingdom'),
   Country('ES', '+34', '🇪🇸', 'Spain'),
   Country('AR', '+54', '🇦🇷', 'Argentina'),
+  Country('MX', '+52', '🇲🇽', 'Mexico'),
+  Country('FR', '+33', '🇫🇷', 'France'),
+  Country('CN', '+86', '🇨🇳', 'China'),
+  Country('IN', '+91', '🇮🇳', 'India'),
 ];
+
+/// The country's name in the phone's language.
+String countryName(Country c) {
+  final l = appL10n;
+  return switch (c.code) {
+    'US' => l.countryUS,
+    'BR' => l.countryBR,
+    'PT' => l.countryPT,
+    'GB' => l.countryGB,
+    'ES' => l.countryES,
+    'AR' => l.countryAR,
+    'MX' => l.countryMX,
+    'FR' => l.countryFR,
+    'CN' => l.countryCN,
+    'IN' => l.countryIN,
+    _ => c.name,
+  };
+}
 
 Country countryByCode(String code) =>
     kCountries.firstWhere((c) => c.code == code, orElse: () => kCountries.first);

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:safecircle/core/widgets/sc_widgets.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 const kEmergencyNumber = '911';
 
@@ -19,19 +20,19 @@ Future<void> _launch(BuildContext context, Uri uri, String failMsg) async {
 Future<void> callPhone(BuildContext context, String? phone) {
   final digits = (phone ?? '').replaceAll(RegExp(r'[^\d+]'), '');
   if (digits.isEmpty) {
-    showScToast(context, 'No phone number available.');
+    showScToast(context, context.l10n.noPhoneNumber);
     return Future.value();
   }
-  return _launch(context, Uri(scheme: 'tel', path: digits), 'Could not open the dialer.');
+  return _launch(context, Uri(scheme: 'tel', path: digits), context.l10n.couldNotOpenDialer);
 }
 
 Future<void> messagePhone(BuildContext context, String? phone) {
   final digits = (phone ?? '').replaceAll(RegExp(r'[^\d+]'), '');
   if (digits.isEmpty) {
-    showScToast(context, 'No phone number available.');
+    showScToast(context, context.l10n.noPhoneNumber);
     return Future.value();
   }
-  return _launch(context, Uri(scheme: 'smsto', path: digits), 'Could not open messages.');
+  return _launch(context, Uri(scheme: 'smsto', path: digits), context.l10n.couldNotOpenMessages);
 }
 
 Future<void> messageGroup(BuildContext context, Iterable<String?> phones, {String? body}) {
@@ -40,7 +41,7 @@ Future<void> messageGroup(BuildContext context, Iterable<String?> phones, {Strin
       .where((d) => d.isNotEmpty)
       .toSet();
   if (list.isEmpty) {
-    showScToast(context, 'No phone numbers available.');
+    showScToast(context, context.l10n.noPhoneNumbers);
     return Future.value();
   }
   final uri = Uri(
@@ -48,17 +49,17 @@ Future<void> messageGroup(BuildContext context, Iterable<String?> phones, {Strin
     path: list.join(','),
     queryParameters: body == null || body.isEmpty ? null : {'body': body},
   );
-  return _launch(context, uri, 'Could not open messages.');
+  return _launch(context, uri, context.l10n.couldNotOpenMessages);
 }
 
 Future<void> openInMaps(BuildContext context, double? lat, double? lng, {String? label}) {
   if (lat == null || lng == null) {
-    showScToast(context, 'No location available yet.');
+    showScToast(context, context.l10n.noLocationYetShort);
     return Future.value();
   }
   final q = Uri.encodeComponent(label == null || label.isEmpty ? '$lat,$lng' : label);
   final uri = kIsWeb
       ? Uri.parse('https://www.google.com/maps/search/?api=1&query=$lat%2C$lng')
       : Uri.parse('geo:$lat,$lng?q=$lat,$lng($q)');
-  return _launch(context, uri, 'Could not open the maps app.');
+  return _launch(context, uri, context.l10n.couldNotOpenMaps);
 }

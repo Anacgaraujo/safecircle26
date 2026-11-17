@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/widgets/sc_camera.dart';
 import 'package:safecircle/core/widgets/sc_tiles.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class ScMapView extends StatefulWidget {
   const ScMapView({
@@ -71,7 +72,7 @@ class _ScMapViewState extends State<ScMapView> with SingleTickerProviderStateMix
                 color: Colors.white.withValues(alpha: .95),
                 borderRadius: BorderRadius.circular(999),
               ),
-              child: Text('Location not shared yet',
+              child: Text(context.l10n.locationNotSharedYet,
                   style: ScText.sans(size: 12.5, weight: FontWeight.w700, color: ScColors.textSecondary)),
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:safecircle/features/alerts/domain/safety_alert.dart';
 import 'package:safecircle/features/journeys/domain/journey.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class FriendsFeed {
   FriendsFeed._({
@@ -38,8 +39,8 @@ class FriendsFeed {
     final needsAttention = overdue.length + standaloneAlerts.length;
     final n = journeys.length;
     return needsAttention > 0
-        ? '$needsAttention ${needsAttention == 1 ? 'friend needs' : 'friends need'} attention · $n active'
-        : '$n ${n == 1 ? 'friend' : 'friends'} currently on a journey';
+        ? appL10n.friendsNeedAttentionActive(needsAttention, n)
+        : appL10n.friendsOnJourneyNow(n);
   }
 }
 
