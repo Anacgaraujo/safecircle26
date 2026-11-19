@@ -9,6 +9,7 @@ import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
 import 'package:safecircle/features/contacts/data/contacts_repository.dart';
 import 'package:safecircle/features/contacts/presentation/contacts_screen.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class SosView extends ConsumerWidget {
   const SosView({super.key, required this.hold, required this.onHoldStart, required this.onHoldEnd});
@@ -47,7 +48,7 @@ class SosView extends ConsumerWidget {
                   child: const Icon(FeatherIcons.alertTriangle, size: 19, color: ScColors.red500),
                 ),
                 const SizedBox(width: 10),
-                Text('Emergency SOS',
+                Text(context.l10n.emergencySos,
                     style: ScText.sans(size: 24, weight: FontWeight.w800, color: ScColors.textHeading, height: 28, spacing: -0.5)),
               ],
             ),
@@ -69,8 +70,8 @@ class SosView extends ConsumerWidget {
                     width: 300,
                     child: Text(
                       enabled
-                          ? 'This alerts your circle in the app with your location. Contacts without SafeCircle get a one-tap SMS with your position.'
-                          : 'Add at least one emergency contact before you can send an alert.',
+                          ? context.l10n.sosHint
+                          : context.l10n.sosNeedsContact,
                       textAlign: TextAlign.center,
                       style: ScText.sans(size: 14.5, weight: FontWeight.w500, color: ScColors.textSubtle, height: 21),
                     ),
@@ -78,7 +79,7 @@ class SosView extends ConsumerWidget {
                   if (loaded && !enabled) ...[
                     const SizedBox(height: 14),
                     ScButton(
-                      label: 'Add emergency contact',
+                      label: context.l10n.addEmergencyContact,
                       variant: ScButtonVariant.secondary,
                       fullWidth: false,
                       leftIcon: FeatherIcons.userPlus,
@@ -91,7 +92,7 @@ class SosView extends ConsumerWidget {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: ScSectionLabel(
-                      'Your emergency contacts · ${contacts.length}',
+                      context.l10n.yourEmergencyContactsCount(contacts.length),
                       icon: FeatherIcons.users,
                     ),
                   ),
@@ -152,7 +153,7 @@ class _SosButton extends StatelessWidget {
         final p = hold.value;
         final holding = hold.isAnimating;
         final caption =
-            !enabled ? 'Unavailable' : (holding ? (p >= .99 ? 'Sending…' : 'Keep holding…') : 'Hold to alert');
+            !enabled ? context.l10n.unavailable : (holding ? (p >= .99 ? context.l10n.sending : context.l10n.keepHolding) : context.l10n.holdToAlert);
 
         return SizedBox(
           width: 264,
@@ -171,7 +172,7 @@ class _SosButton extends StatelessWidget {
               GestureDetector(
                 onTapDown: (_) {
                   if (!enabled) {
-                    showScToast(context, 'Add an emergency contact before sending an alert.');
+                    showScToast(context, context.l10n.addContactBeforeAlert);
                     return;
                   }
                   onHoldStart();

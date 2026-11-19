@@ -1,0 +1,1326 @@
+{
+  "@@locale": "en",
+  "appTitle": "SafeCircle",
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "alertKindPanic": "Silent panic",
+  "alertKindOverdue": "Missed check-in",
+  "alertKindSos": "SOS",
+  "alertHeadlineOverdue": "{name} missed a check-in",
+  "@alertHeadlineOverdue": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alertHeadlineHelp": "{name} needs help",
+  "@alertHeadlineHelp": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "someone": "Someone",
+  "aCircle": "a circle",
+  "inviteSummary": "{name} invited you to {circle}",
+  "@inviteSummary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "circle": {
+        "type": "String"
+      }
+    }
+  },
+  "circleOwner": "Circle owner",
+  "lastSeenAt": "Last seen {time}",
+  "@lastSeenAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "enterYourName": "Enter your name.",
+  "enterYourEmail": "Enter your email.",
+  "passwordTooShort": "Password must have at least 6 characters.",
+  "passwordsDontMatch": "Passwords don't match.",
+  "enterEmailAndPassword": "Enter your email and password.",
+  "recoveryLinkSent": "Recovery link sent. Check your inbox.",
+  "couldNotSavePins": "Could not save your PINs. Try again.",
+  "welcomeTo": "Welcome to",
+  "welcomeTagline": "Build a trusted circle and let someone always know you're safe.",
+  "start": "Start",
+  "skipIntro": "Skip intro",
+  "createAccount": "Create account",
+  "joinInSeconds": "Join SafeCircle in a few seconds.",
+  "name": "Name",
+  "nameExample": "e.g. Alex Morgan",
+  "email": "Email",
+  "emailExample": "name@example.com",
+  "phone": "Phone",
+  "password": "Password",
+  "repeatPassword": "Repeat password",
+  "creatingAccount": "Creating account…",
+  "register": "Register",
+  "alreadyHaveAccount": "Already have an account? ",
+  "login": "Login",
+  "loginTagline": "Someone always knows you're safe.",
+  "forgotPassword": "Forgot?",
+  "loggingIn": "Logging in…",
+  "orLoginWith": "Or, login with...",
+  "noAccountYet": "Don't have an account? ",
+  "registerExclaim": "Register!",
+  "socialLoginSoon": "Social login coming soon.",
+  "recoverPassword": "Recover password",
+  "recoverPasswordHint": "Enter the email linked to your account and we'll send you a secure link to reset your password.",
+  "sending": "Sending…",
+  "stepOf": "STEP {step} OF {total}",
+  "@stepOf": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "setPanicPin": "Set your panic PIN",
+  "setSafetyPin": "Set your safety PIN",
+  "panicPinHint": "If you're forced to open the app, enter this PIN. The screen looks normal, but your circle is silently alerted.",
+  "safetyPinHint": "Use this PIN to confirm you're safe during check-ins.",
+  "panicPinMatchesSafety": "That matches your safety PIN. Choose a different code.",
+  "panicPinMustDiffer": "Must be different from your safety PIN.",
+  "saving": "Saving…",
+  "finish": "Finish",
+  "continueLabel": "Continue",
+  "gettingStarted": "GETTING STARTED",
+  "createFirstCircle": "Create your first Circle",
+  "tapPrefix": "Tap ",
+  "tabCircles": "Circles",
+  "createFirstCircleHint": " in the bottom bar, give it a name, and add the people you trust. They'll get an invite to follow your journeys.",
+  "next": "Next",
+  "allSet": "You're all set!",
+  "allSetHint": "Your SafeCircle is ready. Plan your first journey whenever you head out.",
+  "enterSafeCircle": "Enter SafeCircle",
+  "authInvalidEmail": "Invalid email address.",
+  "authEmailInUse": "This email is already registered.",
+  "authWeakPassword": "Password too weak (min. 6 characters).",
+  "authWrongCredentials": "Wrong email or password.",
+  "authTooManyAttempts": "Too many attempts. Try again later.",
+  "authNetwork": "Network error. Check your connection.",
+  "authReloginNeeded": "Please log in again to do this.",
+  "authGenericError": "Authentication error.",
+  "somethingWentWrong": "Something went wrong. Try again.",
+  "settings": "Settings",
+  "security": "Security",
+  "changeSafetyPin": "Change safety PIN",
+  "changeSafetyPinSub": "Confirms you're OK at check-in",
+  "changePanicPin": "Change panic PIN",
+  "changePanicPinSub": "Silent duress code · sends a hidden alert",
+  "notifications": "Notifications",
+  "checkInReminders": "Check-in reminders",
+  "checkInRemindersSub": "Nudge me when a check-in is due",
+  "overdueCheckIns": "Overdue check-ins",
+  "overdueCheckInsSub": "When a friend misses a check-in. Panic and SOS alerts are always on.",
+  "permissions": "Permissions",
+  "permissionsSub": "Location, notifications, alarms and battery",
+  "permissionsReason": "SafeCircle only uses these to protect you and your circle.",
+  "done": "Done",
+  "sendTestNotification": "Send a test notification",
+  "sendTestNotificationSub": "Check that alerts reach this phone",
+  "testNotificationSent": "Sent — check your notification shade.",
+  "testNotificationFailed": "Could not send. Check notification permission in system settings.",
+  "account": "Account",
+  "changeEmail": "Change email",
+  "changePassword": "Change password",
+  "logOut": "Log out",
+  "logOutQuestion": "Log out?",
+  "logOutBody": "You'll stop receiving alerts from your circles until you log back in.",
+  "loggedOut": "Logged out.",
+  "deleteAccount": "Delete account",
+  "deleteAccountSub": "Permanently erases your circle & history",
+  "deleteAccountQuestion": "Delete account?",
+  "deleteAccountBody": "This permanently erases your circles, contacts and journey history. This cannot be undone.",
+  "accountDeleted": "Account deleted.",
+  "about": "About",
+  "version": "Version",
+  "termsOfService": "Terms of Service",
+  "privacyPolicy": "Privacy Policy",
+  "aboutFooter": "SafeCircle · Made to keep your circle safe",
+  "cancel": "Cancel",
+  "beforeYouStart": "Before you start",
+  "journeyPermissionsReason": "A journey needs these so your check-in reminders ring on time and your circle can see where you are.",
+  "shareLiveLocation": "Share your live location",
+  "shareLiveLocationReason": "Your circle sees where you are on the map.",
+  "notificationsOffWarning": "You won't be notified about alerts — enable notifications in Settings.",
+  "almostThere": "ALMOST THERE",
+  "allowPermissions": "Allow permissions",
+  "allowPermissionsHint": "SafeCircle only uses these to keep you and your circle safe. You're always in control — change them anytime in Settings.",
+  "locationDenied": "Location denied — enable it in system settings.",
+  "notificationsDenied": "Notifications denied — enable them in system settings.",
+  "turnOnAlarms": "Turn on \"Alarms & reminders\" for SafeCircle, then come back.",
+  "contactsDenied": "Contacts denied — enable it in system settings.",
+  "location": "Location",
+  "locationPermissionSub": "So your circle can see you've arrived safely.",
+  "notificationsPermissionSub": "So we can remind you when a check-in is due.",
+  "alarmsAndReminders": "Alarms & reminders",
+  "alarmsPermissionSub": "So check-in reminders ring exactly on time.",
+  "backgroundActivity": "Background activity (recommended)",
+  "backgroundPermissionSub": "So reminders still fire when your phone is idle.",
+  "contactsOptional": "Contacts (optional)",
+  "contactsPermissionSub": "To quickly invite the people you trust.",
+  "locationAndNotificationsRequired": "Location and Notifications are required for SafeCircle to protect you.",
+  "locationRequired": "Location is required for SafeCircle to protect you.",
+  "setUpLater": "Set up later",
+  "openSystemSettings": "Open system settings",
+  "allowed": "Allowed",
+  "allow": "Allow",
+  "profileUpdated": "Profile updated",
+  "verificationLinkSent": "Verification link sent to {email} — confirm it to switch.",
+  "@verificationLinkSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "passwordChanged": "Password changed",
+  "safetyPinUpdated": "Safety PIN updated",
+  "panicPinUpdated": "Panic PIN updated",
+  "editProfile": "Edit profile",
+  "editProfileHint": "Update how your circle sees you. Your phone lets friends call you during a journey.",
+  "changeEmailHint": "We'll send a verification link to the new address. Sign-in and invites move to it once confirmed. Current: {email}",
+  "@changeEmailHint": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "newEmail": "New email",
+  "currentPassword": "Current password",
+  "useSixCharacters": "Use at least 6 characters.",
+  "newPassword": "New password",
+  "confirmNewPassword": "Confirm new password",
+  "safetyPinHintShort": "This PIN confirms you are OK at each check-in.",
+  "currentPin": "Current PIN",
+  "newPin": "New PIN",
+  "panicPinHintShort": "Entering this PIN looks normal but silently alerts your circle.",
+  "currentPanicPin": "Current panic PIN",
+  "newPanicPin": "New panic PIN",
+  "fullName": "Full name",
+  "saveChanges": "Save changes",
+  "deleteCircleQuestion": "Delete {circle}?",
+  "@deleteCircleQuestion": {
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteCircleBody": "Everyone in this circle stops following your journeys and alerts. This can’t be undone.",
+  "deleteCircle": "Delete circle",
+  "theOwner": "the owner",
+  "leaveCircleQuestion": "Leave {circle}?",
+  "@leaveCircleQuestion": {
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      }
+    }
+  },
+  "leaveCircleBody": "You'll stop following {owner}'s journeys and alerts, and this circle stops seeing your location. {owner} can invite you again.",
+  "@leaveCircleBody": {
+    "placeholders": {
+      "owner": {
+        "type": "String"
+      }
+    }
+  },
+  "leaveCircle": "Leave circle",
+  "couldNotLeaveCircle": "Could not leave the circle. Try again.",
+  "resendInvitationQuestion": "Resend invitation to {name}?",
+  "@resendInvitationQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "resendInvitationTextBody": "We'll text {phone} again and remind them in the app.",
+  "@resendInvitationTextBody": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "resendInvitationAppBody": "We'll remind them in the app if they have SafeCircle. If not, you'll pick how to send them the invitation yourself.",
+  "resend": "Resend",
+  "couldNotResendInvitation": "Could not resend the invitation. Try again.",
+  "removePersonQuestion": "Remove {name}?",
+  "@removePersonQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "removePersonBody": "They will no longer follow your journeys or receive your alerts.",
+  "remove": "Remove",
+  "couldNotRemoveParticipant": "Could not remove the participant. Try again.",
+  "participantCount": "{count, plural, =1{1 participant} other{{count} participants}}",
+  "@participantCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "participants": "Participants",
+  "addMoreParticipants": "Add more participants",
+  "deleteThisCircle": "Delete this circle",
+  "leaveThisCircle": "Leave this circle",
+  "deleteJourneyQuestion": "Delete this journey?",
+  "deleteJourneyBody": "This removes the journey from {date} from your history. This can’t be undone.",
+  "@deleteJourneyBody": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteJourneyBodyNoDate": "This removes this journey from your history. This can’t be undone.",
+  "deleteJourney": "Delete journey",
+  "couldNotDeleteJourney": "Could not delete the journey. Try again.",
+  "deleteAllJourneysQuestion": "Delete all journeys?",
+  "deleteAllJourneysBody": "{count, plural, =1{This removes 1 journey from your history. This can’t be undone.} other{This removes all {count} journeys from your history. This can’t be undone.}}",
+  "@deleteAllJourneysBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteAll": "Delete all",
+  "journeysDeleted": "{count, plural, =1{Deleted 1 journey.} other{Deleted {count} journeys.}}",
+  "@journeysDeleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "couldNotDeleteJourneys": "Could not delete your journeys. Try again.",
+  "journeyHistory": "Journey history",
+  "planNewJourney": "Plan new journey",
+  "noPastJourneys": "No past journeys yet",
+  "noPastJourneysHint": "Your completed journeys will show up here once you finish one.",
+  "journey": "Journey",
+  "completed": "Completed",
+  "checkInOverdue": "Check-in overdue",
+  "checkInDueNow": "Check-in due now",
+  "journeyActive": "Journey active",
+  "journeyActiveAt": "Journey active · {place}",
+  "@journeyActiveAt": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "circleColon": "Circle:",
+  "checkIns": "Check-ins",
+  "endJourney": "End journey",
+  "getMeOut": "Get me out of here",
+  "messages": "Messages",
+  "overdue": "Overdue",
+  "dueNow": "Due now",
+  "confirmed": "Confirmed",
+  "confirm": "Confirm",
+  "upcoming": "Upcoming",
+  "missedCheckInTitle": "You missed a check-in",
+  "checkInDueTitle": "Check-in due — are you safe?",
+  "missedCheckInBody": "{label} · {time}. Your circle has been alerted — confirm now to let them know you're okay.",
+  "@missedCheckInBody": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmWithinBody": "Confirm within {minutes} min or your circle will be alerted.",
+  "@confirmWithinBody": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "pickOneAlert": "Pick at least one alert.",
+  "waitingForLocation": "Waiting for a location — try again in a moment.",
+  "newPlace": "New place",
+  "placeAdded": "{name} added · circle will be alerted",
+  "@placeAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotSavePlace": "Could not save the place. Try again.",
+  "deleteNamedQuestion": "Delete {name}?",
+  "@deleteNamedQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deletePlaceBody": "Your circle will no longer be alerted about arrivals and departures here.",
+  "deletePlace": "Delete place",
+  "editPlace": "Edit place",
+  "placeNameExample": "e.g. Gym, Grandma's house",
+  "gettingLocation": "Getting your location…",
+  "noLocationYet": "No location yet",
+  "useCurrentLocation": "Use my current location",
+  "alertRadius": "ALERT RADIUS",
+  "arrives": "Arrives",
+  "leaves": "Leaves",
+  "savePlace": "Save Place",
+  "you": "You",
+  "locating": "Locating…",
+  "tripHistoryToday": "Trip history · {today}",
+  "@tripHistoryToday": {
+    "placeholders": {
+      "today": {
+        "type": "String"
+      }
+    }
+  },
+  "pauseSharing": "Pause sharing",
+  "resumeSharing": "Resume sharing",
+  "call": "Call",
+  "message": "Message",
+  "sharingAgain": "Sharing your live location again.",
+  "locationOffOnPhone": "Location is off on this phone — turn it on in Settings.",
+  "pauseSharingQuestion": "Pause location sharing?",
+  "pauseSharingBody": "Your circle won't see where you are until you resume. Journeys, check-ins and SOS keep working.",
+  "pause": "Pause",
+  "sharingPaused": "Location sharing paused.",
+  "charging": "Charging",
+  "lowBattery": "Low battery",
+  "battery": "Battery",
+  "alertResolvedReturning": "Alert resolved — returning home…",
+  "markedResolved": "Marked as resolved",
+  "youConfirmedSafe": "You confirmed {name} is safe · just now",
+  "@youConfirmedSafe": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "liveLocation": "Live location",
+  "updating": "Updating",
+  "atTimeOfAlert": "At the time of the alert",
+  "locationUnavailable": "Location unavailable",
+  "pinnedOnMap": "Pinned on the map",
+  "noPositionShared": "No position shared",
+  "lastRecordedCheckIn": "Last recorded check-in",
+  "callName": "Call {name}",
+  "@callName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "openInMaps": "Open in Maps",
+  "reopenAlert": "Reopen alert",
+  "markAsResolved": "Mark as resolved",
+  "tripHistoryEyebrow": "TRIP HISTORY",
+  "yourTrips": "Your trips",
+  "namesTrips": "{name}'s trips",
+  "@namesTrips": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "noTripsThisWeek": "No trips this week",
+  "weekSummary": "{miles} mi · Top speed {speed}",
+  "@weekSummary": {
+    "placeholders": {
+      "miles": {
+        "type": "String"
+      },
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "allTripsCount": "All trips {count}",
+  "@allTripsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "overSpeedCount": "Over {speed} {count}",
+  "@overSpeedCount": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripsRecordedYou": "Trips are recorded automatically whenever you leave a {meters} m radius and end after {minutes} minutes stopped.",
+  "@tripsRecordedYou": {
+    "placeholders": {
+      "meters": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "tripsRecordedName": "Trips are recorded automatically whenever {name} leaves a {meters} m radius and end after {minutes} minutes stopped.",
+  "@tripsRecordedName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "meters": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "noTripsRecorded": "No trips recorded this week.",
+  "noTripsMatch": "No trips match this filter.",
+  "thisWeek": "This week",
+  "lastWeek": "Last week",
+  "sinceDay": "Since {day}",
+  "@sinceDay": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "tripsPerWeek": "TRIPS PER WEEK",
+  "thisWeekShort": "This\nweek",
+  "lastWeekShort": "Last\nweek",
+  "termsServiceTitle": "1. The service",
+  "termsServiceBody": "SafeCircle helps you share planned journeys and check-ins with people you trust. It complements — never replaces — emergency services.",
+  "termsResponsibilitiesTitle": "2. Your responsibilities",
+  "termsResponsibilitiesBody": "Keep your account, safety PIN and panic PIN private, and only add emergency contacts who have agreed to receive alerts on your behalf.",
+  "termsAlertsTitle": "3. Alerts",
+  "termsAlertsBody": "Alerts depend on your device connectivity and location permissions. In a life-threatening situation, always contact local emergency services first.",
+  "privacyCollectTitle": "What we collect",
+  "privacyCollectBody": "Your profile details, journey plans, check-in confirmations and — only while a journey is active — your location.",
+  "privacyWhoTitle": "Who can see it",
+  "privacyWhoBody": "Only the circles and emergency contacts you choose. Your location is never sold or shared with advertisers.",
+  "privacyControlTitle": "Your control",
+  "privacyControlBody": "You can end sharing at any time, and deleting your account permanently erases your circles and journey history.",
+  "lastUpdatedJune2026": "Last updated · June 2026",
+  "allCheckInsConfirmed": "All check-ins confirmed — end the journey when you arrive",
+  "labelCheckInOverdue": "{label} check-in overdue — your circle has been alerted",
+  "@labelCheckInOverdue": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "labelCheckInDueNow": "{label} check-in due now — confirm you're safe",
+  "@labelCheckInDueNow": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "nextCheckInLabel": "Next check-in: {label} · {time}",
+  "@nextCheckInLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "yourJourneyWith": "Your journey · {circle}",
+  "@yourJourneyWith": {
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      }
+    }
+  },
+  "noActiveFriendJourneys": "There are no active journeys from your friends at this time",
+  "nextCheckInPrefix": "Next check-in: ",
+  "panicAlert": "Panic alert",
+  "checkInDuePrefix": "Check-in due: ",
+  "waiting": "· waiting",
+  "journeyWith": "Journey with {circle}",
+  "@journeyWith": {
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      }
+    }
+  },
+  "silentAlert": "Silent alert",
+  "onTime": "On time",
+  "usedPanicPin": "{name} used the panic PIN — they may be in danger. Call them or {emergency}.",
+  "@usedPanicPin": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "emergency": {
+        "type": "String"
+      }
+    }
+  },
+  "missedCheckInAt": "Missed check-in at {time}. Reach out to {name}.",
+  "@missedCheckInAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "aCheckInWasMissed": "A check-in was missed. Reach out to {name}.",
+  "@aCheckInWasMissed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "missed": "Missed",
+  "alertSent": "Alert sent",
+  "sentJustNow": "{time} · just now",
+  "@sentJustNow": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "locationShared": "Location shared",
+  "enableLocationToShare": "Enable location to share where you are",
+  "live": "Live",
+  "alertedInApp": "{count, plural, =1{Alerted in the app · 1 person} other{Alerted in the app · {count} people}}",
+  "@alertedInApp": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noOneToAlert": "No one on SafeCircle to alert yet",
+  "textMyLocation": "Text my location to contacts",
+  "emergencySmsNoLocation": "EMERGENCY — I need help. Sent from SafeCircle.",
+  "emergencySmsWithLocation": "EMERGENCY — I need help. My location: {link} ({place})",
+  "@emergencySmsWithLocation": {
+    "placeholders": {
+      "link": {
+        "type": "String"
+      },
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "alsoCall": "Also call {number}",
+  "@alsoCall": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelAlertSafe": "Cancel alert — I'm safe",
+  "callOrTextToCheck": "Call or text to make sure",
+  "newJourney": "New journey",
+  "newJourneyHint": "Schedule when you'll check in. If you miss one, your circle is alerted.",
+  "selectTiming": "Select the timing",
+  "otherInformation": "Other information",
+  "journeyNoteExample": "Meeting at the bar",
+  "addCheckIn": "Add check-in",
+  "startJourney": "Start the journey",
+  "pickTimeOneMinute": "Pick a time at least 1 minute from now.",
+  "textInvitationsSent": "{count, plural, =1{Text invitation sent to 1 person.} other{Text invitation sent to {count} people.}}",
+  "@textInvitationsSent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noAccountYetFor": "No SafeCircle account yet for: {emails}",
+  "@noAccountYetFor": {
+    "placeholders": {
+      "emails": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotSaveCircle": "Could not save the circle. Try again.",
+  "addParticipants": "Add participants",
+  "addingTo": "Adding to ",
+  "addingToHint": ". Participants join with the email of their SafeCircle account — that's how they follow your journeys.",
+  "saveParticipant": "Save participant",
+  "add": "Add",
+  "participantsCount": "PARTICIPANTS · {count}",
+  "@participantsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noParticipantsYet": "No participants yet",
+  "saveCircle": "Save circle",
+  "createCircle": "Create circle",
+  "resendAlreadyJoined": "{name} already joined this circle.",
+  "@resendAlreadyJoined": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "resendTexted": "Invitation texted to {name} again.",
+  "@resendTexted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "resendTooSoon": "{minutes, plural, =1{You just texted {name}. Try again in 1 minute.} other{You just texted {name}. Try again in {minutes} minutes.}}",
+  "@resendTooSoon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "resendLimited": "Daily text limit reached. Try again tomorrow.",
+  "resendFailed": "Could not text {name}.",
+  "@resendFailed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "resendFailedInAppWaiting": "Could not text {name}. The in-app invitation is still waiting for them.",
+  "@resendFailedInAppWaiting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "resendInApp": "In-app invitation sent to {name} again.",
+  "@resendInApp": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "resendNoAccount": "No SafeCircle account yet for {name}. Add a phone number to text them.",
+  "@resendNoAccount": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "circleNotifiedNextAt": "Your circle has been notified. Next check-in at {time}.",
+  "@circleNotifiedNextAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "allCheckedIn": "You're all checked in for this journey. Have a safe trip.",
+  "checkInConfirmed": "Check-in confirmed!",
+  "backToJourney": "Back to journey",
+  "journeyFinished": "Journey finished",
+  "journeyFinishedHint": "You're safe and your circle has been notified that you've arrived.",
+  "backHome": "Back home",
+  "emergencyContacts": "Emergency contacts",
+  "emergencyContactsHint": "On any alert they get a text with your location, and a notification in the app if they use SafeCircle.",
+  "addTwoContacts": "Add at least 2 emergency contacts to start a journey.",
+  "alwaysAlerted": "{count, plural, =1{Always alerted · 1 contact} other{Always alerted · {count} contacts}}",
+  "@alwaysAlerted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "removeContactBody": "They will no longer be alerted when you send an SOS.",
+  "removeContact": "Remove contact",
+  "addEmergencyContact": "Add emergency contact",
+  "noPhoneNumber": "No phone number available.",
+  "couldNotOpenDialer": "Could not open the dialer.",
+  "couldNotOpenMessages": "Could not open messages.",
+  "noPhoneNumbers": "No phone numbers available.",
+  "noLocationYetShort": "No location available yet.",
+  "couldNotOpenMaps": "Could not open the maps app.",
+  "replayOf": "{day} · Replay",
+  "@replayOf": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "tripSummaryTop": "{start} – {end} · {distance} · top {speed}",
+  "@tripSummaryTop": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      },
+      "distance": {
+        "type": "String"
+      },
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "metricTime": "TIME",
+  "metricSpeed": "SPEED",
+  "metricDistance": "DISTANCE",
+  "unitMph": " mph",
+  "unitMi": " mi",
+  "leftPlace": "Left {place}",
+  "@leftPlace": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "theStart": "the start",
+  "speedingOver": "Speeding · over {speed}",
+  "@speedingOver": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "arrivedAt": "Arrived at {place}",
+  "@arrivedAt": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "theEnd": "the end",
+  "editProfileSub": "Name, photo & personal info",
+  "myEmergencyContacts": "My emergency contacts",
+  "peopleWillBeAlerted": "{count, plural, =1{1 person will be alerted} other{{count} people will be alerted}}",
+  "@peopleWillBeAlerted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "myCircles": "My circles",
+  "completedJourneys": "{count, plural, =1{1 completed journey} other{{count} completed journeys}}",
+  "@completedJourneys": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profile": "Profile",
+  "me": "Me",
+  "couldNotUpdatePhoto": "Could not update the photo.",
+  "waitingFirstUpdate": "Waiting for the first update",
+  "liveUpdatedJustNow": "Live · updated just now",
+  "updatedMinAgo": "Updated {minutes} min ago",
+  "@updatedMinAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "noRecentUpdate": "No recent update",
+  "moving": "Moving",
+  "movingAt": "Moving · {speed}",
+  "@movingAt": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "stopped": "Stopped",
+  "atPlaceSince": "At place since {time}",
+  "@atPlaceSince": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "friendsNeedAttention": "{count, plural, =1{1 friend needs attention} other{{count} friends need attention}}",
+  "@friendsNeedAttention": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "namesCheckInDue": "{name}'s check-in is due",
+  "@namesCheckInDue": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "checkInsAreDue": "{count} check-ins are due",
+  "@checkInsAreDue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "friendsOnJourney": "{count, plural, =1{1 friend on a journey} other{{count} friends on a journey}}",
+  "@friendsOnJourney": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "whosWatching": "Who's watching?",
+  "pickCircleHint": "Pick the circle that monitors this journey.",
+  "nobodyAcceptedYet": "Nobody in this circle has accepted the invite yet, so no one could see this journey. Wait for a member to accept before starting.",
+  "addTwoContactsBeforeStart": "Add 2 emergency contacts before starting",
+  "schedule": "SCHEDULE",
+  "starting": "Starting…",
+  "startJourneyButton": "Start journey",
+  "needCircleFirst": "You need a circle first. Tap the Circles tab below to create one.",
+  "peopleWatching": "{count, plural, =1{1 person watching} other{{count} people watching}}",
+  "@peopleWatching": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "couldNotOpenContacts": "Could not open your contacts.",
+  "nameExampleContact": "e.g. Jessica Moore",
+  "photo": "Photo",
+  "couldNotOpenPhotos": "Could not open the photo library.",
+  "photoAdded": "Photo added",
+  "addPhoto": "Add a photo",
+  "emailRequired": "E-mail (required)",
+  "emailShouldMatch": "Email should match their account",
+  "importFromContacts": "Import from contacts",
+  "circlesSummary": "{circles, plural, =1{1 circle} other{{circles} circles}} · {members, plural, =1{1 member} other{{members} members}}",
+  "@circlesSummary": {
+    "placeholders": {
+      "circles": {
+        "type": "int"
+      },
+      "members": {
+        "type": "int"
+      }
+    }
+  },
+  "currentPinWrong": "Current PIN is incorrect.",
+  "currentPanicPinWrong": "Current panic PIN is incorrect.",
+  "newPinFourDigits": "The new PIN must have 4 digits.",
+  "mustDifferFromPanic": "It must differ from your panic PIN.",
+  "mustDifferFromSafety": "It must differ from your safety PIN.",
+  "enterValidEmail": "Enter a valid email.",
+  "enterCurrentPassword": "Enter your current password.",
+  "newPasswordTooShort": "New password must have at least 6 characters.",
+  "tripsToday": "{count, plural, =1{1 trip today} other{{count} trips today}}",
+  "@tripsToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripsTodayMiles": "{count, plural, =1{1 trip · {miles} mi today} other{{count} trips · {miles} mi today}}",
+  "@tripsTodayMiles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "miles": {
+        "type": "String"
+      }
+    }
+  },
+  "alertsOff": "Alerts off",
+  "alertArriveLeave": "Alert on arrive & leave",
+  "alertArrive": "Alert on arrive",
+  "alertLeave": "Alert on leave",
+  "tripStart": "Start",
+  "tripEnd": "End",
+  "arrivedAtPlace": "{name} arrived at {place}",
+  "@arrivedAtPlace": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "leftPlaceNamed": "{name} left {place}",
+  "@leftPlaceNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "hasLowBattery": "{name} has a low battery",
+  "@hasLowBattery": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "lowBatterySub": "{level} · Location may stop updating soon",
+  "@lowBatterySub": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "myCirclesTitle": "My circles",
+  "createNewCircle": "Create new circle",
+  "noCircleYet": "You don't have any circle created",
+  "noCircleYetHint": "Create a circle to gather the people you trust and share your journeys with them.",
+  "newCircleInvite": "New circle invite",
+  "newBadge": "NEW",
+  "memberCount": "{count, plural, =1{1 member} other{{count} members}}",
+  "@memberCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "emergencySos": "Emergency SOS",
+  "sosHint": "This alerts your circle in the app and texts your circle and emergency contacts your location.",
+  "sosNeedsContact": "Add at least one emergency contact before you can send an alert.",
+  "yourEmergencyContactsCount": "Your emergency contacts · {count}",
+  "@yourEmergencyContactsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unavailable": "Unavailable",
+  "keepHolding": "Keep holding…",
+  "holdToAlert": "Hold to alert",
+  "addContactBeforeAlert": "Add an emergency contact before sending an alert.",
+  "notificationChannelName": "SafeCircle alerts",
+  "notificationChannelDescription": "Check-in reminders and safety alerts",
+  "reminderDueTitle": "Check-in due now",
+  "reminderDueBody": "{label} · {time} — open SafeCircle and confirm you're safe.",
+  "@reminderDueBody": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderLastCallTitle": "Last call: confirm your check-in",
+  "reminderLastCallBody": "{label} · {time} — your circle will be alerted in 1 minute.",
+  "@reminderLastCallBody": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "testNotificationTitle": "SafeCircle notifications are working",
+  "testNotificationBody": "You will be alerted like this for check-ins, overdue friends and emergencies.",
+  "circleInvite": "Circle invite",
+  "inviteNotificationBody": "{summary} — open SafeCircle to accept.",
+  "@inviteNotificationBody": {
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "speedAlertTitle": "Speed alert on your last trip",
+  "speedAlertBody": "{trip} · top {speed}",
+  "@speedAlertBody": {
+    "placeholders": {
+      "trip": {
+        "type": "String"
+      },
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "checkIn": "Check-in",
+  "checkInOverdueReachOut": "{label} is overdue — reach out.",
+  "@checkInOverdueReachOut": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "places": "Places",
+  "placesHint": "Your circle gets an alert when someone arrives at or leaves these places.",
+  "noPlacesYet": "No places yet. Add home, school or work and the circle is told when someone gets there.",
+  "addPlace": "Add Place",
+  "savedLocation": "Saved location",
+  "couldNotUpdatePlace": "Could not update the place.",
+  "sharingPausedBanner": "Your location sharing is paused",
+  "turnOnLocation": "Turn on your location",
+  "sharingPausedBannerSub": "Your circle can't see where you are. Tap to resume.",
+  "turnOnLocationSub": "Your circle can't see you yet. Tap to allow location.",
+  "noOneSharing": "No one is sharing yet",
+  "noOneSharingHint": "Invite the people you trust to a circle. Everyone who joins and shares their location appears here.",
+  "goToCircles": "Go to circles",
+  "firstCheckIn": "First check-in",
+  "secondCheckIn": "Second check-in",
+  "checkOut": "Check-out",
+  "numberedCheckIn": "Check-in {number}",
+  "@numberedCheckIn": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "couldNotJoinNoAccess": "Couldn't join: the app doesn't have access to this circle yet. Ask {name} to send the invite again.",
+  "@couldNotJoinNoAccess": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotAcceptInvite": "Could not accept the invite. Try again.",
+  "circleInviteEyebrow": "CIRCLE INVITE",
+  "addedYouToCircle": "{name} added you to the circle {circle} on SafeCircle.",
+  "@addedYouToCircle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "circle": {
+        "type": "String"
+      }
+    }
+  },
+  "joinHint": "Join and {name} will be able to invite you to follow their journeys and get alerted if they're ever overdue. You can leave the circle at any time.",
+  "@joinHint": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "joining": "Joining…",
+  "accept": "Accept",
+  "decline": "Decline",
+  "confirmToEndJourney": "Confirm to end journey",
+  "confirmYourCheckIn": "Confirm your check-in",
+  "enterPinToEnd": "Enter your PIN to end this journey safely.",
+  "incorrectPin": "Incorrect PIN. Try again.",
+  "friendsJourneys": "Friends' Journeys",
+  "noNewNotifications": "No new notifications.",
+  "renameCircle": "Rename circle",
+  "nameYourCircle": "Name your circle",
+  "circleNameHint": "Pick a name — add an emoji to make it easy to spot.",
+  "circlesName": "Circle's name",
+  "circleNameExample": "e.g. 🏠 Family",
+  "save": "Save",
+  "locationSharingChannel": "Location sharing",
+  "locationSharingChannelDescription": "Shown while SafeCircle shares your location with your circle.",
+  "sharingNotificationTitle": "SafeCircle is sharing your location",
+  "sharingNotificationBody": "Your circle can see where you are.",
+  "checkInInPast": "\"{label}\" is already in the past — adjust its time.",
+  "@checkInInPast": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "journeyStartsWithoutLocation": "Location unavailable — journey starts without a map position.",
+  "couldNotStartJourney": "Could not start the journey. Try again.",
+  "createYourFirstCircle": "Create your first circle",
+  "nothingNewYet": "Nothing new yet.",
+  "activity": "Activity",
+  "delete": "Delete",
+  "back": "Back",
+  "checkConnection": "Check your connection and try again.",
+  "couldNotLoadThis": "Couldn't load this",
+  "couldNotLoadAccount": "We couldn't load your account",
+  "checkInternet": "Check your internet connection and try again.",
+  "tryAgain": "Try again",
+  "createACircle": "Create a circle",
+  "journeysList": "Journeys list",
+  "couldNotSaveContact": "Could not save the contact. Try again.",
+  "editContact": "Edit contact",
+  "addContactHint": "They'll be alerted on every journey, always. We'll text them once to let them know you added them.",
+  "sharingWithCircles": "Sharing your live location with your circles.",
+  "locationOffEnable": "Location is off — enable it to share your position.",
+  "positionNotShared": "Your position is not being shared yet.",
+  "tabMap": "Map",
+  "tabJourneys": "Journeys",
+  "tabEmergency": "Emergency",
+  "tabProfile": "Profile",
+  "planAJourney": "Plan a journey",
+  "phoneNumber": "Phone number",
+  "addYourFirstCircle": "Add your first circle",
+  "resendInvitation": "Resend invitation",
+  "locationNotSharedYet": "Location not shared yet",
+  "couldNotSendAlert": "Could not send the alert. Check your connection and try again.",
+  "journeys": "Journeys",
+  "overSpeed": "Over {speed}",
+  "@overSpeed": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "withinLimit": "Within limit",
+  "friendsNeedAttentionActive": "{count, plural, =1{1 friend needs attention} other{{count} friends need attention}} · {active} active",
+  "@friendsNeedAttentionActive": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "active": {
+        "type": "int"
+      }
+    }
+  },
+  "friendsOnJourneyNow": "{count, plural, =1{1 friend currently on a journey} other{{count} friends currently on a journey}}",
+  "@friendsOnJourneyNow": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "countryUS": "United States",
+  "countryBR": "Brazil",
+  "countryPT": "Portugal",
+  "countryGB": "United Kingdom",
+  "countryES": "Spain",
+  "countryAR": "Argentina",
+  "countryFR": "France",
+  "countryMX": "Mexico",
+  "countryCN": "China",
+  "countryIN": "India",
+  "enterPinToPause": "Enter your PIN to pause.",
+  "smsConsentLabel": "They agreed to get SafeCircle texts at this number (invitations and safety alerts). Msg & data rates may apply. They can reply STOP to opt out.",
+  "profilePhoneSmsNote": "By adding your number, you agree to get SafeCircle texts about your circles' safety alerts. Msg & data rates may apply. Reply STOP to opt out.",
+  "privacySmsTitle": "Text messages",
+  "privacySmsBody": "We text a number only after the person agreed to it, and only for circle invitations and safety alerts — never marketing. Mobile numbers and opt-in consent are never sold or shared with third parties or affiliates for marketing. Reply STOP to any text to opt out, or HELP for help.",
+  "resendNoConsent": "{name} hasn't agreed to get texts yet. Once they agree, edit their details and tick the texting box.",
+  "@resendNoConsent": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteShareMessage": "I added you to my SafeCircle circle \"{circle}\" so we can look out for each other. Get the app: {link} and sign up with {email} to join.",
+  "inviteShareMessageNoEmail": "I added you to my SafeCircle circle \"{circle}\" so we can look out for each other. Get the app: {link} to join.",
+  "inviteShareSubject": "Join my SafeCircle circle",
+  "@inviteShareMessage": {
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      },
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "@inviteShareMessageNoEmail": {
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      }
+    }
+  }
+}

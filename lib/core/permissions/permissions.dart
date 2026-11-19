@@ -8,6 +8,7 @@ import 'package:safecircle/features/live_map/data/tracking_service.dart';
 import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/widgets/feather_icons.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 bool get _isAndroid => !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
@@ -68,9 +69,8 @@ Future<bool> ensureJourneyPermissions(BuildContext context) async {
   if (!context.mounted) return false;
   return await showPermissionSheet(
         context,
-        title: 'Before you start',
-        reason: 'A journey needs these so your check-in reminders ring on time and '
-            'your circle can see where you are.',
+        title: context.l10n.beforeYouStart,
+        reason: context.l10n.journeyPermissionsReason,
       ) ??
       false;
 }
@@ -81,8 +81,8 @@ Future<bool> ensureLiveSharingPermissions(BuildContext context) async {
   if (!context.mounted) return false;
   final ok = await showPermissionSheet(
     context,
-    title: 'Share your live location',
-    reason: 'Your circle sees where you are on the map.',
+    title: context.l10n.shareLiveLocation,
+    reason: context.l10n.shareLiveLocationReason,
   );
   return ok == true;
 }
@@ -104,7 +104,7 @@ Future<void> ensureAlertNotifications(BuildContext context) async {
       ? await NotificationService.instance.requestWebPermission()
       : (await Permission.notification.request()).isGranted;
   if (!ok && context.mounted) {
-    showScToast(context, "You won't be notified about alerts — enable notifications in Settings.");
+    showScToast(context, context.l10n.notificationsOffWarning);
   }
 }
 
@@ -112,7 +112,7 @@ Future<bool?> showPermissionSheet(
   BuildContext context, {
   required String title,
   required String reason,
-  String continueLabel = 'Continue',
+  String? continueLabel,
 }) {
   return showModalBottomSheet<bool>(
     context: context,
@@ -146,7 +146,7 @@ Future<bool?> showPermissionSheet(
               const SizedBox(height: 18),
               PermissionRows(
                 onContinue: () => Navigator.of(sheetContext).pop(true),
-                continueLabel: continueLabel,
+                continueLabel: continueLabel ?? context.l10n.continueLabel,
               ),
             ],
           ),
@@ -157,9 +157,9 @@ Future<bool?> showPermissionSheet(
 }
 
 class PermissionsScreen extends StatelessWidget {
-  const PermissionsScreen({super.key, required this.onContinue, this.eyebrow = 'ALMOST THERE'});
+  const PermissionsScreen({super.key, required this.onContinue, this.eyebrow});
   final VoidCallback onContinue;
-  final String eyebrow;
+  final String? eyebrow;
 
   @override
   Widget build(BuildContext context) {
@@ -173,11 +173,11 @@ class PermissionsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(eyebrow,
+                Text(eyebrow ?? context.l10n.almostThere,
                     style: ScText.sans(
                         size: 12, weight: FontWeight.w700, color: ScColors.brand, spacing: .9)),
                 const SizedBox(height: 8),
-                Text('Allow permissions',
+                Text(context.l10n.allowPermissions,
                     style: ScText.sans(
                         size: 28,
                         weight: FontWeight.w800,
@@ -186,7 +186,7 @@ class PermissionsScreen extends StatelessWidget {
                         spacing: -0.6)),
                 const SizedBox(height: 10),
                 Text(
-                  "SafeCircle only uses these to keep you and your circle safe. You're always in control — change them anytime in Settings.",
+                  context.l10n.allowPermissionsHint,
                   style: ScText.sans(
                       size: 14, weight: FontWeight.w500, color: ScColors.textSubtle, height: 21),
                 ),
@@ -207,12 +207,12 @@ class PermissionRows extends StatefulWidget {
   const PermissionRows({
     super.key,
     required this.onContinue,
-    this.continueLabel = 'Continue',
+    this.continueLabel,
     this.fillHeight = false,
     this.onSkip,
   });
   final VoidCallback onContinue;
-  final String continueLabel;
+  final String? continueLabel;
 
   final VoidCallback? onSkip;
 
@@ -251,7 +251,7 @@ class _PermissionRowsState extends State<PermissionRows> with WidgetsBindingObse
   Future<void> _allowLocation() async {
     final ok = await LocationService.instance.ensurePermission();
     if (!mounted) return;
-    if (!ok) showScToast(context, 'Location denied — enable it in system settings.');
+    if (!ok) showScToast(context, context.l10n.locationDenied);
     await _refresh();
   }
 
@@ -260,7 +260,7 @@ class _PermissionRowsState extends State<PermissionRows> with WidgetsBindingObse
         ? await NotificationService.instance.requestWebPermission()
         : (await Permission.notification.request()).isGranted;
     if (!mounted) return;
-    if (!ok) showScToast(context, 'Notifications denied — enable them in system settings.');
+    if (!ok) showScToast(context, context.l10n.notificationsDenied);
     await _refresh();
   }
 
@@ -268,7 +268,7 @@ class _PermissionRowsState extends State<PermissionRows> with WidgetsBindingObse
     final status = await Permission.scheduleExactAlarm.request();
     if (!mounted) return;
     if (!status.isGranted) {
-      showScToast(context, 'Turn on "Alarms & reminders" for SafeCircle, then come back.');
+      showScToast(context, context.l10n.turnOnAlarms);
     }
     await _refresh();
   }
@@ -281,7 +281,7 @@ class _PermissionRowsState extends State<PermissionRows> with WidgetsBindingObse
   Future<void> _allowContacts() async {
     final status = await Permission.contacts.request();
     if (!mounted) return;
-    if (!status.isGranted) showScToast(context, 'Contacts denied — enable it in system settings.');
+    if (!status.isGranted) showScToast(context, context.l10n.contactsDenied);
     await _refresh();
   }
 
@@ -293,40 +293,40 @@ class _PermissionRowsState extends State<PermissionRows> with WidgetsBindingObse
     final rows = <Widget>[
       _PermissionRow(
         icon: FeatherIcons.mapPin,
-        title: 'Location',
-        sub: "So your circle can see you've arrived safely.",
+        title: context.l10n.location,
+        sub: context.l10n.locationPermissionSub,
         granted: snap.location,
         onAllow: _allowLocation,
       ),
       if (notifRequired)
         _PermissionRow(
           icon: FeatherIcons.bell,
-          title: 'Notifications',
-          sub: 'So we can remind you when a check-in is due.',
+          title: context.l10n.notifications,
+          sub: context.l10n.notificationsPermissionSub,
           granted: snap.notifications,
           onAllow: _allowNotifications,
         ),
       if (_isAndroid && !snap.exactAlarms)
         _PermissionRow(
           icon: FeatherIcons.clock,
-          title: 'Alarms & reminders',
-          sub: 'So check-in reminders ring exactly on time.',
+          title: context.l10n.alarmsAndReminders,
+          sub: context.l10n.alarmsPermissionSub,
           granted: snap.exactAlarms,
           onAllow: _allowExactAlarms,
         ),
       if (_isAndroid)
         _PermissionRow(
           icon: FeatherIcons.batteryCharging,
-          title: 'Background activity (recommended)',
-          sub: 'So reminders still fire when your phone is idle.',
+          title: context.l10n.backgroundActivity,
+          sub: context.l10n.backgroundPermissionSub,
           granted: snap.battery,
           onAllow: _allowBattery,
         ),
       if (!kIsWeb)
         _PermissionRow(
           icon: FeatherIcons.users,
-          title: 'Contacts (optional)',
-          sub: 'To quickly invite the people you trust.',
+          title: context.l10n.contactsOptional,
+          sub: context.l10n.contactsPermissionSub,
           granted: snap.contacts,
           onAllow: _allowContacts,
         ),
@@ -339,22 +339,22 @@ class _PermissionRowsState extends State<PermissionRows> with WidgetsBindingObse
           padding: const EdgeInsets.only(bottom: 10),
           child: Text(
             notifRequired
-                ? 'Location and Notifications are required for SafeCircle to protect you.'
-                : 'Location is required for SafeCircle to protect you.',
+                ? context.l10n.locationAndNotificationsRequired
+                : context.l10n.locationRequired,
             textAlign: TextAlign.center,
             style: ScText.sans(
                 size: 12.5, weight: FontWeight.w600, color: ScColors.textMuted, height: 17),
           ),
         ),
       ScButton(
-          label: widget.continueLabel,
+          label: widget.continueLabel ?? context.l10n.continueLabel,
           rightIcon: FeatherIcons.arrowRight,
           onPressed: ready ? widget.onContinue : null),
       if (!ready && widget.onSkip != null) ...[
         const SizedBox(height: 6),
         Center(
           child: ScButton(
-            label: 'Set up later',
+            label: context.l10n.setUpLater,
             variant: ScButtonVariant.link,
             fullWidth: false,
             onPressed: widget.onSkip,
@@ -365,7 +365,7 @@ class _PermissionRowsState extends State<PermissionRows> with WidgetsBindingObse
         const SizedBox(height: 6),
         Center(
           child: ScButton(
-            label: 'Open system settings',
+            label: context.l10n.openSystemSettings,
             variant: ScButtonVariant.link,
             fullWidth: false,
             onPressed: openAppSettings,
@@ -438,11 +438,11 @@ class _PermissionRow extends StatelessWidget {
               ? Row(children: [
                   const Icon(FeatherIcons.check, size: 20, color: ScColors.green500),
                   const SizedBox(width: 5),
-                  Text('Allowed',
+                  Text(context.l10n.allowed,
                       style: ScText.sans(
                           size: 14, weight: FontWeight.w700, color: ScColors.green500)),
                 ])
-              : ScButton(label: 'Allow', fullWidth: false, height: 40, onPressed: onAllow),
+              : ScButton(label: context.l10n.allow, fullWidth: false, height: 40, onPressed: onAllow),
         ],
       ),
     );

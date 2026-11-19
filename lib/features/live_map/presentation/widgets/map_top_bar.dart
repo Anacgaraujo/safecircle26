@@ -14,6 +14,7 @@ import 'package:safecircle/features/circles/domain/circle_invite.dart';
 import 'package:safecircle/features/live_map/domain/tracking.dart';
 import 'package:safecircle/features/live_map/presentation/widgets/map_controls.dart';
 import 'package:safecircle/features/places/presentation/places_screen.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class MapTopBar extends StatelessWidget {
   const MapTopBar({
@@ -64,7 +65,7 @@ class MapTopBar extends StatelessWidget {
                     ),
                     const SizedBox(width: 9),
                     Flexible(
-                      child: Text(circle?.name ?? 'Create a circle',
+                      child: Text(circle?.name ?? context.l10n.createACircle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: ScText.sans(size: 15, weight: FontWeight.w800)),
@@ -80,7 +81,7 @@ class MapTopBar extends StatelessWidget {
           if (onToggleHome != null) ...[
             MapRoundButton(
               icon: FeatherIcons.list,
-              tooltip: 'Journeys list',
+              tooltip: context.l10n.journeysList,
               onTap: onToggleHome,
             ),
             const SizedBox(width: 8),
@@ -156,7 +157,7 @@ class CircleMenu extends StatelessWidget {
                       children: [
                         Text(c.name, style: ScText.sans(size: 15, weight: FontWeight.w800)),
                         const SizedBox(height: 2),
-                        Text('${c.memberIds.length} ${c.memberIds.length == 1 ? 'member' : 'members'}',
+                        Text(context.l10n.memberCount(c.memberIds.length),
                             style: ScText.sans(
                                 size: 12, weight: FontWeight.w600, color: ScColors.textMuted)),
                       ],

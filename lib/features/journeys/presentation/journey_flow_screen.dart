@@ -9,6 +9,7 @@ import 'package:safecircle/core/permissions/permissions.dart';
 import 'package:safecircle/core/session/session.dart';
 import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/widgets/async_view.dart';
+import 'package:safecircle/core/widgets/sc_bottom_nav.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/circles/data/circle_repository.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
@@ -24,6 +25,7 @@ import 'package:safecircle/features/journeys/presentation/journey_flow/pick_circ
 import 'package:safecircle/features/journeys/presentation/journey_flow/plan_timing_step.dart';
 import 'package:safecircle/features/journeys/presentation/journey_history_view.dart';
 import 'package:safecircle/features/live_map/data/tracking_service.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class JourneyFlow extends ConsumerStatefulWidget {
   const JourneyFlow({super.key, this.startAtHistory = false});
@@ -112,7 +114,7 @@ class _JourneyFlowState extends ConsumerState<JourneyFlow> {
     if (starting) return;
     final past = firstPastCheckIn(checkIns, DateTime.now());
     if (past != null) {
-      showScToast(context, '"${past.label}" is already in the past — adjust its time.');
+      showScToast(context, context.l10n.checkInInPast(past.label));
       return;
     }
     if (!await ensureJourneyPermissions(context)) return;
@@ -124,7 +126,7 @@ class _JourneyFlowState extends ConsumerState<JourneyFlow> {
           await _service.start(circle: circle, checkIns: checkIns, note: noteCtrl.text.trim());
       if (!mounted) return;
       if (started.location == null) {
-        showScToast(context, 'Location unavailable — journey starts without a map position.');
+        showScToast(context, context.l10n.journeyStartsWithoutLocation);
       }
       setState(() {
         journeyId = started.id;
@@ -137,7 +139,7 @@ class _JourneyFlowState extends ConsumerState<JourneyFlow> {
       });
     } catch (_) {
       if (mounted) {
-        showScToast(context, 'Could not start the journey. Try again.');
+        showScToast(context, context.l10n.couldNotStartJourney);
         setState(() => starting = false);
       }
     }
@@ -238,6 +240,11 @@ class _JourneyFlowState extends ConsumerState<JourneyFlow> {
     return ScLocation(lat: live!.lastLat!, lng: live.lastLng!, label: live.lastPlace);
   }
 
+  void _leaveToTab(ScTab tab) {
+    ref.read(mainTabProvider.notifier).select(tab);
+    Navigator.of(context).popUntil((route) => route.isFirst);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (checkingResume) return const Scaffold(body: ScSpinner());
@@ -287,7 +294,21 @@ class _JourneyFlowState extends ConsumerState<JourneyFlow> {
       _JStep.history => JourneyHistoryView(onPlanNew: _planNew),
     };
 
+    // Without a circle the journey can't start, so show the app's tab bar
+    // here: the user sees the Circles tab and can jump straight to it.
+    final noCircles =
+        step == _JStep.circle && (ref.watch(myCirclesProvider).value?.isEmpty ?? false);
+
     return Scaffold(
+      bottomNavigationBar: noCircles
+          ? ScBottomNav(
+              active: ScTab.circles,
+              onTab: _leaveToTab,
+              onFab: () {},
+              coachmark: context.l10n.createYourFirstCircle,
+              mapHome: ref.read(sessionProvider).mapHome,
+            )
+          : null,
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 340),
         switchInCurve: ScMotion.easeOut,

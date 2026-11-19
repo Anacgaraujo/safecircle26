@@ -18,6 +18,7 @@ import 'package:safecircle/features/profile/domain/profile_rules.dart';
 import 'package:safecircle/features/profile/presentation/profile_form_screen.dart';
 import 'package:safecircle/features/profile/presentation/settings_screen.dart';
 import 'package:safecircle/features/profile/presentation/widgets/profile_ui.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key, this.onGoCircles});
@@ -41,26 +42,26 @@ class ProfileScreen extends ConsumerWidget {
     final items = [
           (
             FeatherIcons.edit3,
-            'Edit profile',
-            'Name, photo & personal info',
+            context.l10n.editProfile,
+            context.l10n.editProfileSub,
             () => pushScreen(context, const ProfileFormScreen(kind: ProfileFormKind.editProfile)),
           ),
           (
             FeatherIcons.users,
-            'My emergency contacts',
-            ccount == 1 ? '1 person will be alerted' : '$ccount people will be alerted',
+            context.l10n.myEmergencyContacts,
+            context.l10n.peopleWillBeAlerted(ccount),
             () => pushScreen(context, const EmergencyContactsScreen()),
           ),
           (
             null,
-            'My circles',
+            context.l10n.myCircles,
             circlesSummary(circles),
             onGoCircles ?? () {},
           ),
           (
             FeatherIcons.clock,
-            'Journey history',
-            '$historyCount completed journeys',
+            context.l10n.journeyHistory,
+            context.l10n.completedJourneys(historyCount),
             () => pushScreen(context, const JourneyFlow(startAtHistory: true)),
           ),
         ];
@@ -72,7 +73,7 @@ class ProfileScreen extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Profile', style: ScText.title()),
+                  Text(context.l10n.profile, style: ScText.title()),
                   ScCircleIconButton(
                     icon: FeatherIcons.settings,
                     onTap: () => pushScreen(context, const SettingsScreen()),
@@ -97,7 +98,7 @@ class ProfileScreen extends ConsumerWidget {
                           ),
                           child: ScAvatar(
                               image: app.userPhoto,
-                              name: app.userName.isEmpty ? 'Me' : app.userName,
+                              name: app.userName.isEmpty ? context.l10n.me : app.userName,
                               size: 104),
                         ),
                         Positioned(
@@ -113,7 +114,7 @@ class ProfileScreen extends ConsumerWidget {
                                 await ref.read(profileServiceProvider).updatePhoto(picked.path);
                               } catch (_) {
                                 if (context.mounted) {
-                                  showScToast(context, 'Could not update the photo.');
+                                  showScToast(context, context.l10n.couldNotUpdatePhoto);
                                 }
                               }
                             },
@@ -135,7 +136,7 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                   Center(
-                    child: Text(app.userName.isEmpty ? 'Me' : app.userName,
+                    child: Text(app.userName.isEmpty ? context.l10n.me : app.userName,
                         style: ScText.sans(size: 22, weight: FontWeight.w800, color: ScColors.textHeading, spacing: -.3)),
                   ),
                   const SizedBox(height: 5),

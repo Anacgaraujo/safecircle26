@@ -11,6 +11,7 @@ import 'package:safecircle/features/alerts/domain/alert_position.dart';
 import 'package:safecircle/features/alerts/domain/safety_alert.dart';
 import 'package:safecircle/features/journeys/data/journey_repository.dart';
 import 'package:safecircle/features/live_map/data/status_repository.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class AlertDetailScreen extends ConsumerStatefulWidget {
   const AlertDetailScreen({super.key, required this.alert});
@@ -33,7 +34,7 @@ class _AlertDetailScreenState extends ConsumerState<AlertDetailScreen> {
     }
     setState(() => resolved = true);
     sos.setResolved(widget.alert.id, true);
-    showScToast(context, 'Alert resolved — returning home…');
+    showScToast(context, context.l10n.alertResolvedReturning);
     final navigator = Navigator.of(context);
     Future.delayed(const Duration(milliseconds: 1800), () {
       if (mounted) navigator.pop();
@@ -89,7 +90,7 @@ class _AlertDetailScreenState extends ConsumerState<AlertDetailScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(resolved ? 'Marked as resolved' : '$friendFirst needs help',
+                          Text(resolved ? context.l10n.markedResolved : context.l10n.alertHeadlineHelp(friendFirst),
                               style: ScText.sans(size: 23, weight: FontWeight.w800, color: Colors.white, height: 27, spacing: -.4)),
                           const SizedBox(height: 5),
                           Row(
@@ -99,8 +100,8 @@ class _AlertDetailScreenState extends ConsumerState<AlertDetailScreen> {
                               Expanded(
                                 child: Text(
                                   resolved
-                                      ? 'You confirmed $friendFirst is safe · just now'
-                                      : '${widget.alert.kindLabel} · ${widget.alert.timeLabel}',
+                                      ? context.l10n.youConfirmedSafe(friendFirst)
+                                      : '${widget.alert.kindLabel} · ${widget.alert.timeText}',
                                   style: ScText.sans(size: 13, weight: FontWeight.w600, color: Colors.white.withValues(alpha: .9)),
                                 ),
                               ),
@@ -121,17 +122,17 @@ class _AlertDetailScreenState extends ConsumerState<AlertDetailScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const ScSectionLabel('Live location', icon: FeatherIcons.mapPin),
+                    ScSectionLabel(context.l10n.liveLocation, icon: FeatherIcons.mapPin),
                     if (pos.isLive)
                       Row(
                         children: [
                           Container(width: 7, height: 7, decoration: const BoxDecoration(color: ScColors.green500, shape: BoxShape.circle)),
                           const SizedBox(width: 6),
-                          Text('Updating', style: ScText.sans(size: 11.5, weight: FontWeight.w700, color: ScColors.green500)),
+                          Text(context.l10n.updating, style: ScText.sans(size: 11.5, weight: FontWeight.w700, color: ScColors.green500)),
                         ],
                       )
                     else if (widget.alert.lat != null)
-                      Text('At the time of the alert',
+                      Text(context.l10n.atTimeOfAlert,
                           style: ScText.sans(size: 11.5, weight: FontWeight.w700, color: ScColors.textMuted)),
                   ],
                 ),
@@ -170,12 +171,12 @@ class _AlertDetailScreenState extends ConsumerState<AlertDetailScreen> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(pos.place.isEmpty ? (pos.lat == null ? 'Location unavailable' : 'Pinned on the map') : pos.place,
+                                      Text(pos.place.isEmpty ? (pos.lat == null ? context.l10n.locationUnavailable : context.l10n.pinnedOnMap) : pos.place,
                                           style: ScText.sans(size: 13.5, weight: FontWeight.w800, color: ScColors.textHeading)),
                                       const SizedBox(height: 1),
                                       Text(
                                           pos.lat == null
-                                              ? 'No position shared'
+                                              ? context.l10n.noPositionShared
                                               : '${pos.lat!.toStringAsFixed(4)}, ${pos.lng!.toStringAsFixed(4)}',
                                           style: ScText.mono(size: 11, color: ScColors.textMuted)),
                                     ],
@@ -191,7 +192,7 @@ class _AlertDetailScreenState extends ConsumerState<AlertDetailScreen> {
                 ),
                 if (lastConfirmed != null) ...[
                   const SizedBox(height: 16),
-                  const ScSectionLabel('Last recorded check-in', icon: FeatherIcons.clock),
+                  ScSectionLabel(context.l10n.lastRecordedCheckIn, icon: FeatherIcons.clock),
                   const SizedBox(height: 9),
                   ScCard(
                     padding: const EdgeInsets.all(15),
@@ -212,7 +213,7 @@ class _AlertDetailScreenState extends ConsumerState<AlertDetailScreen> {
                                   style: ScText.sans(size: 15, weight: FontWeight.w800, color: ScColors.textHeading)),
                               const SizedBox(height: 2),
                               Text(
-                                  '${lastConfirmed.date} · ${lastConfirmed.time}${(lastConfirmed.place ?? '').isEmpty ? '' : ' · ${lastConfirmed.place}'}',
+                                  '${lastConfirmed.dateText} · ${lastConfirmed.timeText}${(lastConfirmed.place ?? '').isEmpty ? '' : ' · ${lastConfirmed.place}'}',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: ScText.mono(size: 12.5, color: ScColors.textMuted)),
@@ -238,7 +239,7 @@ class _AlertDetailScreenState extends ConsumerState<AlertDetailScreen> {
                   children: [
                     Expanded(
                       child: ScButton(
-                        label: 'Call $friendFirst',
+                        label: context.l10n.callName(friendFirst),
                         leftIcon: FeatherIcons.phoneCall,
                         onPressed: () => callPhone(context, widget.alert.fromPhone),
                       ),
@@ -246,7 +247,7 @@ class _AlertDetailScreenState extends ConsumerState<AlertDetailScreen> {
                     const SizedBox(width: 11),
                     Expanded(
                       child: ScButton(
-                        label: 'Open in Maps',
+                        label: context.l10n.openInMaps,
                         variant: ScButtonVariant.ink,
                         leftIcon: FeatherIcons.navigation,
                         onPressed: () => openInMaps(context, pos.lat, pos.lng, label: pos.place),
@@ -259,7 +260,7 @@ class _AlertDetailScreenState extends ConsumerState<AlertDetailScreen> {
                   onPressed: _toggleResolved,
                   icon: Icon(resolved ? FeatherIcons.alertCircle : FeatherIcons.check,
                       size: 16, color: resolved ? ScColors.brand : ScColors.textMuted),
-                  label: Text(resolved ? 'Reopen alert' : 'Mark as resolved',
+                  label: Text(resolved ? context.l10n.reopenAlert : context.l10n.markAsResolved,
                       style: ScText.sans(size: 13.5, weight: FontWeight.w700, color: resolved ? ScColors.brand : ScColors.textMuted)),
                 ),
               ],

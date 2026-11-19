@@ -2,6 +2,7 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:safecircle/core/widgets/sc_bottom_nav.dart';
 import 'package:safecircle/core/data/lookup_hash.dart';
 import 'package:safecircle/core/location/location_service.dart';
 import 'package:safecircle/core/session/session.dart';
@@ -252,6 +253,40 @@ void main() {
     });
   });
 
+  group('journey history', () {
+    late FakeFirebaseFirestore db;
+    JourneyRepository repo() {
+      final alerts = AlertRepository(db,
+          contacts: ContactsRepository(db, currentUid: () => 'ana'), currentUid: () => 'ana');
+      return JourneyRepository(db, alerts: alerts, currentUid: () => 'ana');
+    }
+
+    Future<void> add(String id, String owner, String status) =>
+        db.collection('journeys').doc(id).set({'ownerId': owner, 'status': status});
+
+    Future<List<String>> ids() async => (await db.collection('journeys').get()).docs.map((d) => d.id).toList();
+
+    setUp(() async {
+      db = FakeFirebaseFirestore();
+      await add('old1', 'ana', 'finished');
+      await add('old2', 'ana', 'finished');
+      await add('now', 'ana', 'active');
+      await add('bia1', 'bia', 'finished');
+    });
+
+    test('deletes one finished journey, never an active one or someone else\'s', () async {
+      await repo().deleteFinishedJourney('old1');
+      await repo().deleteFinishedJourney('now');
+      await repo().deleteFinishedJourney('bia1');
+      expect(await ids(), unorderedEquals(['old2', 'now', 'bia1']));
+    });
+
+    test('deletes all my finished journeys', () async {
+      expect(await repo().deleteAllFinishedJourneys(), 2);
+      expect(await ids(), unorderedEquals(['now', 'bia1']));
+    });
+  });
+
   group('screens', () {
     testWidgets('home lists the friend who needs attention first', (tester) async {
       final late = _journey('Carlos Lima', [
@@ -303,6 +338,32 @@ void main() {
       expect(find.text('Add 2 emergency contacts before starting'), findsOneWidget);
       await tester.tap(find.text('Start journey'));
       await tester.pump();
+    });
+
+    testWidgets('without a circle it points to the Circles tab instead of starting', (tester) async {
+      Session.instance.setProfile(uid: 'ana', name: 'Ana', email: 'ana@example.com');
+      await tester.pumpWidget(ProviderScope(
+        overrides: [
+          myCirclesProvider.overrideWith((ref) => Stream.value(const <Circle>[])),
+          contactsProvider.overrideWith((ref) => Stream.value([Person(name: 'Carlos'), Person(name: 'Bia')])),
+        ],
+        child: MaterialApp(
+          home: Scaffold(
+            body: PickCircleStep(
+              checkIns: defaultCheckIns(now),
+              selectedCircleId: null,
+              starting: false,
+              onSelect: (_) {},
+              onBack: () {},
+              onStart: (_) => fail('must not start'),
+            ),
+          ),
+        ),
+      ));
+      await tester.pump();
+      expect(find.textContaining('Tap the Circles tab below'), findsOneWidget);
+      expect(find.byType(CirclesIcon), findsOneWidget);
+      expect(find.text('Start journey'), findsNothing);
     });
   });
 }

@@ -7,6 +7,7 @@ import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/live_map/application/live_sharing.dart';
 import 'package:safecircle/features/live_map/domain/tracking.dart';
 import 'package:safecircle/features/places/presentation/place_icons.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class MapStrip extends StatelessWidget {
   const MapStrip({super.key, required this.color, required this.icon, required this.label, required this.onTap});
@@ -151,14 +152,14 @@ class ShareLocationCta extends ConsumerWidget {
                 children: [
                   Text(
                       paused
-                          ? 'Your location sharing is paused'
-                          : 'Turn on your location',
+                          ? context.l10n.sharingPausedBanner
+                          : context.l10n.turnOnLocation,
                       style: ScText.sans(size: 14.5, weight: FontWeight.w800)),
                   const SizedBox(height: 2),
                   Text(
                       paused
-                          ? "Your circle can't see where you are. Tap to resume."
-                          : "Your circle can't see you yet. Tap to allow location.",
+                          ? context.l10n.sharingPausedBannerSub
+                          : context.l10n.turnOnLocationSub,
                       style: ScText.sans(
                           size: 12.5, weight: FontWeight.w500, color: ScColors.textSecondary)),
                 ],
@@ -182,17 +183,17 @@ class NoOneSharing extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(24, 6, 24, 10),
       child: Column(
         children: [
-          Text('No one is sharing yet',
+          Text(context.l10n.noOneSharing,
               style: ScText.sans(size: 17, weight: FontWeight.w800, color: ScColors.textHeading)),
           const SizedBox(height: 6),
           Text(
-            'Invite the people you trust to a circle. Everyone who joins and shares their location appears here.',
+            context.l10n.noOneSharingHint,
             textAlign: TextAlign.center,
             style: ScText.sans(
                 size: 13, weight: FontWeight.w500, color: ScColors.textSubtle, height: 18),
           ),
           const SizedBox(height: 14),
-          ScButton(label: 'Go to circles', height: 48, onPressed: onGoCircles),
+          ScButton(label: context.l10n.goToCircles, height: 48, onPressed: onGoCircles),
         ],
       ),
     );

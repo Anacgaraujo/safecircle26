@@ -7,6 +7,7 @@ import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/circles/data/circle_repository.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
 import 'package:safecircle/features/circles/presentation/add_participants_screen.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class CircleNameScreen extends ConsumerStatefulWidget {
   const CircleNameScreen({super.key, this.circle});
@@ -55,20 +56,20 @@ class _CircleNameScreenState extends ConsumerState<CircleNameScreen> {
             children: [
               const ScBackButton(),
               const SizedBox(height: 10),
-              Text(isRename ? 'Rename circle' : 'Name your circle', style: ScText.headline()),
+              Text(isRename ? context.l10n.renameCircle : context.l10n.nameYourCircle, style: ScText.headline()),
               const SizedBox(height: 6),
-              Text('Pick a name — add an emoji to make it easy to spot.', style: ScText.sub()),
+              Text(context.l10n.circleNameHint, style: ScText.sub()),
               const SizedBox(height: 26),
               ScInput(
-                label: "Circle's name",
-                placeholder: 'e.g. 🏠 Family',
+                label: context.l10n.circlesName,
+                placeholder: context.l10n.circleNameExample,
                 leadingIcon: FeatherIcons.users,
                 controller: ctrl,
                 onChanged: (_) => setState(() {}),
               ),
               const Spacer(),
               ScButton(
-                label: isRename ? (_saving ? 'Saving…' : 'Save') : 'Continue',
+                label: isRename ? (_saving ? context.l10n.saving : context.l10n.save) : context.l10n.continueLabel,
                 rightIcon: isRename ? null : FeatherIcons.arrowRight,
                 onPressed: ctrl.text.trim().isEmpty || _saving ? null : _continue,
               ),

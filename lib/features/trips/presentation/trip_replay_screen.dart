@@ -9,6 +9,7 @@ import 'package:safecircle/core/widgets/sc_tiles.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/live_map/domain/tracking.dart';
 import 'package:safecircle/features/trips/domain/trip_rules.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class TripReplayScreen extends StatefulWidget {
   const TripReplayScreen({super.key, required this.trip});
@@ -179,7 +180,7 @@ class _TripReplayScreenState extends State<TripReplayScreen>
                     borderRadius: BorderRadius.circular(999),
                     boxShadow: ScShadows.card,
                   ),
-                  child: Text('${tripDayLabel(trip.start)} · Replay',
+                  child: Text(context.l10n.replayOf(tripDayLabel(trip.start)),
                       style: ScText.sans(size: 13, weight: FontWeight.w700)),
                 ),
               ],
@@ -210,24 +211,24 @@ class _TripReplayScreenState extends State<TripReplayScreen>
               style: ScText.sans(size: 19, weight: FontWeight.w800)),
           const SizedBox(height: 3),
           Text(
-              '${scClock(trip.start)} – ${scClock(trip.end)} · ${scDistance(trip.km)} · top ${scSpeed(trip.maxSpeedKmh)}',
+              context.l10n.tripSummaryTop(scClock(trip.start), scClock(trip.end), scDistance(trip.km), scSpeed(trip.maxSpeedKmh)),
               style: ScText.mono(size: 12.5, color: ScColors.textMuted)),
           const SizedBox(height: 14),
           Row(
             children: [
-              Expanded(child: _Metric(label: 'TIME', value: clock)),
+              Expanded(child: _Metric(label: context.l10n.metricTime, value: clock)),
               const SizedBox(width: 8),
               Expanded(
                 child: _Metric(
-                  label: 'SPEED',
+                  label: context.l10n.metricSpeed,
                   value: '${scMph(speed)}',
-                  suffix: ' mph',
+                  suffix: context.l10n.unitMph,
                   danger: speed > kSpeedLimitKmh,
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: _Metric(label: 'DISTANCE', value: scMiles(trip.km * t), suffix: ' mi'),
+                child: _Metric(label: context.l10n.metricDistance, value: scMiles(trip.km * t), suffix: context.l10n.unitMi),
               ),
             ],
           ),
@@ -299,7 +300,7 @@ class _TripReplayScreenState extends State<TripReplayScreen>
           const SizedBox(height: 12),
           _TimelineRow(
             icon: FeatherIcons.navigation,
-            label: 'Left ${trip.fromLabel.isEmpty ? 'the start' : trip.fromLabel}',
+            label: context.l10n.leftPlace(trip.fromLabel.isEmpty ? context.l10n.theStart : trip.fromLabel),
             time: scClock(trip.start),
             passed: true,
             onTap: () => _seek(0),
@@ -307,7 +308,7 @@ class _TripReplayScreenState extends State<TripReplayScreen>
           for (final e in events)
             _TimelineRow(
               icon: FeatherIcons.alertTriangle,
-              label: 'Speeding · over ${scSpeed(kSpeedLimitKmh)}',
+              label: context.l10n.speedingOver(scSpeed(kSpeedLimitKmh)),
               time: scClock(DateTime.fromMillisecondsSinceEpoch(
                   trip.startMillis + ((trip.endMillis - trip.startMillis) * e).round())),
               passed: t >= e,
@@ -316,7 +317,7 @@ class _TripReplayScreenState extends State<TripReplayScreen>
             ),
           _TimelineRow(
             icon: FeatherIcons.flag,
-            label: 'Arrived at ${trip.toLabel.isEmpty ? 'the end' : trip.toLabel}',
+            label: context.l10n.arrivedAt(trip.toLabel.isEmpty ? context.l10n.theEnd : trip.toLabel),
             time: scClock(trip.end),
             passed: t >= 1,
             onTap: () => _seek(1),

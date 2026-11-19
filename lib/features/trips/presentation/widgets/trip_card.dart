@@ -8,6 +8,7 @@ import 'package:safecircle/core/widgets/feather_icons.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/live_map/domain/tracking.dart';
 import 'package:safecircle/features/trips/presentation/trip_replay_screen.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class TripCard extends StatelessWidget {
   const TripCard({super.key, required this.trip});
@@ -57,8 +58,8 @@ class TripCard extends StatelessWidget {
                       const SizedBox(width: 6),
                       _Tag(
                         label: trip.overLimit
-                            ? 'Over ${scSpeed(kSpeedLimitKmh)}'
-                            : 'Within limit',
+                            ? context.l10n.overSpeed(scSpeed(kSpeedLimitKmh))
+                            : context.l10n.withinLimit,
                         bg: trip.overLimit ? ScColors.red50 : ScColors.green50,
                         fg: trip.overLimit ? const Color(0xFFDC2626) : ScColors.green600,
                       ),

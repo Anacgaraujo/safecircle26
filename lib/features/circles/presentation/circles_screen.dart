@@ -13,6 +13,7 @@ import 'package:safecircle/features/circles/domain/circle_invite.dart';
 import 'package:safecircle/features/circles/presentation/circle_detail_screen.dart';
 import 'package:safecircle/features/circles/presentation/circle_name_screen.dart';
 import 'package:safecircle/features/circles/presentation/invite_received_screen.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class CirclesScreen extends ConsumerWidget {
   const CirclesScreen({super.key});
@@ -29,7 +30,7 @@ class CirclesScreen extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(24, 8, 20, 0),
           child: Row(
             children: [
-              Expanded(child: Text('My circles', style: ScText.title())),
+              Expanded(child: Text(context.l10n.myCirclesTitle, style: ScText.title())),
               const CirclesIcon(size: 24, color: ScColors.brand),
             ],
           ),
@@ -72,7 +73,7 @@ class CirclesScreen extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(26, 8, 26, 20),
           child: ScButton(
-            label: 'Create new circle',
+            label: context.l10n.createNewCircle,
             leftIcon: FeatherIcons.plus,
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const CircleNameScreen()),
@@ -96,14 +97,14 @@ class _CirclesEmpty extends StatelessWidget {
         children: [
           const Icon(FeatherIcons.frown, size: 72, color: ScColors.textMuted),
           const SizedBox(height: 14),
-          Text("You don't have any circle created",
+          Text(context.l10n.noCircleYet,
               textAlign: TextAlign.center,
               style: ScText.sans(size: 17, weight: FontWeight.w700, color: ScColors.textSecondary)),
           const SizedBox(height: 6),
           SizedBox(
             width: 250,
             child: Text(
-              'Create a circle to gather the people you trust and share your journeys with them.',
+              context.l10n.noCircleYetHint,
               textAlign: TextAlign.center,
               style: ScText.sans(size: 14, weight: FontWeight.w500, color: ScColors.textMuted, height: 20),
             ),
@@ -133,9 +134,9 @@ class _InviteCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('New circle invite', style: ScText.sans(size: 14.5, weight: FontWeight.w700)),
+                  Text(context.l10n.newCircleInvite, style: ScText.sans(size: 14.5, weight: FontWeight.w700)),
                   const SizedBox(height: 2),
-                  Text('${invite.senderFirstName} invited you to ${invite.circleName}',
+                  Text(invite.summary,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: ScText.sans(
@@ -146,7 +147,7 @@ class _InviteCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
               decoration: BoxDecoration(color: ScColors.brand, borderRadius: BorderRadius.circular(999)),
-              child: Text('NEW',
+              child: Text(context.l10n.newBadge,
                   style: ScText.sans(size: 11, weight: FontWeight.w700, color: Colors.white, spacing: .4)),
             ),
           ],
@@ -187,7 +188,7 @@ class _CircleCard extends ConsumerWidget {
                 children: [
                   Text(text, style: ScText.sans(size: 16, weight: FontWeight.w800, color: ScColors.textHeading)),
                   const SizedBox(height: 2),
-                  Text('${people.length} ${people.length == 1 ? 'member' : 'members'}',
+                  Text(context.l10n.memberCount(people.length),
                       style: ScText.sans(size: 13, weight: FontWeight.w500, color: ScColors.textMuted)),
                 ],
               ),

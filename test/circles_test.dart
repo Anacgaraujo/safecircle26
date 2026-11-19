@@ -31,6 +31,106 @@ void main() {
     Session.instance.setProfile(uid: 'ana', name: 'Ana Ribeiro', email: 'ana@example.com');
   });
 
+  group('invite texts', () {
+    test('asks the server to text members with a phone number', () async {
+      final calls = <String>[];
+      final svc = CircleService(circles(), sendTexts: (req) async {
+        calls.add(req['circleId'] as String);
+        return {'sent': 2};
+      });
+      final circle = Circle(name: 'Family', members: [Person(name: 'Bia', digits: '4155552671')])
+        ..id = 'c1';
+      expect(await svc.sendInviteTexts(circle), 2);
+      expect(calls, ['c1']);
+    });
+
+    test('skips circles without phone numbers and never throws', () async {
+      var called = false;
+      final svc = CircleService(circles(), sendTexts: (_) async {
+        called = true;
+        throw Exception('function not deployed');
+      });
+      final noPhones = Circle(name: 'Family', members: [Person(name: 'Bia', email: 'b@x.com')])
+        ..id = 'c1';
+      expect(await svc.sendInviteTexts(noPhones), 0);
+      expect(called, isFalse);
+
+      final withPhone = Circle(name: 'Family', members: [Person(name: 'Bia', digits: '4155552671')])
+        ..id = 'c1';
+      expect(await svc.sendInviteTexts(withPhone), 0);
+      expect(called, isTrue);
+    });
+
+    test('resend texts one person again and reports what happened', () async {
+      await registerUser('bia', 'Bia Souza', 'bia@example.com');
+      final requests = <Map<String, dynamic>>[];
+      var reply = <String, dynamic>{'sent': 1};
+      final svc = CircleService(circles(), sendTexts: (req) async {
+        requests.add(req);
+        return reply;
+      });
+      final bia = Person(
+          name: 'Bia Souza', email: 'bia@example.com', countryCode: 'US', digits: '4155552671', smsConsent: true);
+      final circle = Circle(name: 'Family', members: [bia]);
+      await svc.saveAndInvite(circle, isNew: true);
+
+      final sent = await svc.resendInvitation(circle, bia);
+      expect(requests.single, {
+        'circleId': circle.id,
+        'resend': {'countryCode': 'US', 'digits': '4155552671'},
+      });
+      expect(sent.message('Bia'), 'Invitation texted to Bia again.');
+      expect(sent.shouldShare, isFalse);
+
+      reply = {'sent': 0, 'retryAfter': 240};
+      expect((await svc.resendInvitation(circle, bia)).message('Bia'),
+          'You just texted Bia. Try again in 4 minutes.');
+
+      reply = {'joined': true};
+      expect((await svc.resendInvitation(circle, bia)).message('Bia'), 'Bia already joined this circle.');
+    });
+
+    test('resend never texts someone who has not agreed to texts', () async {
+      var texted = false;
+      final svc = CircleService(circles(), sendTexts: (_) async {
+        texted = true;
+        return {'sent': 1};
+      });
+      final carlos = Person(name: 'Carlos', email: 'carlos@example.com', countryCode: 'US', digits: '4155550000');
+      final circle = Circle(name: 'Family', members: [carlos]);
+      await svc.saveAndInvite(circle, isNew: true);
+
+      expect((await svc.resendInvitation(circle, carlos)).message('Carlos'),
+          "Carlos hasn't agreed to get texts yet. Once they agree, edit their details and tick the texting box.");
+      final result = await svc.resendInvitation(circle, carlos);
+      expect(result.shouldShare, isTrue);
+      expect(texted, isFalse);
+      expect(inviteShareMessage(circle, carlos),
+          'I added you to my SafeCircle circle "Family" so we can look out for each other. '
+          'Get the app: $kAppStoreUrl and sign up with carlos@example.com to join.');
+    });
+
+    test('resend without a phone only repeats the in-app invitation', () async {
+      await registerUser('bia', 'Bia Souza', 'bia@example.com');
+      var texted = false;
+      final svc = CircleService(circles(), sendTexts: (_) async {
+        texted = true;
+        return {'sent': 1};
+      });
+      final bia = Person(name: 'Bia Souza', email: 'bia@example.com');
+      final carlos = Person(name: 'Carlos', email: 'carlos@example.com');
+      final circle = Circle(name: 'Family', members: [bia, carlos]);
+      await svc.saveAndInvite(circle, isNew: true);
+
+      expect((await svc.resendInvitation(circle, bia)).message('Bia'), 'In-app invitation sent to Bia again.');
+      expect((await svc.resendInvitation(circle, carlos)).message('Carlos'),
+          'No SafeCircle account yet for Carlos. Add a phone number to text them.');
+      expect((await svc.resendInvitation(circle, bia)).shouldShare, isFalse);
+      expect((await svc.resendInvitation(circle, carlos)).shouldShare, isTrue);
+      expect(texted, isFalse);
+    });
+  });
+
   group('invite model', () {
     test('reads the invite and summarizes it', () {
       final invite = CircleInvite.fromMap(

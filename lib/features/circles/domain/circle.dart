@@ -1,6 +1,7 @@
 import 'package:characters/characters.dart';
 
 import 'package:safecircle/core/utils/phone.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class Person {
   Person({
@@ -11,6 +12,7 @@ class Person {
     this.image,
     this.uid,
     this.email,
+    this.smsConsent = false,
   });
 
   String? id;
@@ -22,6 +24,10 @@ class Person {
 
   String? uid;
   String? email;
+
+  /// The person agreed to get SafeCircle texts at this number. The servers
+  /// never text a number without it (carrier A2P opt-in rules).
+  bool smsConsent;
 
   String get fullPhone =>
       digits.isEmpty ? countryByCode(countryCode).dial : formatPhone(countryCode, digits);
@@ -35,6 +41,7 @@ class Person {
         if (image != null) 'image': image,
         if (uid != null) 'uid': uid,
         if (email != null) 'email': email,
+        'smsConsent': smsConsent,
       };
 
   factory Person.fromMap(Map<String, dynamic> m, {String? id}) => Person(
@@ -45,6 +52,7 @@ class Person {
         image: m['image'] as String?,
         uid: m['uid'] as String?,
         email: m['email'] as String?,
+        smsConsent: m['smsConsent'] == true,
       );
 }
 
@@ -67,7 +75,7 @@ class Circle {
     bool isMe(Person p) =>
         p.uid == me || (email.isNotEmpty && p.email?.toLowerCase() == email);
     return [
-      Person(name: ownerName ?? 'Circle owner', uid: ownerId),
+      Person(name: ownerName ?? appL10n.circleOwner, uid: ownerId),
       ...members.where((p) => !isMe(p)),
     ];
   }

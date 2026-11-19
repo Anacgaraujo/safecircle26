@@ -8,6 +8,7 @@ import 'package:safecircle/core/widgets/feather_icons.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
 import 'package:safecircle/features/contacts/data/contacts_repository.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class AlertSentView extends ConsumerWidget {
   const AlertSentView(
@@ -56,7 +57,7 @@ class AlertSentView extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              Center(child: Text('Alert sent', style: ScText.title())),
+              Center(child: Text(context.l10n.alertSent, style: ScText.title())),
               const SizedBox(height: 8),
               Center(
                 child: Row(
@@ -64,7 +65,7 @@ class AlertSentView extends ConsumerWidget {
                   children: [
                     const Icon(FeatherIcons.clock, size: 14, color: ScColors.textSubtle),
                     const SizedBox(width: 7),
-                    Text('$sentAt · just now', style: ScText.sans(size: 13.5, weight: FontWeight.w600, color: ScColors.textSubtle)),
+                    Text(context.l10n.sentJustNow(sentAt), style: ScText.sans(size: 13.5, weight: FontWeight.w600, color: ScColors.textSubtle)),
                   ],
                 ),
               ),
@@ -84,10 +85,10 @@ class AlertSentView extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(location == null ? 'Location unavailable' : 'Location shared',
+                          Text(location == null ? context.l10n.locationUnavailable : context.l10n.locationShared,
                               style: ScText.sans(size: 14.5, weight: FontWeight.w700, color: ScColors.textHeading)),
                           const SizedBox(height: 2),
-                          Text(location?.label ?? 'Enable location to share where you are',
+                          Text(location?.label ?? context.l10n.enableLocationToShare,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: ScText.mono(size: 12, color: ScColors.textMuted)),
@@ -99,7 +100,7 @@ class AlertSentView extends ConsumerWidget {
                         children: [
                           Container(width: 7, height: 7, decoration: const BoxDecoration(color: ScColors.green500, shape: BoxShape.circle)),
                           const SizedBox(width: 6),
-                          Text('Live', style: ScText.sans(size: 11.5, weight: FontWeight.w700, color: ScColors.green500)),
+                          Text(context.l10n.live, style: ScText.sans(size: 11.5, weight: FontWeight.w700, color: ScColors.green500)),
                         ],
                       ),
                   ],
@@ -108,8 +109,8 @@ class AlertSentView extends ConsumerWidget {
               const SizedBox(height: 24),
               ScSectionLabel(
                 reached > 0
-                    ? 'Alerted in the app · $reached ${reached == 1 ? 'person' : 'people'}'
-                    : 'No one on SafeCircle to alert yet',
+                    ? context.l10n.alertedInApp(reached)
+                    : context.l10n.noOneToAlert,
                 icon: FeatherIcons.users,
               ),
               const SizedBox(height: 12),
@@ -129,7 +130,7 @@ class AlertSentView extends ConsumerWidget {
           child: Column(
             children: [
               ScButton(
-                label: 'Text my location to contacts',
+                label: context.l10n.textMyLocation,
                 variant: ScButtonVariant.secondary,
                 leftIcon: FeatherIcons.messageCircle,
                 height: 54,
@@ -137,15 +138,14 @@ class AlertSentView extends ConsumerWidget {
                   context,
                   contacts.map((c) => c.digits.isEmpty ? null : c.fullPhone),
                   body: location == null
-                      ? 'EMERGENCY — I need help. Sent from SafeCircle.'
-                      : 'EMERGENCY — I need help. My location: '
-                          'https://maps.google.com/?q=${location!.lat},${location!.lng} '
-                          '(${location!.label})',
+                      ? context.l10n.emergencySmsNoLocation
+                      : context.l10n.emergencySmsWithLocation(
+                          'https://maps.google.com/?q=${location!.lat},${location!.lng}', location!.label),
                 ),
               ),
               const SizedBox(height: 10),
               ScButton(
-                label: 'Also call $kEmergencyNumber',
+                label: context.l10n.alsoCall(kEmergencyNumber),
                 variant: ScButtonVariant.ink,
                 leftIcon: FeatherIcons.phoneCall,
                 height: 54,
@@ -155,7 +155,7 @@ class AlertSentView extends ConsumerWidget {
               TextButton.icon(
                 onPressed: onCancel,
                 icon: const Icon(FeatherIcons.x, size: 16, color: ScColors.red500),
-                label: Text("Cancel alert — I'm safe", style: ScText.sans(size: 14, weight: FontWeight.w700, color: ScColors.red500)),
+                label: Text(context.l10n.cancelAlertSafe, style: ScText.sans(size: 14, weight: FontWeight.w700, color: ScColors.red500)),
               ),
             ],
           ),
@@ -199,7 +199,7 @@ class _NotifiedRow extends StatelessWidget {
                     children: [
                       const Icon(FeatherIcons.check, size: 13, color: ScColors.green500),
                       const SizedBox(width: 6),
-                      Text('Call or text to make sure', style: ScText.sans(size: 12.5, weight: FontWeight.w600, color: ScColors.textSecondary)),
+                      Text(context.l10n.callOrTextToCheck, style: ScText.sans(size: 12.5, weight: FontWeight.w600, color: ScColors.textSecondary)),
                     ],
                   ),
                 ],

@@ -5,6 +5,7 @@ import 'package:safecircle/core/widgets/feather_icons.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/journeys/domain/journey.dart';
 import 'package:safecircle/features/journeys/domain/journey_schedule.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class PlanTimingStep extends StatelessWidget {
   const PlanTimingStep({
@@ -36,9 +37,9 @@ class PlanTimingStep extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('New journey', style: ScText.headline()),
+                    Text(context.l10n.newJourney, style: ScText.headline()),
                     const SizedBox(height: 6),
-                    Text("Schedule when you'll check in. If you miss one, your circle is alerted.",
+                    Text(context.l10n.newJourneyHint,
                         style: ScText.sub()),
                   ],
                 ),
@@ -56,7 +57,7 @@ class PlanTimingStep extends StatelessWidget {
                           const _StepBadge('1', active: true),
                           const SizedBox(width: 12),
                           Expanded(
-                              child: Text('Select the timing',
+                              child: Text(context.l10n.selectTiming,
                                   style: ScText.sans(
                                       size: 17, weight: FontWeight.w800, color: ScColors.textHeading))),
                           const Icon(FeatherIcons.chevronUp, size: 20, color: ScColors.textMuted),
@@ -74,7 +75,7 @@ class PlanTimingStep extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Other information',
+                              Text(context.l10n.otherInformation,
                                   style: ScText.sans(size: 13, weight: FontWeight.w700)),
                               const SizedBox(height: 7),
                               Container(
@@ -91,7 +92,7 @@ class PlanTimingStep extends StatelessWidget {
                                   decoration: InputDecoration(
                                     isCollapsed: true,
                                     border: InputBorder.none,
-                                    hintText: 'Meeting at the bar',
+                                    hintText: context.l10n.journeyNoteExample,
                                     hintStyle: ScText.sans(
                                         size: 15, weight: FontWeight.w500, color: ScColors.textMuted),
                                   ),
@@ -118,7 +119,7 @@ class PlanTimingStep extends StatelessWidget {
                                 children: [
                                   const Icon(FeatherIcons.plus, size: 16, color: ScColors.brand),
                                   const SizedBox(width: 7),
-                                  Text('Add check-in',
+                                  Text(context.l10n.addCheckIn,
                                       style: ScText.sans(
                                           size: 14, weight: FontWeight.w700, color: ScColors.brand)),
                                 ],
@@ -143,7 +144,7 @@ class PlanTimingStep extends StatelessWidget {
                       const _StepBadge('2', active: false),
                       const SizedBox(width: 12),
                       Expanded(
-                          child: Text('Start the journey',
+                          child: Text(context.l10n.startJourney,
                               style: ScText.sans(
                                   size: 17, weight: FontWeight.w800, color: ScColors.textMuted))),
                       const Icon(FeatherIcons.chevronDown, size: 20, color: ScColors.textMuted),
@@ -156,7 +157,7 @@ class PlanTimingStep extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(26, 8, 26, 20),
-          child: ScButton(label: 'Next', rightIcon: FeatherIcons.arrowRight, onPressed: onNext),
+          child: ScButton(label: context.l10n.next, rightIcon: FeatherIcons.arrowRight, onPressed: onNext),
         ),
       ],
     );
@@ -196,7 +197,7 @@ class _TimingField extends StatelessWidget {
     final now = DateTime.now();
     final at = nextOccurrence(picked.hour, picked.minute, now);
     if (at == null) {
-      if (context.mounted) showScToast(context, 'Pick a time at least 1 minute from now.');
+      if (context.mounted) showScToast(context, context.l10n.pickTimeOneMinute);
       return;
     }
     reschedule(checkIn, at, now: now);
@@ -224,8 +225,8 @@ class _TimingField extends StatelessWidget {
               children: [
                 const Icon(FeatherIcons.calendar, size: 18, color: ScColors.brand),
                 const SizedBox(width: 10),
-                Expanded(child: Text(checkIn.date, style: ScText.sans(size: 15, weight: FontWeight.w600))),
-                Text(checkIn.time,
+                Expanded(child: Text(checkIn.dateText, style: ScText.sans(size: 15, weight: FontWeight.w600))),
+                Text(checkIn.timeText,
                     style: ScText.mono(size: 15, weight: FontWeight.w600, color: ScColors.brand)),
                 const SizedBox(width: 10),
                 const Icon(FeatherIcons.chevronDown, size: 16, color: ScColors.textMuted),

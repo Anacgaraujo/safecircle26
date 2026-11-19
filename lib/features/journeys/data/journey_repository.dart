@@ -62,7 +62,8 @@ class JourneyRepository extends FirestoreRepository {
         'lastLng': location.lng,
         'lastPlace': location.label,
       },
-      'lastSeen': 'Last seen ${scClock(now)}',
+      'lastSeen': 'Last seen ${scClockEn(now)}',
+      'lastSeenAt': Timestamp.fromDate(now),
       'startedAt': FieldValue.serverTimestamp(),
     });
     return ref.id;
@@ -82,7 +83,8 @@ class JourneyRepository extends FirestoreRepository {
         'lastLng': location.lng,
         'lastPlace': location.label,
       },
-      'lastSeen': 'Last seen ${scClock(DateTime.now())}',
+      'lastSeen': 'Last seen ${scClockEn(DateTime.now())}',
+      'lastSeenAt': Timestamp.now(),
     });
     if (panic) await alerts.fireAlert(type: 'panic', location: location);
     await alerts.resolveMyAlerts(types: const {'overdue'});
@@ -109,7 +111,8 @@ class JourneyRepository extends FirestoreRepository {
         'lastLat': loc.lat,
         'lastLng': loc.lng,
         'lastPlace': loc.label,
-        'lastSeen': 'Last seen ${scClock(DateTime.now())}',
+        'lastSeen': 'Last seen ${scClockEn(DateTime.now())}',
+        'lastSeenAt': Timestamp.now(),
       });
 
   Future<void> raiseOverdueOnJourney(Journey j, CheckIn missed, {ScLocation? location}) async {
@@ -149,6 +152,32 @@ class JourneyRepository extends FirestoreRepository {
       .where('status', isEqualTo: 'finished')
       .snapshots()
       .map((s) => s.docs.map((d) => Journey.fromMap(d.data(), d.id)).toList());
+
+  /// Deletes one of my finished journeys. Active journeys are never deleted
+  /// from history: they still protect the traveler.
+  Future<void> deleteFinishedJourney(String id) async {
+    final ref = _journeys.doc(id);
+    final data = (await ref.get()).data();
+    if (data == null || data['ownerId'] != uid || data['status'] != 'finished') return;
+    await ref.delete();
+  }
+
+  /// Deletes all of my finished journeys; returns how many were deleted.
+  Future<int> deleteAllFinishedJourneys() async {
+    final q = await _journeys
+        .where('ownerId', isEqualTo: uid)
+        .where('status', isEqualTo: 'finished')
+        .get();
+    // A Firestore batch holds at most 500 writes.
+    for (var i = 0; i < q.docs.length; i += 400) {
+      final batch = db.batch();
+      for (final d in q.docs.skip(i).take(400)) {
+        batch.delete(d.reference);
+      }
+      await batch.commit();
+    }
+    return q.docs.length;
+  }
 
   Future<Journey?> activeJourneyOf(String ownerUid) async {
     final q = await (ownerUid == uid

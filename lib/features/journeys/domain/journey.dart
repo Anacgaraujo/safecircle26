@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
 
+import 'package:safecircle/core/utils/formatters.dart';
+import 'package:safecircle/l10n/l10n.dart';
+
 enum CheckInState { done, missed, next, future }
 
 const kCheckInGrace = Duration(minutes: 5);
@@ -27,6 +30,11 @@ class CheckIn {
   String? place;
 
   DateTime? get at => atMillis == null ? null : DateTime.fromMillisecondsSinceEpoch(atMillis!);
+
+  /// [time] and [date] are saved in English (text messages use them); these
+  /// show them in the phone's language.
+  String get timeText => atMillis == null ? time : scClock(at!);
+  String get dateText => atMillis == null ? date : scDayLabel(at!, DateTime.now());
 
   bool isLate(DateTime now, {Duration grace = kCheckInGrace}) {
     if (confirmed || atMillis == null) return false;
@@ -79,6 +87,7 @@ class Journey {
     this.lastPlace = '',
     this.lastSeen = '',
     this.startedAt,
+    this.lastSeenAt,
     this.note = '',
   });
 
@@ -99,6 +108,12 @@ class Journey {
   final String lastPlace;
   final String lastSeen;
   final DateTime? startedAt;
+  final DateTime? lastSeenAt;
+
+  /// Shown in the phone's language; [lastSeen] and [dateLabel] are saved in
+  /// English by the traveler's phone.
+  String get lastSeenText => lastSeenAt == null ? lastSeen : appL10n.lastSeenAt(scClock(lastSeenAt!));
+  String get dateText => startedAt == null ? dateLabel : scDate(startedAt!);
   final String note;
 
   String get ownerFirstName => ownerName.trim().split(' ').first;
@@ -138,6 +153,7 @@ class Journey {
         lastPlace: (m['lastPlace'] ?? '') as String,
         lastSeen: (m['lastSeen'] ?? '') as String,
         startedAt: (m['startedAt'] as Timestamp?)?.toDate(),
+        lastSeenAt: (m['lastSeenAt'] as Timestamp?)?.toDate(),
         note: (m['note'] ?? '') as String,
       );
 }

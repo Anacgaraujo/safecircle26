@@ -9,6 +9,7 @@ import 'package:safecircle/features/alerts/presentation/alert_detail_screen.dart
 import 'package:safecircle/features/journeys/domain/journey.dart';
 import 'package:safecircle/features/journeys/presentation/friend_journey_screen.dart';
 import 'package:safecircle/features/journeys/presentation/journey_flow_screen.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 IconData alertIcon(SafetyAlert a) => switch (a.type) {
       'panic' => FeatherIcons.shield,
@@ -29,12 +30,12 @@ class MyJourneyCard extends StatelessWidget {
     final accent = late ? ScColors.red500 : due ? ScColors.amber800 : ScColors.green600;
     final bg = late ? ScColors.red50 : due ? ScColors.amber100 : ScColors.green50;
     final status = next == null
-        ? 'All check-ins confirmed — end the journey when you arrive'
+        ? context.l10n.allCheckInsConfirmed
         : late
-            ? '${next.label} check-in overdue — your circle has been alerted'
+            ? context.l10n.labelCheckInOverdue(next.label)
             : due
-                ? '${next.label} check-in due now — confirm you\'re safe'
-                : 'Next check-in: ${next.label} · ${next.time}';
+                ? context.l10n.labelCheckInDueNow(next.label)
+                : context.l10n.nextCheckInLabel(next.label, next.timeText);
     return ScPressable(
       pressedScale: .99,
       onTap: () => Navigator.of(context).push(
@@ -56,7 +57,7 @@ class MyJourneyCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Your journey · ${journey.circleName}',
+                  Text(context.l10n.yourJourneyWith(journey.circleName),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: ScText.sans(size: 14.5, weight: FontWeight.w800, color: ScColors.textHeading)),
@@ -154,7 +155,7 @@ class FriendsJourneysEmpty extends StatelessWidget {
             SizedBox(
               width: 260,
               child: Text(
-                'There are no active journeys from your friends at this time',
+                context.l10n.noActiveFriendJourneys,
                 textAlign: TextAlign.center,
                 style: ScText.sans(size: 16, weight: FontWeight.w600, color: ScColors.textSecondary, height: 24),
               ),
@@ -212,7 +213,7 @@ class StandaloneAlertCard extends StatelessWidget {
                                 size: 14, color: Colors.white.withValues(alpha: .92)),
                             const SizedBox(width: 6),
                             Text(
-                                '${alert.kindLabel} · ${alert.timeLabel}',
+                                '${alert.kindLabel} · ${alert.timeText}',
                                 style: ScText.sans(size: 13, weight: FontWeight.w800, color: Colors.white)),
                           ],
                         ),
@@ -252,7 +253,7 @@ class StandaloneAlertCard extends StatelessWidget {
                   children: [
                     const Icon(FeatherIcons.phoneCall, size: 18, color: Colors.white),
                     const SizedBox(width: 9),
-                    Text('Call ${alert.fromFirstName}',
+                    Text(context.l10n.callName(alert.fromFirstName),
                         style: ScText.sans(size: 15, weight: FontWeight.w800, color: Colors.white)),
                   ],
                 ),
@@ -308,12 +309,12 @@ class OverdueJourneyCard extends StatelessWidget {
                           children: [
                             Icon(FeatherIcons.clock, size: 14, color: Colors.white.withValues(alpha: .92)),
                             const SizedBox(width: 6),
-                            Text('Next check-in: ',
+                            Text(context.l10n.nextCheckInPrefix,
                                 style: ScText.sans(
                                     size: 13,
                                     weight: FontWeight.w600,
                                     color: Colors.white.withValues(alpha: .92))),
-                            Text(panicMode ? 'Panic alert' : 'Overdue',
+                            Text(panicMode ? context.l10n.panicAlert : context.l10n.overdue,
                                 style: ScText.sans(size: 13, weight: FontWeight.w800, color: Colors.white)),
                           ],
                         ),
@@ -353,7 +354,7 @@ class OverdueJourneyCard extends StatelessWidget {
                   children: [
                     const Icon(FeatherIcons.phoneCall, size: 18, color: Colors.white),
                     const SizedBox(width: 9),
-                    Text('Call ${journey.ownerFirstName}',
+                    Text(context.l10n.callName(journey.ownerFirstName),
                         style: ScText.sans(size: 15, weight: FontWeight.w800, color: Colors.white)),
                   ],
                 ),
@@ -373,7 +374,7 @@ class JourneyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final next = journey.nextCheckIn;
-    final nextTime = next?.time ?? 'Done';
+    final nextTime = next?.timeText ?? context.l10n.done;
     final dueNow = next?.isDueNow(DateTime.now()) ?? false;
     return ScPressable(
       onTap: () => _openDetail(context, journey, false),
@@ -405,12 +406,12 @@ class JourneyCard extends StatelessWidget {
                       Icon(FeatherIcons.clock,
                           size: 15, color: dueNow ? ScColors.amber800 : ScColors.green500),
                       const SizedBox(width: 6),
-                      Text(dueNow ? 'Check-in due: ' : 'Next check-in: ',
+                      Text(dueNow ? context.l10n.checkInDuePrefix : context.l10n.nextCheckInPrefix,
                           style: ScText.sans(size: 13, weight: FontWeight.w600, color: ScColors.textSecondary)),
                       Text(nextTime, style: ScText.mono(size: 13, weight: FontWeight.w700)),
                       if (dueNow) ...[
                         const SizedBox(width: 6),
-                        Text('· waiting',
+                        Text(context.l10n.waiting,
                             style: ScText.sans(size: 12.5, weight: FontWeight.w700, color: ScColors.amber800)),
                       ],
                     ],

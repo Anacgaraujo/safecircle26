@@ -54,7 +54,7 @@ class AlertRepository extends FirestoreRepository {
       'location': location?.label ?? '',
       if (location != null) ...{'lat': location.lat, 'lng': location.lng},
       'resolved': false,
-      'timeLabel': scClock(DateTime.now()),
+      'timeLabel': scClockEn(DateTime.now()),
       'createdAt': FieldValue.serverTimestamp(),
     });
     return watchers.length;

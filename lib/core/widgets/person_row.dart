@@ -4,12 +4,16 @@ import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/widgets/feather_icons.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class PersonRow extends StatelessWidget {
-  const PersonRow({super.key, required this.person, this.subtitle, this.onEdit, this.onDelete});
+  const PersonRow(
+      {super.key, required this.person, this.subtitle, this.onResend, this.onEdit, this.onDelete});
   final Person person;
 
   final String? subtitle;
+  /// Shows a "Resend invitation" button.
+  final VoidCallback? onResend;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
 
@@ -37,6 +41,12 @@ class PersonRow extends StatelessWidget {
               ],
             ),
           ),
+          if (onResend != null)
+            IconButton(
+              tooltip: context.l10n.resendInvitation,
+              onPressed: onResend,
+              icon: const Icon(FeatherIcons.send, size: 18, color: ScColors.brand),
+            ),
           if (onEdit != null)
             IconButton(
               onPressed: onEdit,

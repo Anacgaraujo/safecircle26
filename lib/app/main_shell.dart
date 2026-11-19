@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:safecircle/core/notifications/notification_service.dart';
+import 'package:safecircle/core/notifications/push_service.dart';
 import 'package:safecircle/core/session/session.dart';
 import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/utils/clock.dart';
@@ -9,6 +13,7 @@ import 'package:safecircle/core/widgets/sc_bottom_nav.dart';
 import 'package:safecircle/features/activity/data/activity_repository.dart';
 import 'package:safecircle/features/alerts/data/alert_repository.dart';
 import 'package:safecircle/features/alerts/domain/safety_alert.dart';
+import 'package:safecircle/features/alerts/presentation/alert_detail_screen.dart';
 import 'package:safecircle/features/alerts/presentation/emergency_screen.dart';
 import 'package:safecircle/features/circles/data/circle_repository.dart';
 import 'package:safecircle/features/circles/presentation/circles_screen.dart';
@@ -22,6 +27,7 @@ import 'package:safecircle/features/live_map/application/live_sharing.dart';
 import 'package:safecircle/features/live_map/presentation/map_home_screen.dart';
 import 'package:safecircle/features/profile/data/user_repository.dart';
 import 'package:safecircle/features/profile/presentation/profile_screen.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class MainShell extends ConsumerStatefulWidget {
   const MainShell({super.key});
@@ -31,11 +37,12 @@ class MainShell extends ConsumerStatefulWidget {
 }
 
 class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserver {
-  ScTab tab = ScTab.home;
   late bool _mapHome = ref.read(sessionProvider).mapHome;
 
   List<Journey> _watched = const [];
   List<SafetyAlert> _incoming = const [];
+
+  void _select(ScTab t) => ref.read(mainTabProvider.notifier).select(t);
 
   void _toggleHome() {
     setState(() => _mapHome = !_mapHome);
@@ -77,6 +84,30 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
     ref.listenManual(pendingInvitesProvider, (_, next) {
       (next.value ?? const []).forEach(notifications.notifyInvite);
     });
+
+    final push = PushService.instance;
+    push.onOpen = _openPush;
+    unawaited(push.register(ref.read(sessionProvider).uid));
+    final pending = push.takePendingOpen();
+    if (pending != null) WidgetsBinding.instance.addPostFrameCallback((_) => _openPush(pending));
+  }
+
+  /// A tapped push notification: show the alert, or the invitations.
+  Future<void> _openPush(PushTarget target) async {
+    switch (target) {
+      case InviteTarget():
+        _select(ScTab.circles);
+      case AlertTarget(:final alertId):
+        try {
+          final snap = await FirebaseFirestore.instance.collection('alerts').doc(alertId).get();
+          final data = snap.data();
+          if (data == null || !mounted) return;
+          await Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => AlertDetailScreen(alert: SafetyAlert.fromMap(data, snap.id))));
+        } catch (e) {
+          debugPrint('[SafeCircle] open alert from push: $e');
+        }
+    }
   }
 
   void _checkOverdue() {
@@ -94,25 +125,27 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    PushService.instance.onOpen = null;
     JourneyMonitor.instance.stop();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final tab = ref.watch(mainTabProvider);
     final Widget body = switch (tab) {
       ScTab.home => _mapHome
           ? MapHomeScreen(
-              onGoCircles: () => setState(() => tab = ScTab.circles),
+              onGoCircles: () => _select(ScTab.circles),
               onToggleHome: _toggleHome,
             )
           : HomeScreen(
-              onGoCircles: () => setState(() => tab = ScTab.circles),
+              onGoCircles: () => _select(ScTab.circles),
               onToggleHome: _toggleHome,
             ),
       ScTab.circles => const CirclesScreen(),
       ScTab.emergency => const EmergencyScreen(),
-      ScTab.profile => ProfileScreen(onGoCircles: () => setState(() => tab = ScTab.circles)),
+      ScTab.profile => ProfileScreen(onGoCircles: () => _select(ScTab.circles)),
     };
 
     final circles = ref.watch(myCirclesProvider).value;
@@ -122,11 +155,11 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
       body: SafeArea(bottom: false, child: body),
       bottomNavigationBar: ScBottomNav(
         active: tab,
-        onTab: (t) => setState(() => tab = t),
+        onTab: _select,
         onFab: () => Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => const JourneyFlow()),
         ),
-        coachmark: showCoachmark ? 'Add your first circle' : null,
+        coachmark: showCoachmark ? context.l10n.addYourFirstCircle : null,
         mapHome: _mapHome,
       ),
     );

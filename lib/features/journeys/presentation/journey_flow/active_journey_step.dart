@@ -8,6 +8,7 @@ import 'package:safecircle/core/widgets/sc_map.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
 import 'package:safecircle/features/journeys/domain/journey.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class ActiveJourneyStep extends StatelessWidget {
   const ActiveJourneyStep({
@@ -37,12 +38,12 @@ class ActiveJourneyStep extends StatelessWidget {
     final due = late || (next?.isDueNow(now) ?? false);
     final statusColor = late ? ScColors.red500 : due ? ScColors.amber800 : ScColors.green500;
     final statusText = late
-        ? 'Check-in overdue'
+        ? context.l10n.checkInOverdue
         : due
-            ? 'Check-in due now'
+            ? context.l10n.checkInDueNow
             : lastLocation == null
-                ? 'Journey active'
-                : 'Journey active · ${lastLocation.label}';
+                ? context.l10n.journeyActive
+                : context.l10n.journeyActiveAt(lastLocation.label);
 
     return LayoutBuilder(builder: (context, constraints) {
       final mapHeight = constraints.maxHeight * .44;
@@ -132,7 +133,7 @@ class ActiveJourneyStep extends StatelessWidget {
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      Text('Circle:', style: ScText.sans(size: 14, weight: FontWeight.w500, color: ScColors.textMuted)),
+                      Text(context.l10n.circleColon, style: ScText.sans(size: 14, weight: FontWeight.w500, color: ScColors.textMuted)),
                       const SizedBox(width: 9),
                       Expanded(
                           child: Text(circle.name,
@@ -171,7 +172,7 @@ class ActiveJourneyStep extends StatelessWidget {
                     const SizedBox(height: 14),
                   ] else
                     const SizedBox(height: 22),
-                  const ScSectionLabel('Check-ins', icon: FeatherIcons.clock),
+                  ScSectionLabel(context.l10n.checkIns, icon: FeatherIcons.clock),
                   const SizedBox(height: 12),
                   Expanded(
                     child: ListView(
@@ -187,7 +188,7 @@ class ActiveJourneyStep extends StatelessWidget {
                   Builder(builder: (context) {
                     final allDone = checkIns.every((c) => c.confirmed);
                     return ScButton(
-                      label: allDone ? 'End journey' : 'Get me out of here',
+                      label: allDone ? context.l10n.endJourney : context.l10n.getMeOut,
                       variant: allDone ? ScButtonVariant.primary : ScButtonVariant.danger,
                       leftIcon: allDone ? FeatherIcons.checkCircle : FeatherIcons.logOut,
                       onPressed: onFinish,
@@ -201,7 +202,7 @@ class ActiveJourneyStep extends StatelessWidget {
                         circle.members.map((m) => m.digits.isEmpty ? null : m.fullPhone),
                       ),
                       icon: const Icon(FeatherIcons.messageCircle, size: 18, color: ScColors.textSecondary),
-                      label: Text('Messages',
+                      label: Text(context.l10n.messages,
                           style: ScText.sans(size: 15, weight: FontWeight.w700, color: ScColors.textSecondary)),
                     ),
                   ),
@@ -282,8 +283,8 @@ class _ActiveCheckInRow extends StatelessWidget {
                 const SizedBox(height: 1),
                 Text(
                     due
-                        ? '${c.time} · ${late ? 'Overdue' : 'Due now'}'
-                        : '${c.date} · ${c.time}',
+                        ? '${c.timeText} · ${late ? context.l10n.overdue : context.l10n.dueNow}'
+                        : '${c.dateText} · ${c.timeText}',
                     style: ScText.mono(size: 12.5, color: due ? accent : ScColors.textMuted)),
                 if (c.confirmed && (c.place ?? '').isNotEmpty) ...[
                   const SizedBox(height: 2),
@@ -307,12 +308,12 @@ class _ActiveCheckInRow extends StatelessWidget {
             Row(children: [
               const Icon(FeatherIcons.checkCircle, size: 15, color: ScColors.green500),
               const SizedBox(width: 5),
-              Text('Confirmed', style: ScText.sans(size: 13, weight: FontWeight.w700, color: ScColors.green500)),
+              Text(context.l10n.confirmed, style: ScText.sans(size: 13, weight: FontWeight.w700, color: ScColors.green500)),
             ])
           else if (isNext)
             due
                 ? ScButton(
-                    label: 'Confirm',
+                    label: context.l10n.confirm,
                     fullWidth: false,
                     height: 36,
                     variant: late ? ScButtonVariant.danger : ScButtonVariant.primary,
@@ -321,12 +322,12 @@ class _ActiveCheckInRow extends StatelessWidget {
                     onTap: () => onConfirm(i),
                     child: Padding(
                       padding: const EdgeInsets.all(4),
-                      child: Text('Confirm',
+                      child: Text(context.l10n.confirm,
                           style: ScText.sans(size: 14, weight: FontWeight.w800, color: ScColors.brand)),
                     ),
                   )
           else if (isFuture)
-            Text('Upcoming', style: ScText.sans(size: 12.5, weight: FontWeight.w600, color: ScColors.textMuted)),
+            Text(context.l10n.upcoming, style: ScText.sans(size: 12.5, weight: FontWeight.w600, color: ScColors.textMuted)),
         ],
       ),
     );
@@ -343,10 +344,10 @@ class _DueBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final accent = late ? ScColors.red500 : ScColors.amber800;
     final bg = late ? ScColors.red50 : ScColors.amber100;
-    final title = late ? 'You missed a check-in' : 'Check-in due — are you safe?';
+    final title = late ? context.l10n.missedCheckInTitle : context.l10n.checkInDueTitle;
     final sub = late
-        ? '${checkIn.label} · ${checkIn.time}. Your circle has been alerted — confirm now to let them know you\'re okay.'
-        : 'Confirm within ${kCheckInGrace.inMinutes} min or your circle will be alerted.';
+        ? context.l10n.missedCheckInBody(checkIn.label, checkIn.timeText)
+        : context.l10n.confirmWithinBody(kCheckInGrace.inMinutes);
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
       decoration: BoxDecoration(
@@ -373,7 +374,7 @@ class _DueBanner extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           ScButton(
-              label: 'Confirm',
+              label: context.l10n.confirm,
               fullWidth: false,
               height: 38,
               variant: late ? ScButtonVariant.danger : ScButtonVariant.primary,

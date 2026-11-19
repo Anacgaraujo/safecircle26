@@ -13,6 +13,7 @@ import 'package:safecircle/features/profile/application/profile_service.dart';
 import 'package:safecircle/features/profile/presentation/legal_doc_screen.dart';
 import 'package:safecircle/features/profile/presentation/profile_form_screen.dart';
 import 'package:safecircle/features/profile/presentation/widgets/profile_ui.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -46,7 +47,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     onPressed: () => Navigator.of(context).pop(),
                     icon: const Icon(FeatherIcons.arrowLeft, size: 24, color: ScColors.textPrimary),
                   ),
-                  Text('Settings',
+                  Text(context.l10n.settings,
                       style: ScText.sans(size: 24, weight: FontWeight.w800, color: ScColors.textHeading, spacing: -.5)),
                 ],
               ),
@@ -55,33 +56,33 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
                 children: [
-                  _sectionHeader(FeatherIcons.lock, 'Security'),
+                  _sectionHeader(FeatherIcons.lock, context.l10n.security),
                   _groupCard([
                     _settingRow(
                       tile: const Icon(FeatherIcons.checkCircle, size: 19, color: ScColors.green500),
                       tileBg: ScColors.green50,
-                      label: 'Change safety PIN',
-                      sub: "Confirms you're OK at check-in",
+                      label: context.l10n.changeSafetyPin,
+                      sub: context.l10n.changeSafetyPinSub,
                       onTap: () => pushScreen(context, const ProfileFormScreen(kind: ProfileFormKind.safetyPin)),
                     ),
                     _settingRow(
                       tile: const Icon(FeatherIcons.shield, size: 19, color: ScColors.brand),
                       tileBg: ScColors.brandTint,
-                      label: 'Change panic PIN',
-                      sub: 'Silent duress code · sends a hidden alert',
+                      label: context.l10n.changePanicPin,
+                      sub: context.l10n.changePanicPinSub,
                       onTap: () => pushScreen(context, const ProfileFormScreen(kind: ProfileFormKind.panicPin)),
                       topBorder: true,
                     ),
                   ]),
                   const SizedBox(height: 24),
-                  _sectionHeader(FeatherIcons.bell, 'Notifications'),
+                  _sectionHeader(FeatherIcons.bell, context.l10n.notifications),
                   _groupCard([
-                    _toggleRow(FeatherIcons.clock, 'Check-in reminders', 'Nudge me when a check-in is due',
+                    _toggleRow(FeatherIcons.clock, context.l10n.checkInReminders, context.l10n.checkInRemindersSub,
                         checkinReminder, (v) {
                       setState(() => checkinReminder = v);
                       _saveToggle('checkinReminder', v);
                     }),
-                    _toggleRow(FeatherIcons.alertTriangle, 'Overdue check-ins', 'When a friend misses a check-in. Panic and SOS alerts are always on.',
+                    _toggleRow(FeatherIcons.alertTriangle, context.l10n.overdueCheckIns, context.l10n.overdueCheckInsSub,
                         overdueAlerts, (v) {
                       setState(() => overdueAlerts = v);
                       _saveToggle('overdueAlerts', v);
@@ -89,53 +90,53 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     _settingRow(
                       tile: const Icon(FeatherIcons.shield, size: 19, color: ScColors.purple700),
                       tileBg: profileTileBg,
-                      label: 'Permissions',
-                      sub: 'Location, notifications, alarms and battery',
+                      label: context.l10n.permissions,
+                      sub: context.l10n.permissionsSub,
                       onTap: () => showPermissionSheet(
                         context,
-                        title: 'Permissions',
-                        reason: 'SafeCircle only uses these to protect you and your circle.',
-                        continueLabel: 'Done',
+                        title: context.l10n.permissions,
+                        reason: context.l10n.permissionsReason,
+                        continueLabel: context.l10n.done,
                       ),
                       topBorder: true,
                     ),
                     _settingRow(
                       tile: const Icon(FeatherIcons.send, size: 19, color: ScColors.purple700),
                       tileBg: profileTileBg,
-                      label: 'Send a test notification',
-                      sub: 'Check that alerts reach this phone',
+                      label: context.l10n.sendTestNotification,
+                      sub: context.l10n.sendTestNotificationSub,
                       onTap: () async {
                         final ok = await NotificationService.instance.sendTest();
                         if (!context.mounted) return;
                         showScToast(
                             context,
                             ok
-                                ? 'Sent — check your notification shade.'
-                                : 'Could not send. Check notification permission in system settings.');
+                                ? context.l10n.testNotificationSent
+                                : context.l10n.testNotificationFailed);
                       },
                       topBorder: true,
                     ),
                   ]),
                   const SizedBox(height: 24),
-                  _sectionHeader(FeatherIcons.user, 'Account'),
+                  _sectionHeader(FeatherIcons.user, context.l10n.account),
                   _groupCard([
                     _settingRow(
                       tile: const Icon(FeatherIcons.mail, size: 19, color: ScColors.purple700),
                       tileBg: profileTileBg,
-                      label: 'Change email',
+                      label: context.l10n.changeEmail,
                       onTap: () => pushScreen(context, const ProfileFormScreen(kind: ProfileFormKind.email)),
                     ),
                     _settingRow(
                       tile: const Icon(FeatherIcons.lock, size: 19, color: ScColors.purple700),
                       tileBg: profileTileBg,
-                      label: 'Change password',
+                      label: context.l10n.changePassword,
                       onTap: () => pushScreen(context, const ProfileFormScreen(kind: ProfileFormKind.password)),
                       topBorder: true,
                     ),
                     _settingRow(
                       tile: const Icon(FeatherIcons.logOut, size: 19, color: ScColors.textBody),
                       tileBg: ScColors.surfaceSunken,
-                      label: 'Log out',
+                      label: context.l10n.logOut,
                       labelColor: ScColors.textBody,
                       chevronColor: ScColors.textMuted,
                       onTap: () => _confirm(
@@ -144,10 +145,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         tint: ScColors.surfaceSunken,
                         fg: ScColors.textBody,
                         btnBg: ScColors.ink,
-                        title: 'Log out?',
-                        body: "You'll stop receiving alerts from your circles until you log back in.",
-                        cta: 'Log out',
-                        done: 'Logged out.',
+                        title: context.l10n.logOutQuestion,
+                        body: context.l10n.logOutBody,
+                        cta: context.l10n.logOut,
+                        done: context.l10n.loggedOut,
                         action: () async {
                           final nav = Navigator.of(context);
                           await ref.read(authRepositoryProvider).logout();
@@ -159,9 +160,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     _settingRow(
                       tile: const Icon(FeatherIcons.trash2, size: 19, color: ScColors.red500),
                       tileBg: ScColors.red50,
-                      label: 'Delete account',
+                      label: context.l10n.deleteAccount,
                       labelColor: ScColors.red500,
-                      sub: 'Permanently erases your circle & history',
+                      sub: context.l10n.deleteAccountSub,
                       subColor: ScColors.red500,
                       chevronColor: ScColors.red500,
                       onTap: () => _confirm(
@@ -170,10 +171,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         tint: ScColors.red50,
                         fg: ScColors.red500,
                         btnBg: ScColors.red500,
-                        title: 'Delete account?',
-                        body: 'This permanently erases your circles, contacts and journey history. This cannot be undone.',
-                        cta: 'Delete account',
-                        done: 'Account deleted.',
+                        title: context.l10n.deleteAccountQuestion,
+                        body: context.l10n.deleteAccountBody,
+                        cta: context.l10n.deleteAccount,
+                        done: context.l10n.accountDeleted,
                         action: () async {
                           final nav = Navigator.of(context);
                           await ref.read(profileServiceProvider).deleteAccount();
@@ -185,7 +186,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ),
                   ]),
                   const SizedBox(height: 24),
-                  _sectionHeader(FeatherIcons.info, 'About'),
+                  _sectionHeader(FeatherIcons.info, context.l10n.about),
                   _groupCard([
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
@@ -193,7 +194,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         children: [
                           _tile(const Icon(FeatherIcons.smartphone, size: 19, color: ScColors.purple700), profileTileBg),
                           const SizedBox(width: 13),
-                          Expanded(child: Text('Version', style: ScText.sans(size: 15, weight: FontWeight.w700, color: ScColors.textHeading))),
+                          Expanded(child: Text(context.l10n.version, style: ScText.sans(size: 15, weight: FontWeight.w700, color: ScColors.textHeading))),
                           FutureBuilder<PackageInfo>(
                             future: PackageInfo.fromPlatform(),
                             builder: (_, snap) => Text(
@@ -208,21 +209,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     _settingRow(
                       tile: const Icon(FeatherIcons.flag, size: 19, color: ScColors.purple700),
                       tileBg: profileTileBg,
-                      label: 'Terms of Service',
+                      label: context.l10n.termsOfService,
                       onTap: () => pushScreen(context, const LegalDocScreen(isTerms: true)),
                       topBorder: true,
                     ),
                     _settingRow(
                       tile: const Icon(FeatherIcons.shield, size: 19, color: ScColors.purple700),
                       tileBg: profileTileBg,
-                      label: 'Privacy Policy',
+                      label: context.l10n.privacyPolicy,
                       onTap: () => pushScreen(context, const LegalDocScreen(isTerms: false)),
                       topBorder: true,
                     ),
                   ]),
                   const SizedBox(height: 18),
                   Center(
-                    child: Text('SafeCircle · Made to keep your circle safe',
+                    child: Text(context.l10n.aboutFooter,
                         style: ScText.sans(size: 12, weight: FontWeight.w600, color: ScColors.textMuted)),
                   ),
                 ],
@@ -400,7 +401,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               TextButton(
                 onPressed: () => Navigator.of(dialogContext).pop(),
-                child: Text('Cancel', style: ScText.sans(size: 14, weight: FontWeight.w700, color: ScColors.textMuted)),
+                child: Text(context.l10n.cancel, style: ScText.sans(size: 14, weight: FontWeight.w700, color: ScColors.textMuted)),
               ),
             ],
           ),

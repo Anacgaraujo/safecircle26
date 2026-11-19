@@ -116,6 +116,7 @@ class UserRepository extends FirestoreRepository {
 
     await wipe(_user(uid).collection('contacts'));
     await _secrets.delete();
+    await _user(uid).collection('private').doc('push').delete();
     await _profile.delete();
     final joined = await db.collection('circles').where('memberIds', arrayContains: uid).get();
     for (final d in joined.docs) {

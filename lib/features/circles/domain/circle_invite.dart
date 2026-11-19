@@ -1,3 +1,5 @@
+import 'package:safecircle/l10n/l10n.dart';
+
 class CircleInvite {
   const CircleInvite({
     required this.id,
@@ -21,9 +23,9 @@ class CircleInvite {
   final String fromUid;
   final String fromName;
 
-  String get senderName => fromName.isEmpty ? 'Someone' : fromName;
+  String get senderName => fromName.isEmpty ? appL10n.someone : fromName;
   String get senderFirstName => senderName.split(' ').first;
-  String get circleLabel => circleName.isEmpty ? 'a circle' : circleName;
+  String get circleLabel => circleName.isEmpty ? appL10n.aCircle : circleName;
 
-  String get summary => '$senderFirstName invited you to $circleLabel';
+  String get summary => appL10n.inviteSummary(senderFirstName, circleLabel);
 }

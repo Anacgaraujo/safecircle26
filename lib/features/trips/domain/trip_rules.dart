@@ -1,7 +1,9 @@
 import 'dart:math' as math;
 
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
+import 'package:safecircle/core/utils/formatters.dart';
 import 'package:safecircle/features/live_map/domain/tracking.dart';
 
 DateTime weekStart(int weeksAgo, {DateTime? now}) {
@@ -10,12 +12,13 @@ DateTime weekStart(int weeksAgo, {DateTime? now}) {
   return monday.subtract(Duration(days: 7 * weeksAgo));
 }
 
-const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const weekdayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+/// Short weekday name in the phone's language: "Mon", "seg.", "周一"…
+String weekdayName(DateTime d) => scFormat(DateFormat.E, d);
 
-String tripDayLabel(DateTime d) => '${weekdayNames[d.weekday - 1]} · ${_months[d.month - 1]} ${d.day}';
+String tripDayLabel(DateTime d) => '${weekdayName(d)} · ${shortDate(d)}';
 
-String shortDate(DateTime d) => '${_months[d.month - 1]} ${d.day}';
+/// "Nov 16", "16 de nov."…
+String shortDate(DateTime d) => scFormat(DateFormat.MMMd, d);
 
 class TripWeek {
   TripWeek(this.all, {this.onlyOverLimit = false});

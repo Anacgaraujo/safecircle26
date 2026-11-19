@@ -13,6 +13,7 @@ import 'package:safecircle/features/live_map/domain/tracking.dart';
 import 'package:safecircle/features/trips/data/trip_repository.dart';
 import 'package:safecircle/features/trips/domain/trip_rules.dart';
 import 'package:safecircle/features/trips/presentation/widgets/trip_card.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class TripHistoryScreen extends ConsumerStatefulWidget {
   const TripHistoryScreen({super.key, required this.userId, required this.name, this.photo});
@@ -49,7 +50,7 @@ class _TripHistoryScreenState extends ConsumerState<TripHistoryScreen> {
                 ScBackButton(onTap: () => Navigator.of(context).pop()),
                 Expanded(
                   child: Center(
-                    child: Text('TRIP HISTORY',
+                    child: Text(context.l10n.tripHistoryEyebrow,
                         style: ScText.sans(
                             size: 11, weight: FontWeight.w700, color: ScColors.textMuted, spacing: 1)),
                   ),
@@ -66,7 +67,7 @@ class _TripHistoryScreenState extends ConsumerState<TripHistoryScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(isMe ? 'Your trips' : "$_firstName's trips",
+                      Text(isMe ? context.l10n.yourTrips : context.l10n.namesTrips(_firstName),
                           style: ScText.sans(
                               size: 24,
                               weight: FontWeight.w800,
@@ -76,8 +77,8 @@ class _TripHistoryScreenState extends ConsumerState<TripHistoryScreen> {
                       const SizedBox(height: 3),
                       Text(
                         week.all.isEmpty
-                            ? 'No trips this week'
-                            : '${scMiles(week.totalKm)} mi · Top speed ${scSpeed(week.topKmh)}',
+                            ? context.l10n.noTripsThisWeek
+                            : context.l10n.weekSummary(scMiles(week.totalKm), scSpeed(week.topKmh)),
                         style: ScText.sans(
                             size: 13.5, weight: FontWeight.w600, color: ScColors.textSecondary),
                       ),
@@ -101,13 +102,13 @@ class _TripHistoryScreenState extends ConsumerState<TripHistoryScreen> {
             Row(
               children: [
                 _FilterChip(
-                  label: 'All trips ${week.all.length}',
+                  label: context.l10n.allTripsCount(week.all.length),
                   active: !_onlyOverLimit,
                   onTap: () => setState(() => _onlyOverLimit = false),
                 ),
                 const SizedBox(width: 8),
                 _FilterChip(
-                  label: 'Over ${scSpeed(kSpeedLimitKmh)} ${week.overLimitCount}',
+                  label: context.l10n.overSpeedCount(scSpeed(kSpeedLimitKmh), week.overLimitCount),
                   active: _onlyOverLimit,
                   onTap: () => setState(() => _onlyOverLimit = true),
                 ),
@@ -121,9 +122,9 @@ class _TripHistoryScreenState extends ConsumerState<TripHistoryScreen> {
                 const SizedBox(width: 7),
                 Expanded(
                   child: Text(
-                    'Trips are recorded automatically whenever ${isMe ? 'you leave' : '$_firstName leaves'} '
-                    'a ${kTripStartRadiusM.round()} m radius and end after '
-                    '${kTripStopAfter.inMinutes} minutes stopped.',
+                    isMe
+                        ? context.l10n.tripsRecordedYou(kTripStartRadiusM.round(), kTripStopAfter.inMinutes)
+                        : context.l10n.tripsRecordedName(_firstName, kTripStartRadiusM.round(), kTripStopAfter.inMinutes),
                     style: ScText.sans(
                         size: 12.5, weight: FontWeight.w600, color: ScColors.textMuted, height: 17),
                   ),
@@ -138,7 +139,7 @@ class _TripHistoryScreenState extends ConsumerState<TripHistoryScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(24),
                         child: Text(
-                          week.all.isEmpty ? 'No trips recorded this week.' : 'No trips match this filter.',
+                          week.all.isEmpty ? context.l10n.noTripsRecorded : context.l10n.noTripsMatch,
                           textAlign: TextAlign.center,
                           style: ScText.sans(size: 14, weight: FontWeight.w600, color: ScColors.textMuted),
                         ),
@@ -177,9 +178,9 @@ class _WeekPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     final start = weekStart(weeksAgo);
     final label = weeksAgo == 0
-        ? 'This week'
+        ? context.l10n.thisWeek
         : weeksAgo == 1
-            ? 'Last week'
+            ? context.l10n.lastWeek
             : '${shortDate(start)} – ${shortDate(start.add(const Duration(days: 6)))}';
 
     return ScCard(
@@ -199,8 +200,8 @@ class _WeekPicker extends StatelessWidget {
                 const SizedBox(height: 1),
                 Text(
                     weeksAgo == 0
-                        ? 'Since ${weekdayNames[0]}, ${shortDate(start)}'
-                        : '${weekdayNames[0]}, ${shortDate(start)} – ${weekdayNames[6]}, ${shortDate(start.add(const Duration(days: 6)))}',
+                        ? context.l10n.sinceDay('${weekdayName(start)}, ${shortDate(start)}')
+                        : '${weekdayName(start)}, ${shortDate(start)} – ${weekdayName(start.add(const Duration(days: 6)))}, ${shortDate(start.add(const Duration(days: 6)))}',
                     style: ScText.sans(
                         size: 12, weight: FontWeight.w600, color: ScColors.textMuted)),
               ],
@@ -256,7 +257,7 @@ class _WeekChart extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('TRIPS PER WEEK',
+          Text(context.l10n.tripsPerWeek,
               style: ScText.sans(
                   size: 11, weight: FontWeight.w700, color: ScColors.textMuted, spacing: 1)),
           const SizedBox(height: 10),
@@ -292,9 +293,9 @@ class _WeekChart extends StatelessWidget {
                           const SizedBox(height: 6),
                           Text(
                             i == 3
-                                ? 'This\nweek'
+                                ? context.l10n.thisWeekShort
                                 : i == 2
-                                    ? 'Last\nweek'
+                                    ? context.l10n.lastWeekShort
                                     : shortDate(weekStart(3 - i)),
                             textAlign: TextAlign.center,
                             style: ScText.sans(

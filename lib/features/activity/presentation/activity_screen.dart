@@ -7,6 +7,7 @@ import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/widgets/feather_icons.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/alerts/presentation/alert_detail_screen.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 void showActivitySheet(
   BuildContext context, {
@@ -16,7 +17,7 @@ void showActivitySheet(
   VoidCallback? onGoCircles,
 }) {
   if (alerts.isEmpty && invites.isEmpty && events.isEmpty) {
-    showScToast(context, 'Nothing new yet.');
+    showScToast(context, context.l10n.nothingNewYet);
     return;
   }
   showModalBottomSheet<void>(
@@ -40,7 +41,7 @@ void showActivitySheet(
               ),
             ),
             const SizedBox(height: 16),
-            Text('Activity',
+            Text(context.l10n.activity,
                 style: ScText.sans(
                     size: 20, weight: FontWeight.w800, color: ScColors.textHeading)),
             const SizedBox(height: 12),
@@ -58,7 +59,7 @@ void showActivitySheet(
                         _ => FeatherIcons.alertTriangle,
                       },
                       title: a.headline,
-                      sub: '${a.kindLabel} · ${a.timeLabel}',
+                      sub: '${a.kindLabel} · ${a.timeText}',
                       onTap: () {
                         Navigator.of(sheetContext).pop();
                         Navigator.of(context).push(
@@ -72,7 +73,7 @@ void showActivitySheet(
                       tint: ScColors.amber100,
                       iconColor: ScColors.amber800,
                       icon: FeatherIcons.userPlus,
-                      title: 'Circle invite',
+                      title: context.l10n.circleInvite,
                       sub: i.summary,
                       onTap: () {
                         Navigator.of(sheetContext).pop();

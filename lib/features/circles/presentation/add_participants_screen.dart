@@ -10,6 +10,7 @@ import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/circles/application/circle_service.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
 import 'package:safecircle/features/circles/presentation/circle_detail_screen.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class AddParticipantsScreen extends ConsumerStatefulWidget {
   const AddParticipantsScreen({super.key, required this.draft, this.isExisting = false});
@@ -48,13 +49,15 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
     if (widget.draft.members.isEmpty || _saving) return;
     setState(() => _saving = true);
     try {
-      final missing = await ref
-          .read(circleServiceProvider)
-          .saveAndInvite(widget.draft, isNew: !widget.isExisting);
+      final service = ref.read(circleServiceProvider);
+      final missing = await service.saveAndInvite(widget.draft, isNew: !widget.isExisting);
+      final texted = await service.sendInviteTexts(widget.draft);
       if (!mounted) return;
-      if (missing.isNotEmpty) {
-        showScToast(context, 'No SafeCircle account for: ${missing.join(', ')}');
-      }
+      final notes = [
+        if (texted > 0) context.l10n.textInvitationsSent(texted),
+        if (missing.isNotEmpty) context.l10n.noAccountYetFor(missing.join(', ')),
+      ];
+      if (notes.isNotEmpty) showScToast(context, notes.join(' '));
       if (!widget.isExisting) await startLiveSharingByDefault(context);
       if (!mounted) return;
       Navigator.of(context).pop();
@@ -65,7 +68,7 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
       }
     } catch (_) {
       if (mounted) {
-        showScToast(context, 'Could not save the circle. Try again.');
+        showScToast(context, context.l10n.couldNotSaveCircle);
         setState(() => _saving = false);
       }
     }
@@ -87,19 +90,17 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(26, 10, 26, 10),
                 children: [
-                  Text('Add participants', style: ScText.headline()),
+                  Text(context.l10n.addParticipants, style: ScText.headline()),
                   const SizedBox(height: 6),
                   Text.rich(
                     TextSpan(
-                      text: 'Adding to ',
+                      text: context.l10n.addingTo,
                       style: ScText.sub(),
                       children: [
                         TextSpan(
                             text: widget.draft.name,
                             style: ScText.sans(size: 15, weight: FontWeight.w800, color: ScColors.brand)),
-                        const TextSpan(
-                            text:
-                                ". Participants join with the email of their SafeCircle account — that's how they follow your journeys."),
+                        TextSpan(text: context.l10n.addingToHint),
                       ],
                     ),
                   ),
@@ -111,7 +112,7 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
                   ),
                   const SizedBox(height: 8),
                   ScButton(
-                    label: editIndex != null ? 'Save participant' : 'Add',
+                    label: editIndex != null ? context.l10n.saveParticipant : context.l10n.add,
                     leftIcon: FeatherIcons.userPlus,
                     variant: editIndex != null || members.isEmpty
                         ? ScButtonVariant.primary
@@ -119,7 +120,7 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
                     onPressed: _canAdd ? _add : null,
                   ),
                   const SizedBox(height: 24),
-                  Text('PARTICIPANTS · ${members.length}', style: ScText.micro()),
+                  Text(context.l10n.participantsCount(members.length), style: ScText.micro()),
                   const SizedBox(height: 12),
                   if (members.isEmpty)
                     Container(
@@ -129,14 +130,17 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(color: ScColors.borderDefault, width: 1.5),
                       ),
-                      child: Text('No participants yet',
+                      child: Text(context.l10n.noParticipantsYet,
                           style: ScText.sans(size: 14, weight: FontWeight.w500, color: ScColors.textMuted)),
                     )
                   else
                     for (var i = 0; i < members.length; i++) ...[
                       PersonRow(
                         person: members[i],
-                        onEdit: () => setState(() => editIndex = i),
+                        onEdit: () {
+                          setState(() => editIndex = i);
+                          _formKey.currentState?.load(members[i]);
+                        },
                         onDelete: () => setState(() => members.removeAt(i)),
                       ),
                       const SizedBox(height: 10),
@@ -148,8 +152,8 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
               padding: const EdgeInsets.fromLTRB(26, 8, 26, 20),
               child: ScButton(
                 label: _saving
-                    ? 'Saving…'
-                    : (widget.isExisting ? 'Save circle' : 'Create circle'),
+                    ? context.l10n.saving
+                    : (widget.isExisting ? context.l10n.saveCircle : context.l10n.createCircle),
                 onPressed: members.isEmpty || _saving ? null : _finalize,
               ),
             ),

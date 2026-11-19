@@ -4,17 +4,18 @@ import 'package:safecircle/core/widgets/feather_icons.dart';
 
 import 'package:safecircle/core/utils/phone.dart';
 import 'package:safecircle/core/theme/sc_theme.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class ScPhoneField extends StatefulWidget {
   const ScPhoneField({
     super.key,
-    this.label = 'Phone number',
+    this.label,
     this.initialCountryCode = kDefaultCountry,
     this.initialDigits = '',
     required this.onChanged,
   });
 
-  final String label;
+  final String? label;
   final String initialCountryCode;
   final String initialDigits;
   final void Function(String countryCode, String digits) onChanged;
@@ -52,7 +53,7 @@ class _ScPhoneFieldState extends State<ScPhoneField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.label, style: ScText.sans(size: 14, weight: FontWeight.w700)),
+        Text(widget.label ?? context.l10n.phoneNumber, style: ScText.sans(size: 14, weight: FontWeight.w700)),
         const SizedBox(height: 8),
         Container(
           height: 56,
@@ -136,7 +137,7 @@ class _ScPhoneFieldState extends State<ScPhoneField> {
                               children: [
                                 Text(c.flag, style: const TextStyle(fontSize: 20)),
                                 const SizedBox(width: 12),
-                                Expanded(child: Text(c.name, style: ScText.sans(size: 15, weight: FontWeight.w600))),
+                                Expanded(child: Text(countryName(c), style: ScText.sans(size: 15, weight: FontWeight.w600))),
                                 Text(c.dial, style: ScText.mono(size: 14, color: ScColors.textSecondary)),
                                 if (c.code == countryCode) ...[
                                   const SizedBox(width: 10),

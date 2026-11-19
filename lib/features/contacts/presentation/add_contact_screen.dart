@@ -6,6 +6,7 @@ import 'package:safecircle/core/widgets/person_form.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
 import 'package:safecircle/features/contacts/data/contacts_repository.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class AddContactScreen extends ConsumerStatefulWidget {
   const AddContactScreen({super.key, this.existing});
@@ -42,7 +43,7 @@ class _AddContactScreenState extends ConsumerState<AddContactScreen> {
       if (mounted) Navigator.of(context).pop();
     } catch (_) {
       if (mounted) {
-        showScToast(context, 'Could not save the contact. Try again.');
+        showScToast(context, context.l10n.couldNotSaveContact);
         setState(() => _saving = false);
       }
     }
@@ -63,10 +64,12 @@ class _AddContactScreenState extends ConsumerState<AddContactScreen> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(26, 10, 26, 10),
                 children: [
-                  Text(isEdit ? 'Edit contact' : 'Add emergency contact',
+                  Text(isEdit ? context.l10n.editContact : context.l10n.addEmergencyContact,
                       style: ScText.headline()),
                   const SizedBox(height: 6),
-                  Text("They'll be alerted on every journey, always.", style: ScText.sub()),
+                  Text(
+                      context.l10n.addContactHint,
+                      style: ScText.sub()),
                   const SizedBox(height: 24),
                   PersonForm(
                     initial: isEdit ? _current : null,
@@ -78,7 +81,7 @@ class _AddContactScreenState extends ConsumerState<AddContactScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(26, 8, 26, 20),
               child: ScButton(
-                label: _saving ? 'Saving…' : (isEdit ? 'Save changes' : 'Add'),
+                label: _saving ? context.l10n.saving : (isEdit ? context.l10n.saveChanges : context.l10n.add),
                 onPressed: _current.name.trim().isEmpty || _saving ? null : _submit,
               ),
             ),

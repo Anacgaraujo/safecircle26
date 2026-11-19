@@ -1,3 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
+
+import 'package:safecircle/core/utils/formatters.dart';
+import 'package:safecircle/l10n/l10n.dart';
+
 class SafetyAlert {
   SafetyAlert({
     required this.id,
@@ -11,6 +16,7 @@ class SafetyAlert {
     this.lat,
     this.lng,
     this.watcherCount = 0,
+    this.createdAt,
   });
 
   final String id;
@@ -26,16 +32,23 @@ class SafetyAlert {
 
   final int watcherCount;
 
+  final DateTime? createdAt;
+
+  /// When it was raised, in the phone's language ([timeLabel] is saved in
+  /// English for text messages).
+  String get timeText => createdAt == null ? timeLabel : scClock(createdAt!);
+
   String get fromFirstName => fromName.trim().split(' ').first;
 
   String get kindLabel => switch (type) {
-        'panic' => 'Silent panic',
-        'overdue' => 'Missed check-in',
-        _ => 'SOS',
+        'panic' => appL10n.alertKindPanic,
+        'overdue' => appL10n.alertKindOverdue,
+        _ => appL10n.alertKindSos,
       };
 
-  String get headline =>
-      type == 'overdue' ? '$fromFirstName missed a check-in' : '$fromFirstName needs help';
+  String get headline => type == 'overdue'
+      ? appL10n.alertHeadlineOverdue(fromFirstName)
+      : appL10n.alertHeadlineHelp(fromFirstName);
 
   factory SafetyAlert.fromMap(Map<String, dynamic> m, String id) => SafetyAlert(
         id: id,
@@ -49,5 +62,6 @@ class SafetyAlert {
         lat: (m['lat'] as num?)?.toDouble(),
         lng: (m['lng'] as num?)?.toDouble(),
         watcherCount: ((m['watcherIds'] ?? const []) as List).length,
+        createdAt: (m['createdAt'] as Timestamp?)?.toDate(),
       );
 }

@@ -40,3 +40,19 @@ app.*.map.json
 
 # Local map tile key (see config/maps.example.json)
 config/maps.json
+
+# Firebase configuration, generated per environment by `flutterfire configure`
+# (see docs/FIREBASE_SETUP.md)
+lib/firebase_options.dart
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+
+# Node (firebase-tools)
+node_modules/
+
+# Cloud Functions local secrets (emulator) and debug logs
+functions/*.local
+firebase-debug.log
+
+# Firebase Hosting deploy cache
+.firebase/

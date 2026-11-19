@@ -1,4 +1,5 @@
 import 'package:safecircle/core/utils/formatters.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 const kStaleAfter = Duration(minutes: 15);
 
@@ -56,8 +57,9 @@ class MemberStatus {
 
   String get todayLabel {
     final km = metersToday / 1000;
-    final t = '$tripsToday ${tripsToday == 1 ? 'trip' : 'trips'}';
-    return km / kKmPerMile < .1 ? '$t today' : '$t · ${scMiles(km)} mi today';
+    return km / kKmPerMile < .1
+        ? appL10n.tripsToday(tripsToday)
+        : appL10n.tripsTodayMiles(tripsToday, scMiles(km));
   }
 
   factory MemberStatus.fromMap(Map<String, dynamic> m, String id) => MemberStatus(
@@ -117,11 +119,11 @@ class Place {
   final List<String> viewerIds;
 
   String get ruleLabel {
-    if (!enabled) return 'Alerts off';
-    if (notifyArrive && notifyLeave) return 'Alert on arrive & leave';
-    if (notifyArrive) return 'Alert on arrive';
-    if (notifyLeave) return 'Alert on leave';
-    return 'Alerts off';
+    if (!enabled) return appL10n.alertsOff;
+    if (notifyArrive && notifyLeave) return appL10n.alertArriveLeave;
+    if (notifyArrive) return appL10n.alertArrive;
+    if (notifyLeave) return appL10n.alertLeave;
+    return appL10n.alertsOff;
   }
 
   Map<String, dynamic> toMap() => {
@@ -204,7 +206,7 @@ class Trip {
   bool get overLimit => maxSpeedKmh > kSpeedLimitKmh;
   double get km => distanceM / 1000;
   String get title =>
-      '${fromLabel.isEmpty ? 'Start' : fromLabel} → ${toLabel.isEmpty ? 'End' : toLabel}';
+      '${fromLabel.isEmpty ? appL10n.tripStart : fromLabel} → ${toLabel.isEmpty ? appL10n.tripEnd : toLabel}';
 
   List<double> get overLimitAt {
     if (points.length < 2) return const [];
@@ -272,13 +274,13 @@ class ActivityEvent {
   String get firstName => userName.trim().split(' ').first;
 
   String get title => switch (type) {
-        'arrive' => '$firstName arrived at $placeName',
-        'leave' => '$firstName left $placeName',
-        _ => '$firstName has a low battery',
+        'arrive' => appL10n.arrivedAtPlace(firstName, placeName),
+        'leave' => appL10n.leftPlaceNamed(firstName, placeName),
+        _ => appL10n.hasLowBattery(firstName),
       };
 
   String get subtitle => type == 'lowBattery'
-      ? '$detail · Location may stop updating soon'
+      ? appL10n.lowBatterySub(detail)
       : scClock(at);
 
   factory ActivityEvent.fromMap(Map<String, dynamic> m, String id) => ActivityEvent(

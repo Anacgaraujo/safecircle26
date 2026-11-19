@@ -4,6 +4,7 @@ import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/widgets/feather_icons.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/journeys/domain/journey.dart';
+import 'package:safecircle/l10n/l10n.dart';
 
 class CheckInPinStep extends StatelessWidget {
   const CheckInPinStep({
@@ -47,7 +48,7 @@ class CheckInPinStep extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 14),
-                  Text(finishing ? 'Confirm to end journey' : 'Confirm your check-in',
+                  Text(finishing ? context.l10n.confirmToEndJourney : context.l10n.confirmYourCheckIn,
                       textAlign: TextAlign.center,
                       style: ScText.sans(
                           size: 26,
@@ -57,7 +58,7 @@ class CheckInPinStep extends StatelessWidget {
                           spacing: -0.5)),
                   const SizedBox(height: 8),
                   if (finishing)
-                    Text('Enter your PIN to end this journey safely.',
+                    Text(context.l10n.enterPinToEnd,
                         textAlign: TextAlign.center,
                         style: ScText.sans(size: 15, weight: FontWeight.w600, color: ScColors.textSubtle))
                   else if (active != null)
@@ -67,7 +68,7 @@ class CheckInPinStep extends StatelessWidget {
                         style: ScText.sans(size: 15, weight: FontWeight.w600, color: ScColors.textSubtle),
                         children: [
                           TextSpan(
-                              text: '${active.date} · ${active.time}',
+                              text: '${active.dateText} · ${active.timeText}',
                               style: ScText.mono(size: 14, color: ScColors.brand)),
                         ],
                       ),
@@ -78,7 +79,7 @@ class CheckInPinStep extends StatelessWidget {
                   if (pinError)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
-                      child: Text('Incorrect PIN. Try again.',
+                      child: Text(context.l10n.incorrectPin,
                           style: ScText.sans(size: 13, weight: FontWeight.w700, color: ScColors.red500)),
                     ),
                   const Spacer(),
