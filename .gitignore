@@ -53,3 +53,6 @@ node_modules/
 # Cloud Functions local secrets (emulator) and debug logs
 functions/*.local
 firebase-debug.log
+
+# Firebase Hosting deploy cache
+.firebase/
