@@ -2121,4 +2121,23 @@ class AppLocalizationsHi extends AppLocalizations {
   String participantRemovedFrom(String circle) {
     return '$circle से हटाया गया';
   }
+
+  @override
+  String notOnSafeCircleYet(String name) {
+    return '$name अभी SafeCircle पर नहीं हैं';
+  }
+
+  @override
+  String get inviteByTextBody =>
+      'क्या आप उन्हें निमंत्रण भेजना चाहेंगे? निमंत्रण के साथ एक टेक्स्ट मैसेज खुलेगा, भेजने के लिए तैयार।';
+
+  @override
+  String get inviteByShareBody =>
+      'क्या आप उन्हें निमंत्रण भेजना चाहेंगे? भेजने का तरीका चुनें: Messages, WhatsApp, ईमेल…';
+
+  @override
+  String get sendInvitation => 'निमंत्रण भेजें';
+
+  @override
+  String get notNow => 'अभी नहीं';
 }

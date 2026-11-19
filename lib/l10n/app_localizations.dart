@@ -3520,6 +3520,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Removed from {circle}'**
   String participantRemovedFrom(String circle);
+
+  /// No description provided for @notOnSafeCircleYet.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} isn\'t on SafeCircle yet'**
+  String notOnSafeCircleYet(String name);
+
+  /// No description provided for @inviteByTextBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to send them an invitation? A text message will open with the invitation ready to send.'**
+  String get inviteByTextBody;
+
+  /// No description provided for @inviteByShareBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to send them an invitation? You\'ll choose how to send it: Messages, WhatsApp, email…'**
+  String get inviteByShareBody;
+
+  /// No description provided for @sendInvitation.
+  ///
+  /// In en, this message translates to:
+  /// **'Send invitation'**
+  String get sendInvitation;
+
+  /// No description provided for @notNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get notNow;
 }
 
 class _AppLocalizationsDelegate

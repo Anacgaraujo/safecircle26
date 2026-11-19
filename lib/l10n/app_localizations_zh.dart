@@ -2014,4 +2014,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String participantRemovedFrom(String circle) {
     return '已从$circle移除';
   }
+
+  @override
+  String notOnSafeCircleYet(String name) {
+    return '$name 还没有加入 SafeCircle';
+  }
+
+  @override
+  String get inviteByTextBody => '要给对方发送邀请吗？短信将会打开，邀请内容已准备好。';
+
+  @override
+  String get inviteByShareBody => '要给对方发送邀请吗？请选择发送方式：信息、WhatsApp、电子邮件…';
+
+  @override
+  String get sendInvitation => '发送邀请';
+
+  @override
+  String get notNow => '以后再说';
 }

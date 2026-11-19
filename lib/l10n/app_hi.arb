@@ -568,5 +568,10 @@
   "inviteShareMessageNoEmail": "मैंने आपको अपने SafeCircle सर्कल \"{circle}\" में जोड़ा है ताकि हम एक-दूसरे का ध्यान रख सकें। जुड़ने के लिए ऐप डाउनलोड करें: {link}",
   "inviteShareSubject": "मेरे SafeCircle सर्कल से जुड़ें",
   "participantSavedTo": "{circle} में सहेजा गया",
-  "participantRemovedFrom": "{circle} से हटाया गया"
+  "participantRemovedFrom": "{circle} से हटाया गया",
+  "notOnSafeCircleYet": "{name} अभी SafeCircle पर नहीं हैं",
+  "inviteByTextBody": "क्या आप उन्हें निमंत्रण भेजना चाहेंगे? निमंत्रण के साथ एक टेक्स्ट मैसेज खुलेगा, भेजने के लिए तैयार।",
+  "inviteByShareBody": "क्या आप उन्हें निमंत्रण भेजना चाहेंगे? भेजने का तरीका चुनें: Messages, WhatsApp, ईमेल…",
+  "sendInvitation": "निमंत्रण भेजें",
+  "notNow": "अभी नहीं"
 }

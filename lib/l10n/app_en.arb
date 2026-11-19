@@ -1338,5 +1338,17 @@
         "type": "String"
       }
     }
+  },
+  "notOnSafeCircleYet": "{name} isn't on SafeCircle yet",
+  "inviteByTextBody": "Would you like to send them an invitation? A text message will open with the invitation ready to send.",
+  "inviteByShareBody": "Would you like to send them an invitation? You'll choose how to send it: Messages, WhatsApp, email…",
+  "sendInvitation": "Send invitation",
+  "notNow": "Not now",
+  "@notOnSafeCircleYet": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

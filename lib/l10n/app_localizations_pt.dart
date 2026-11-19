@@ -2135,4 +2135,23 @@ class AppLocalizationsPt extends AppLocalizations {
   String participantRemovedFrom(String circle) {
     return 'Removido de $circle';
   }
+
+  @override
+  String notOnSafeCircleYet(String name) {
+    return '$name ainda não está no SafeCircle';
+  }
+
+  @override
+  String get inviteByTextBody =>
+      'Quer enviar um convite? Uma mensagem de texto vai abrir com o convite pronto para enviar.';
+
+  @override
+  String get inviteByShareBody =>
+      'Quer enviar um convite? Você escolhe como enviar: Mensagens, WhatsApp, e-mail…';
+
+  @override
+  String get sendInvitation => 'Enviar convite';
+
+  @override
+  String get notNow => 'Agora não';
 }

@@ -568,5 +568,10 @@
   "inviteShareMessageNoEmail": "Adicionei você ao meu círculo do SafeCircle \"{circle}\" para a gente cuidar uns dos outros. Baixe o app: {link} para entrar.",
   "inviteShareSubject": "Entre no meu círculo do SafeCircle",
   "participantSavedTo": "Salvo em {circle}",
-  "participantRemovedFrom": "Removido de {circle}"
+  "participantRemovedFrom": "Removido de {circle}",
+  "notOnSafeCircleYet": "{name} ainda não está no SafeCircle",
+  "inviteByTextBody": "Quer enviar um convite? Uma mensagem de texto vai abrir com o convite pronto para enviar.",
+  "inviteByShareBody": "Quer enviar um convite? Você escolhe como enviar: Mensagens, WhatsApp, e-mail…",
+  "sendInvitation": "Enviar convite",
+  "notNow": "Agora não"
 }

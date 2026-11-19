@@ -463,7 +463,10 @@ Future<bool> showScConfirm(
   required String body,
   required String confirmLabel,
   IconData icon = FeatherIcons.trash2,
+  String? cancelLabel,
+  bool danger = true,
 }) async {
+  final accent = danger ? ScColors.red500 : ScColors.brand;
   final ok = await showDialog<bool>(
     context: context,
     barrierColor: const Color(0x730C0710),
@@ -478,8 +481,9 @@ Future<bool> showScConfirm(
             Container(
               width: 54,
               height: 54,
-              decoration: const BoxDecoration(color: ScColors.red50, shape: BoxShape.circle),
-              child: Icon(icon, size: 24, color: ScColors.red500),
+              decoration: BoxDecoration(
+                  color: danger ? ScColors.red50 : ScColors.brandTint, shape: BoxShape.circle),
+              child: Icon(icon, size: 24, color: accent),
             ),
             const SizedBox(height: 14),
             Text(title,
@@ -496,7 +500,7 @@ Future<bool> showScConfirm(
               height: 52,
               child: FilledButton(
                 style: FilledButton.styleFrom(
-                  backgroundColor: ScColors.red500,
+                  backgroundColor: accent,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                 ),
                 onPressed: () => Navigator.of(dialogContext).pop(true),
@@ -506,7 +510,7 @@ Future<bool> showScConfirm(
             ),
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: Text(context.l10n.cancel,
+              child: Text(cancelLabel ?? context.l10n.cancel,
                   style: ScText.sans(size: 14, weight: FontWeight.w700, color: ScColors.textMuted)),
             ),
           ],
@@ -517,8 +521,13 @@ Future<bool> showScConfirm(
   return ok ?? false;
 }
 
-void showScToast(BuildContext context, String message) {
-  final overlay = Overlay.of(context);
+void showScToast(BuildContext context, String message) =>
+    showScToastOn(Overlay.of(context, rootOverlay: true), message);
+
+/// Shows a toast on [overlay]. Grab the root overlay before a long save and
+/// use this, so the message still shows if the user leaves the screen first.
+void showScToastOn(OverlayState overlay, String message) {
+  if (!overlay.mounted) return;
   late final OverlayEntry entry;
   entry = OverlayEntry(
     builder: (_) => Positioned(
@@ -553,7 +562,9 @@ void showScToast(BuildContext context, String message) {
     ),
   );
   overlay.insert(entry);
-  Future.delayed(const Duration(milliseconds: 2200), () {
+  // Long messages (e.g. who has no account yet) stay up long enough to read.
+  final ms = (1600 + message.length * 45).clamp(2200, 7000);
+  Future.delayed(Duration(milliseconds: ms), () {
     if (entry.mounted) entry.remove();
   });
 }

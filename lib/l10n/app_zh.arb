@@ -568,5 +568,10 @@
   "inviteShareMessageNoEmail": "我把你加入了我的 SafeCircle 圈子\"{circle}\"，让我们互相照应。下载应用：{link} 即可加入。",
   "inviteShareSubject": "加入我的 SafeCircle 圈子",
   "participantSavedTo": "已保存到{circle}",
-  "participantRemovedFrom": "已从{circle}移除"
+  "participantRemovedFrom": "已从{circle}移除",
+  "notOnSafeCircleYet": "{name} 还没有加入 SafeCircle",
+  "inviteByTextBody": "要给对方发送邀请吗？短信将会打开，邀请内容已准备好。",
+  "inviteByShareBody": "要给对方发送邀请吗？请选择发送方式：信息、WhatsApp、电子邮件…",
+  "sendInvitation": "发送邀请",
+  "notNow": "以后再说"
 }

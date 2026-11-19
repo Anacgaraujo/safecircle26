@@ -10,6 +10,7 @@ import 'package:safecircle/core/widgets/sc_widgets.dart';
 import 'package:safecircle/features/circles/application/circle_service.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
 import 'package:safecircle/features/circles/presentation/circle_detail_screen.dart';
+import 'package:safecircle/features/circles/presentation/invite_by_text.dart';
 import 'package:safecircle/l10n/l10n.dart';
 
 class AddParticipantsScreen extends ConsumerStatefulWidget {
@@ -36,6 +37,7 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
     if (!_canAdd || _saving) return;
     final members = widget.draft.members;
     final before = List<Person>.of(members);
+    final added = _current;
     setState(() {
       if (editIndex != null) {
         members[editIndex!] = _current;
@@ -46,7 +48,7 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
     });
     _formKey.currentState?.reset();
     if (widget.isExisting) {
-      await _saveNow(before, (l) => l.participantSavedTo(widget.draft.name));
+      await _saveNow(before, (l) => l.participantSavedTo(widget.draft.name), person: added);
     }
   }
 
@@ -70,27 +72,47 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
   /// An existing circle has no Save button: each add, edit or removal is
   /// saved (and new people invited) straight away. On failure the list goes
   /// back to how it was, so the screen never shows unsaved people.
-  Future<void> _saveNow(List<Person> before, String Function(AppLocalizations) done) async {
+  ///
+  /// [person] is who was just added or edited. If they have no account and
+  /// SafeCircle couldn't text them (no number or no consent), the owner is
+  /// offered to send the invitation from their own phone. If the user left
+  /// the screen before saving finished, a message says so instead.
+  Future<void> _saveNow(List<Person> before, String Function(AppLocalizations) done,
+      {Person? person}) async {
+    final overlay = Overlay.of(context, rootOverlay: true);
+    final l10n = context.l10n;
     setState(() => _saving = true);
     try {
       final service = ref.read(circleServiceProvider);
       final missing = await service.saveAndInvite(widget.draft, isNew: false);
       final texted = await service.sendInviteTexts(widget.draft);
-      if (!mounted) return;
-      final l10n = context.l10n;
-      showScToast(context, [
+      final offer = person != null && _needsOwnInvite(person, missing);
+      if (offer && mounted) {
+        showScToastOn(overlay, done(l10n));
+        await offerInviteByText(context, widget.draft, person);
+        return;
+      }
+      showScToastOn(overlay, [
         done(l10n),
         if (texted > 0) l10n.textInvitationsSent(texted),
-        if (missing.isNotEmpty) l10n.noAccountYetFor(missing.join(', ')),
-      ].join(' '));
+        if (offer) l10n.noAccountYetFor(person.email!.trim()),
+      ].join('\n'));
     } catch (_) {
       widget.draft.members
         ..clear()
         ..addAll(before);
-      if (mounted) showScToast(context, context.l10n.couldNotSaveCircle);
+      showScToastOn(overlay, l10n.couldNotSaveCircle);
     } finally {
       if (mounted) setState(() => _saving = false);
     }
+  }
+
+  /// [p] has no SafeCircle account (their email is in [missing]) and
+  /// SafeCircle can't text them either, so only the owner can reach them.
+  static bool _needsOwnInvite(Person p, List<String> missing) {
+    final email = (p.email ?? '').trim().toLowerCase();
+    if (email.isEmpty || !missing.any((m) => m.trim().toLowerCase() == email)) return false;
+    return !(p.smsConsent && p.digits.isNotEmpty);
   }
 
   /// Creates a new circle and invites everyone added so far.
@@ -102,11 +124,12 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
       final missing = await service.saveAndInvite(widget.draft, isNew: !widget.isExisting);
       final texted = await service.sendInviteTexts(widget.draft);
       if (!mounted) return;
-      final notes = [
-        if (texted > 0) context.l10n.textInvitationsSent(texted),
-        if (missing.isNotEmpty) context.l10n.noAccountYetFor(missing.join(', ')),
-      ];
-      if (notes.isNotEmpty) showScToast(context, notes.join(' '));
+      if (texted > 0) showScToast(context, context.l10n.textInvitationsSent(texted));
+      for (final p in List<Person>.of(widget.draft.members)) {
+        if (!mounted) return;
+        if (_needsOwnInvite(p, missing)) await offerInviteByText(context, widget.draft, p);
+      }
+      if (!mounted) return;
       if (!widget.isExisting) await startLiveSharingByDefault(context);
       if (!mounted) return;
       Navigator.of(context).pop();
