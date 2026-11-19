@@ -55,6 +55,12 @@ Cloud Functions text circle invitations, new emergency contacts, SOS and
 panic alerts, missed journey check-ins and the all-clear, through Twilio.
 Setup: [docs/SMS.md](docs/SMS.md).
 
+## Push notifications
+
+The same alerts and circle invitations also arrive as push notifications
+(Firebase Cloud Messaging), even when the app is closed.
+Setup: [docs/PUSH.md](docs/PUSH.md).
+
 ## Map tiles
 
 Maps use MapTiler raster tiles. Copy `config/maps.example.json` to

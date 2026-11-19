@@ -17,6 +17,11 @@ exports.textAllClear = emergency.textAllClear;
 exports.textNewEmergencyContact = emergency.textNewEmergencyContact;
 exports.checkOverdueJourneys = emergency.checkOverdueJourneys;
 
+const push = require('./push');
+exports.pushAlert = push.pushAlert;
+exports.pushAllClear = push.pushAllClear;
+exports.pushInvite = push.pushInvite;
+
 // Non-secret settings live in functions/.env.
 const APP_INVITE_URL = defineString('APP_INVITE_URL', { default: '' });
 const DAILY_TEXTS_PER_USER = defineInt('DAILY_TEXTS_PER_USER', { default: 20 });

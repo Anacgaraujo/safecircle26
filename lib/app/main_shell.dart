@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:safecircle/core/notifications/notification_service.dart';
+import 'package:safecircle/core/notifications/push_service.dart';
 import 'package:safecircle/core/session/session.dart';
 import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/utils/clock.dart';
@@ -9,6 +13,7 @@ import 'package:safecircle/core/widgets/sc_bottom_nav.dart';
 import 'package:safecircle/features/activity/data/activity_repository.dart';
 import 'package:safecircle/features/alerts/data/alert_repository.dart';
 import 'package:safecircle/features/alerts/domain/safety_alert.dart';
+import 'package:safecircle/features/alerts/presentation/alert_detail_screen.dart';
 import 'package:safecircle/features/alerts/presentation/emergency_screen.dart';
 import 'package:safecircle/features/circles/data/circle_repository.dart';
 import 'package:safecircle/features/circles/presentation/circles_screen.dart';
@@ -79,6 +84,30 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
     ref.listenManual(pendingInvitesProvider, (_, next) {
       (next.value ?? const []).forEach(notifications.notifyInvite);
     });
+
+    final push = PushService.instance;
+    push.onOpen = _openPush;
+    unawaited(push.register(ref.read(sessionProvider).uid));
+    final pending = push.takePendingOpen();
+    if (pending != null) WidgetsBinding.instance.addPostFrameCallback((_) => _openPush(pending));
+  }
+
+  /// A tapped push notification: show the alert, or the invitations.
+  Future<void> _openPush(PushTarget target) async {
+    switch (target) {
+      case InviteTarget():
+        _select(ScTab.circles);
+      case AlertTarget(:final alertId):
+        try {
+          final snap = await FirebaseFirestore.instance.collection('alerts').doc(alertId).get();
+          final data = snap.data();
+          if (data == null || !mounted) return;
+          await Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => AlertDetailScreen(alert: SafetyAlert.fromMap(data, snap.id))));
+        } catch (e) {
+          debugPrint('[SafeCircle] open alert from push: $e');
+        }
+    }
   }
 
   void _checkOverdue() {
@@ -96,6 +125,7 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    PushService.instance.onOpen = null;
     JourneyMonitor.instance.stop();
     super.dispose();
   }

@@ -248,3 +248,5 @@ exports.checkOverdueJourneys = onSchedule({ schedule: 'every 1 minutes', maxInst
     }
   }
 });
+
+exports.lookupHash = lookupHash;

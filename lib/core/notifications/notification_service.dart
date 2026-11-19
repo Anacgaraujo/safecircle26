@@ -59,6 +59,16 @@ class NotificationService {
           iOS: DarwinInitializationSettings(),
         ),
       );
+      // Push notifications (FCM) arrive on this channel while the app is
+      // closed, so it must exist before the first one.
+      await _plugin
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(AndroidNotificationChannel(
+            _channel.channelId,
+            _channel.channelName,
+            description: _channel.channelDescription,
+            importance: Importance.max,
+          ));
       _ready = true;
     } catch (e) {
       debugPrint('[SafeCircle] notification init failed: $e');
