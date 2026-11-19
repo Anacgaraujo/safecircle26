@@ -260,7 +260,7 @@
       }
     }
   },
-  "resendInvitationAppBody": "We'll remind them in the app. Add a phone number to text them too.",
+  "resendInvitationAppBody": "We'll remind them in the app if they have SafeCircle. If not, you'll pick how to send them the invitation yourself.",
   "resend": "Resend",
   "couldNotResendInvitation": "Could not resend the invitation. Try again.",
   "removePersonQuestion": "Remove {name}?",
@@ -1293,6 +1293,32 @@
   "@resendNoConsent": {
     "placeholders": {
       "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteShareMessage": "I added you to my SafeCircle circle \"{circle}\" so we can look out for each other. Get the app: {link} and sign up with {email} to join.",
+  "inviteShareMessageNoEmail": "I added you to my SafeCircle circle \"{circle}\" so we can look out for each other. Get the app: {link} to join.",
+  "inviteShareSubject": "Join my SafeCircle circle",
+  "@inviteShareMessage": {
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      },
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "@inviteShareMessageNoEmail": {
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      },
+      "link": {
         "type": "String"
       }
     }

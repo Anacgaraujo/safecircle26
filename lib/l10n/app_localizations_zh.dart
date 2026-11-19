@@ -544,7 +544,8 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get resendInvitationAppBody => '我们会在应用内提醒对方。添加电话号码后也可以发送短信。';
+  String get resendInvitationAppBody =>
+      '如果对方有 SafeCircle，我们会在应用内提醒。如果没有，你可以自己选择发送邀请的方式。';
 
   @override
   String get resend => '重新发送';
@@ -1990,4 +1991,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String resendNoConsent(String name) {
     return '$name 尚未同意接收短信。对方同意后，请编辑其信息并勾选短信选项。';
   }
+
+  @override
+  String inviteShareMessage(String circle, String link, String email) {
+    return '我把你加入了我的 SafeCircle 圈子\"$circle\"，让我们互相照应。下载应用：$link，用 $email 注册即可加入。';
+  }
+
+  @override
+  String inviteShareMessageNoEmail(String circle, String link) {
+    return '我把你加入了我的 SafeCircle 圈子\"$circle\"，让我们互相照应。下载应用：$link 即可加入。';
+  }
+
+  @override
+  String get inviteShareSubject => '加入我的 SafeCircle 圈子';
 }

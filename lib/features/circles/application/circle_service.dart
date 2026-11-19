@@ -55,6 +55,12 @@ class ResendResult {
   /// No text sent: they haven't agreed to get texts (consent box unticked).
   final bool noConsent;
 
+  /// Nothing reached them (no account, no text sent or recently sent), so the
+  /// owner should send the invitation themselves from the share sheet.
+  /// A text the owner sends from their own phone isn't an A2P business
+  /// text, so it doesn't need the SafeCircle texting consent.
+  bool get shouldShare => !joined && !texted && !hasAccount && retryAfter == 0;
+
   String message(String firstName) {
     if (joined) return appL10n.resendAlreadyJoined(firstName);
     if (texted) return appL10n.resendTexted(firstName);
@@ -72,6 +78,17 @@ class ResendResult {
     if (hasAccount) return appL10n.resendInApp(firstName);
     return appL10n.resendNoAccount(firstName);
   }
+}
+
+/// Where an invitation sends someone to get the app.
+const kAppStoreUrl = 'https://apps.apple.com/app/id1534615814';
+
+/// The invitation the owner sends from their own phone (share sheet).
+String inviteShareMessage(Circle circle, Person person) {
+  final email = (person.email ?? '').trim();
+  return email.isNotEmpty
+      ? appL10n.inviteShareMessage(circle.name, kAppStoreUrl, email)
+      : appL10n.inviteShareMessageNoEmail(circle.name, kAppStoreUrl);
 }
 
 class CircleService {

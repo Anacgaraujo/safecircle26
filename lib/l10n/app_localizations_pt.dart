@@ -582,7 +582,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get resendInvitationAppBody =>
-      'Enviaremos um lembrete no app. Adicione um telefone para enviar SMS também.';
+      'Enviaremos um lembrete no app se a pessoa tiver o SafeCircle. Se não, você escolhe como enviar o convite.';
 
   @override
   String get resend => 'Reenviar';
@@ -2112,4 +2112,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String resendNoConsent(String name) {
     return '$name ainda não concordou em receber mensagens. Quando concordar, edite os dados e marque a caixa de mensagens.';
   }
+
+  @override
+  String inviteShareMessage(String circle, String link, String email) {
+    return 'Adicionei você ao meu círculo do SafeCircle \"$circle\" para a gente cuidar uns dos outros. Baixe o app: $link e cadastre-se com $email para entrar.';
+  }
+
+  @override
+  String inviteShareMessageNoEmail(String circle, String link) {
+    return 'Adicionei você ao meu círculo do SafeCircle \"$circle\" para a gente cuidar uns dos outros. Baixe o app: $link para entrar.';
+  }
+
+  @override
+  String get inviteShareSubject => 'Entre no meu círculo do SafeCircle';
 }

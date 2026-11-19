@@ -1129,7 +1129,7 @@ abstract class AppLocalizations {
   /// No description provided for @resendInvitationAppBody.
   ///
   /// In en, this message translates to:
-  /// **'We\'ll remind them in the app. Add a phone number to text them too.'**
+  /// **'We\'ll remind them in the app if they have SafeCircle. If not, you\'ll pick how to send them the invitation yourself.'**
   String get resendInvitationAppBody;
 
   /// No description provided for @resend.
@@ -3490,6 +3490,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} hasn\'t agreed to get texts yet. Once they agree, edit their details and tick the texting box.'**
   String resendNoConsent(String name);
+
+  /// No description provided for @inviteShareMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'I added you to my SafeCircle circle \"{circle}\" so we can look out for each other. Get the app: {link} and sign up with {email} to join.'**
+  String inviteShareMessage(String circle, String link, String email);
+
+  /// No description provided for @inviteShareMessageNoEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'I added you to my SafeCircle circle \"{circle}\" so we can look out for each other. Get the app: {link} to join.'**
+  String inviteShareMessageNoEmail(String circle, String link);
+
+  /// No description provided for @inviteShareSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Join my SafeCircle circle'**
+  String get inviteShareSubject;
 }
 
 class _AppLocalizationsDelegate

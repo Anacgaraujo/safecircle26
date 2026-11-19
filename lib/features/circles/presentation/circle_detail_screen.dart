@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'package:safecircle/core/session/session.dart';
 import 'package:safecircle/core/theme/sc_theme.dart';
@@ -66,7 +67,7 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
   final _resending = <Person>{};
 
   Future<void> _resend(Circle circle, Person member) async {
-    final phone = member.digits.isNotEmpty ? member.fullPhone : null;
+    final phone = member.digits.isNotEmpty && member.smsConsent ? member.fullPhone : null;
     final ok = await showScConfirm(
       context,
       title: context.l10n.resendInvitationQuestion(member.firstName),
@@ -80,13 +81,30 @@ class _CircleDetailScreenState extends ConsumerState<CircleDetailScreen> {
     setState(() => _resending.add(member));
     try {
       final result = await ref.read(circleServiceProvider).resendInvitation(circle, member);
-      if (mounted) showScToast(context, result.message(member.firstName));
+      if (!mounted) return;
+      if (result.shouldShare) {
+        await _shareInvitation(circle, member);
+      } else {
+        showScToast(context, result.message(member.firstName));
+      }
     } catch (e) {
       debugPrint('[SafeCircle] resendInvitation: $e');
       if (mounted) showScToast(context, context.l10n.couldNotResendInvitation);
     } finally {
       if (mounted) setState(() => _resending.remove(member));
     }
+  }
+
+  /// Opens the share sheet so the owner sends the invitation themselves
+  /// (Messages, WhatsApp, email…) when SafeCircle can't reach the person.
+  Future<void> _shareInvitation(Circle circle, Person member) async {
+    final box = context.findRenderObject() as RenderBox?;
+    await SharePlus.instance.share(ShareParams(
+      text: inviteShareMessage(circle, member),
+      subject: context.l10n.inviteShareSubject,
+      // iPad anchors the share popover here.
+      sharePositionOrigin: box == null ? null : box.localToGlobal(Offset.zero) & box.size,
+    ));
   }
 
   Future<void> _removeMember(Circle circle, Person member) async {

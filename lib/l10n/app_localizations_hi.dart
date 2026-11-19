@@ -580,7 +580,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get resendInvitationAppBody =>
-      'हम ऐप में याद दिलाएंगे। SMS भी भेजने के लिए फ़ोन नंबर जोड़ें।';
+      'अगर उनके पास SafeCircle है तो हम ऐप में याद दिलाएंगे। नहीं तो आप खुद चुनें कि निमंत्रण कैसे भेजना है।';
 
   @override
   String get resend => 'फिर से भेजें';
@@ -2098,4 +2098,17 @@ class AppLocalizationsHi extends AppLocalizations {
   String resendNoConsent(String name) {
     return '$name ने अभी तक संदेश पाने की सहमति नहीं दी है। सहमति मिलने पर, उनकी जानकारी संपादित करें और संदेश वाला बॉक्स चुनें।';
   }
+
+  @override
+  String inviteShareMessage(String circle, String link, String email) {
+    return 'मैंने आपको अपने SafeCircle सर्कल \"$circle\" में जोड़ा है ताकि हम एक-दूसरे का ध्यान रख सकें। ऐप डाउनलोड करें: $link और जुड़ने के लिए $email से साइन अप करें।';
+  }
+
+  @override
+  String inviteShareMessageNoEmail(String circle, String link) {
+    return 'मैंने आपको अपने SafeCircle सर्कल \"$circle\" में जोड़ा है ताकि हम एक-दूसरे का ध्यान रख सकें। जुड़ने के लिए ऐप डाउनलोड करें: $link';
+  }
+
+  @override
+  String get inviteShareSubject => 'मेरे SafeCircle सर्कल से जुड़ें';
 }

@@ -80,6 +80,7 @@ void main() {
         'resend': {'countryCode': 'US', 'digits': '4155552671'},
       });
       expect(sent.message('Bia'), 'Invitation texted to Bia again.');
+      expect(sent.shouldShare, isFalse);
 
       reply = {'sent': 0, 'retryAfter': 240};
       expect((await svc.resendInvitation(circle, bia)).message('Bia'),
@@ -101,7 +102,12 @@ void main() {
 
       expect((await svc.resendInvitation(circle, carlos)).message('Carlos'),
           "Carlos hasn't agreed to get texts yet. Once they agree, edit their details and tick the texting box.");
+      final result = await svc.resendInvitation(circle, carlos);
+      expect(result.shouldShare, isTrue);
       expect(texted, isFalse);
+      expect(inviteShareMessage(circle, carlos),
+          'I added you to my SafeCircle circle "Family" so we can look out for each other. '
+          'Get the app: $kAppStoreUrl and sign up with carlos@example.com to join.');
     });
 
     test('resend without a phone only repeats the in-app invitation', () async {
@@ -119,6 +125,8 @@ void main() {
       expect((await svc.resendInvitation(circle, bia)).message('Bia'), 'In-app invitation sent to Bia again.');
       expect((await svc.resendInvitation(circle, carlos)).message('Carlos'),
           'No SafeCircle account yet for Carlos. Add a phone number to text them.');
+      expect((await svc.resendInvitation(circle, bia)).shouldShare, isFalse);
+      expect((await svc.resendInvitation(circle, carlos)).shouldShare, isTrue);
       expect(texted, isFalse);
     });
   });

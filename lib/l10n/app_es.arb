@@ -170,7 +170,7 @@
   "couldNotLeaveCircle": "No se pudo salir del círculo. Inténtalo de nuevo.",
   "resendInvitationQuestion": "¿Reenviar invitación a {name}?",
   "resendInvitationTextBody": "Enviaremos otro SMS a {phone} y un recordatorio en la app.",
-  "resendInvitationAppBody": "Enviaremos un recordatorio en la app. Agrega un teléfono para enviarle un SMS también.",
+  "resendInvitationAppBody": "Le recordaremos en la app si tiene SafeCircle. Si no, tú eliges cómo enviarle la invitación.",
   "resend": "Reenviar",
   "couldNotResendInvitation": "No se pudo reenviar la invitación. Inténtalo de nuevo.",
   "removePersonQuestion": "¿Quitar a {name}?",
@@ -563,5 +563,8 @@
   "profilePhoneSmsNote": "Al añadir tu número, aceptas recibir mensajes de SafeCircle sobre las alertas de seguridad de tus círculos. Pueden aplicarse tarifas de mensajes y datos. Responde STOP para darte de baja.",
   "privacySmsTitle": "Mensajes de texto",
   "privacySmsBody": "Solo enviamos mensajes a un número después de que la persona lo acepte, y solo para invitaciones a círculos y alertas de seguridad, nunca publicidad. Los números de móvil y los consentimientos nunca se venden ni se comparten con terceros o afiliados con fines publicitarios. Responde STOP a cualquier mensaje para darte de baja, o HELP para obtener ayuda.",
-  "resendNoConsent": "{name} aún no ha aceptado recibir mensajes. Cuando acepte, edita sus datos y marca la casilla de mensajes."
+  "resendNoConsent": "{name} aún no ha aceptado recibir mensajes. Cuando acepte, edita sus datos y marca la casilla de mensajes.",
+  "inviteShareMessage": "Te agregué a mi círculo de SafeCircle \"{circle}\" para cuidarnos entre todos. Descarga la app: {link} y regístrate con {email} para unirte.",
+  "inviteShareMessageNoEmail": "Te agregué a mi círculo de SafeCircle \"{circle}\" para cuidarnos entre todos. Descarga la app: {link} para unirte.",
+  "inviteShareSubject": "Únete a mi círculo de SafeCircle"
 }
