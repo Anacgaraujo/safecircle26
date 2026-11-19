@@ -1350,5 +1350,68 @@
         "type": "String"
       }
     }
-  }
+  },
+  "membershipTitle": "Keep your circle close",
+  "membershipSubtitle": "A SafeCircle membership unlocks everything that keeps you and your people connected.",
+  "membershipPerkMap": "Live location with your circles",
+  "membershipPerkJourneys": "Journeys with check-ins and overdue alerts",
+  "membershipPerkCircles": "Circles for family and friends",
+  "membershipPerkAlerts": "Alerts when someone in your circle needs help",
+  "membershipTrialPrice": "{days} days free, then {price}/month",
+  "@membershipTrialPrice": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "membershipPrice": "{price}/month",
+  "@membershipPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "membershipCancelAnytime": "Cancel anytime",
+  "membershipStartTrial": "Start free trial",
+  "membershipSubscribe": "Subscribe",
+  "membershipWorking": "One moment…",
+  "membershipFinePrintTrial": "After the {days}-day free trial, payment is charged to your {store} account. The membership renews every month unless canceled at least 24 hours before the end of the current period. Manage or cancel it in your {store} account settings.",
+  "@membershipFinePrintTrial": {
+    "placeholders": {
+      "store": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "membershipFinePrint": "Payment is charged to your {store} account. The membership renews every month unless canceled at least 24 hours before the end of the current period. Manage or cancel it in your {store} account settings.",
+  "@membershipFinePrint": {
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "membershipStoreApple": "Apple ID",
+  "membershipStoreGoogle": "Google Play",
+  "membershipUnavailable": "The membership can't be loaded right now. Check your connection and try again.",
+  "membershipRestore": "Restore purchases",
+  "membershipSosFree": "SOS always works, even without a membership: your circle and emergency contacts are still alerted.",
+  "membershipOpenSos": "Open SOS",
+  "membershipPauseSharing": "Pause location sharing",
+  "membershipWelcome": "Welcome to SafeCircle!",
+  "membershipNothingToRestore": "No membership found for this account.",
+  "membershipPurchaseFailed": "The purchase didn't go through. Please try again.",
+  "membershipLabel": "Membership",
+  "membershipActiveSub": "Active · manage or cancel",
+  "membershipInactiveSub": "Not active · start your free trial",
+  "termsMembershipTitle": "4. Membership",
+  "termsMembershipBody": "Most of SafeCircle needs a monthly membership; SOS is always free. New members get a free trial. The membership renews automatically through the App Store or Google Play until you cancel it there, at least 24 hours before the end of the current period. Unused trial time ends when you subscribe."
 }

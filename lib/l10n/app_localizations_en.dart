@@ -2128,4 +2128,107 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notNow => 'Not now';
+
+  @override
+  String get membershipTitle => 'Keep your circle close';
+
+  @override
+  String get membershipSubtitle =>
+      'A SafeCircle membership unlocks everything that keeps you and your people connected.';
+
+  @override
+  String get membershipPerkMap => 'Live location with your circles';
+
+  @override
+  String get membershipPerkJourneys =>
+      'Journeys with check-ins and overdue alerts';
+
+  @override
+  String get membershipPerkCircles => 'Circles for family and friends';
+
+  @override
+  String get membershipPerkAlerts =>
+      'Alerts when someone in your circle needs help';
+
+  @override
+  String membershipTrialPrice(int days, String price) {
+    return '$days days free, then $price/month';
+  }
+
+  @override
+  String membershipPrice(String price) {
+    return '$price/month';
+  }
+
+  @override
+  String get membershipCancelAnytime => 'Cancel anytime';
+
+  @override
+  String get membershipStartTrial => 'Start free trial';
+
+  @override
+  String get membershipSubscribe => 'Subscribe';
+
+  @override
+  String get membershipWorking => 'One moment…';
+
+  @override
+  String membershipFinePrintTrial(String store, int days) {
+    return 'After the $days-day free trial, payment is charged to your $store account. The membership renews every month unless canceled at least 24 hours before the end of the current period. Manage or cancel it in your $store account settings.';
+  }
+
+  @override
+  String membershipFinePrint(String store) {
+    return 'Payment is charged to your $store account. The membership renews every month unless canceled at least 24 hours before the end of the current period. Manage or cancel it in your $store account settings.';
+  }
+
+  @override
+  String get membershipStoreApple => 'Apple ID';
+
+  @override
+  String get membershipStoreGoogle => 'Google Play';
+
+  @override
+  String get membershipUnavailable =>
+      'The membership can\'t be loaded right now. Check your connection and try again.';
+
+  @override
+  String get membershipRestore => 'Restore purchases';
+
+  @override
+  String get membershipSosFree =>
+      'SOS always works, even without a membership: your circle and emergency contacts are still alerted.';
+
+  @override
+  String get membershipOpenSos => 'Open SOS';
+
+  @override
+  String get membershipPauseSharing => 'Pause location sharing';
+
+  @override
+  String get membershipWelcome => 'Welcome to SafeCircle!';
+
+  @override
+  String get membershipNothingToRestore =>
+      'No membership found for this account.';
+
+  @override
+  String get membershipPurchaseFailed =>
+      'The purchase didn\'t go through. Please try again.';
+
+  @override
+  String get membershipLabel => 'Membership';
+
+  @override
+  String get membershipActiveSub => 'Active · manage or cancel';
+
+  @override
+  String get membershipInactiveSub => 'Not active · start your free trial';
+
+  @override
+  String get termsMembershipTitle => '4. Membership';
+
+  @override
+  String get termsMembershipBody =>
+      'Most of SafeCircle needs a monthly membership; SOS is always free. New members get a free trial. The membership renews automatically through the App Store or Google Play until you cancel it there, at least 24 hours before the end of the current period. Unused trial time ends when you subscribe.';
 }

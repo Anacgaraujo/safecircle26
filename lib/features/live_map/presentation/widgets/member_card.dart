@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:safecircle/core/location/location_service.dart';
 import 'package:safecircle/core/permissions/permissions.dart';
-import 'package:safecircle/core/session/session.dart';
 import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/utils/actions.dart';
 import 'package:safecircle/core/widgets/feather_icons.dart';
-import 'package:safecircle/core/widgets/pin_prompt.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
-import 'package:safecircle/features/alerts/data/alert_repository.dart';
-import 'package:safecircle/features/journeys/domain/pin_check.dart';
 import 'package:safecircle/features/live_map/application/live_sharing.dart';
 import 'package:safecircle/features/live_map/domain/map_rules.dart';
 import 'package:safecircle/features/live_map/domain/tracking.dart';
+import 'package:safecircle/features/live_map/presentation/pause_sharing.dart';
 import 'package:safecircle/features/trips/presentation/trip_history_screen.dart';
 import 'package:safecircle/l10n/l10n.dart';
 
@@ -171,41 +167,7 @@ class MemberCard extends ConsumerWidget {
       }
       return;
     }
-    // Pausing needs a PIN, so nobody can quietly stop the circle from seeing
-    // where you are. The panic PIN looks the same here but keeps sharing and
-    // silently alerts the circle.
-    final session = ref.read(sessionProvider);
-    final hasPins = session.safetyPin.isNotEmpty || session.panicPin.isNotEmpty;
-    final PinResult? result;
-    if (hasPins) {
-      result = await askForPin(context,
-          title: context.l10n.pauseSharingQuestion,
-          body: '${context.l10n.pauseSharingBody} ${context.l10n.enterPinToPause}');
-    } else {
-      final ok = await showScConfirm(
-        context,
-        title: context.l10n.pauseSharingQuestion,
-        body: context.l10n.pauseSharingBody,
-        confirmLabel: context.l10n.pause,
-        icon: FeatherIcons.pause,
-      );
-      result = ok ? PinResult.safety : null;
-    }
-    if (result == null || result == PinResult.wrong) return;
-    if (result == PinResult.panic) {
-      sharing.pauseUnderDuress();
-      final alerts = ref.read(alertRepositoryProvider);
-      LocationService.instance
-          .getCurrent()
-          .then((loc) => alerts.fireAlert(type: 'panic', location: loc))
-          .catchError((Object e) {
-        debugPrint('[SafeCircle] duress alert: $e');
-        return 0;
-      });
-    } else {
-      await sharing.pause();
-    }
-    if (context.mounted) showScToast(context, context.l10n.sharingPaused);
+    await pauseSharingWithPin(context, ref);
   }
 }
 

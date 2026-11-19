@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:safecircle/core/session/session.dart';
 import 'package:safecircle/core/theme/sc_theme.dart';
@@ -13,6 +15,9 @@ import 'package:safecircle/features/contacts/data/contacts_repository.dart';
 import 'package:safecircle/features/contacts/presentation/contacts_screen.dart';
 import 'package:safecircle/features/journeys/data/journey_repository.dart';
 import 'package:safecircle/features/journeys/presentation/journey_flow_screen.dart';
+import 'package:safecircle/features/membership/application/membership_controller.dart';
+import 'package:safecircle/features/membership/domain/membership.dart';
+import 'package:safecircle/features/membership/presentation/membership_paywall.dart';
 import 'package:safecircle/features/profile/application/profile_service.dart';
 import 'package:safecircle/features/profile/domain/profile_rules.dart';
 import 'package:safecircle/features/profile/presentation/profile_form_screen.dart';
@@ -37,8 +42,17 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
+  /// The store's own subscription page, where it can be changed or canceled.
+  static void _manageSubscription() {
+    final url = defaultTargetPlatform == TargetPlatform.android
+        ? 'https://play.google.com/store/account/subscriptions'
+        : 'https://apps.apple.com/account/subscriptions';
+    launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  }
+
   Widget _buildBody(BuildContext context, WidgetRef ref, Session app, int ccount,
       List<Circle> circles, int historyCount) {
+    final membership = ref.watch(membershipProvider);
     final items = [
           (
             FeatherIcons.edit3,
@@ -62,8 +76,20 @@ class ProfileScreen extends ConsumerWidget {
             FeatherIcons.clock,
             context.l10n.journeyHistory,
             context.l10n.completedJourneys(historyCount),
-            () => pushScreen(context, const JourneyFlow(startAtHistory: true)),
+            () => requireMembership(
+                context, ref, () => pushScreen(context, const JourneyFlow(startAtHistory: true))),
           ),
+          if (membership != MembershipStatus.unavailable)
+            (
+              FeatherIcons.star,
+              context.l10n.membershipLabel,
+              membership == MembershipStatus.inactive
+                  ? context.l10n.membershipInactiveSub
+                  : context.l10n.membershipActiveSub,
+              () => membership == MembershipStatus.inactive
+                  ? pushScreen(context, const MembershipScreen())
+                  : _manageSubscription(),
+            ),
         ];
 
         return Column(

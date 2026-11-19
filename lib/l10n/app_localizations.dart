@@ -3550,6 +3550,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not now'**
   String get notNow;
+
+  /// No description provided for @membershipTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your circle close'**
+  String get membershipTitle;
+
+  /// No description provided for @membershipSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A SafeCircle membership unlocks everything that keeps you and your people connected.'**
+  String get membershipSubtitle;
+
+  /// No description provided for @membershipPerkMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Live location with your circles'**
+  String get membershipPerkMap;
+
+  /// No description provided for @membershipPerkJourneys.
+  ///
+  /// In en, this message translates to:
+  /// **'Journeys with check-ins and overdue alerts'**
+  String get membershipPerkJourneys;
+
+  /// No description provided for @membershipPerkCircles.
+  ///
+  /// In en, this message translates to:
+  /// **'Circles for family and friends'**
+  String get membershipPerkCircles;
+
+  /// No description provided for @membershipPerkAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts when someone in your circle needs help'**
+  String get membershipPerkAlerts;
+
+  /// No description provided for @membershipTrialPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days free, then {price}/month'**
+  String membershipTrialPrice(int days, String price);
+
+  /// No description provided for @membershipPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'{price}/month'**
+  String membershipPrice(String price);
+
+  /// No description provided for @membershipCancelAnytime.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel anytime'**
+  String get membershipCancelAnytime;
+
+  /// No description provided for @membershipStartTrial.
+  ///
+  /// In en, this message translates to:
+  /// **'Start free trial'**
+  String get membershipStartTrial;
+
+  /// No description provided for @membershipSubscribe.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe'**
+  String get membershipSubscribe;
+
+  /// No description provided for @membershipWorking.
+  ///
+  /// In en, this message translates to:
+  /// **'One moment…'**
+  String get membershipWorking;
+
+  /// No description provided for @membershipFinePrintTrial.
+  ///
+  /// In en, this message translates to:
+  /// **'After the {days}-day free trial, payment is charged to your {store} account. The membership renews every month unless canceled at least 24 hours before the end of the current period. Manage or cancel it in your {store} account settings.'**
+  String membershipFinePrintTrial(String store, int days);
+
+  /// No description provided for @membershipFinePrint.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment is charged to your {store} account. The membership renews every month unless canceled at least 24 hours before the end of the current period. Manage or cancel it in your {store} account settings.'**
+  String membershipFinePrint(String store);
+
+  /// No description provided for @membershipStoreApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple ID'**
+  String get membershipStoreApple;
+
+  /// No description provided for @membershipStoreGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Play'**
+  String get membershipStoreGoogle;
+
+  /// No description provided for @membershipUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The membership can\'t be loaded right now. Check your connection and try again.'**
+  String get membershipUnavailable;
+
+  /// No description provided for @membershipRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchases'**
+  String get membershipRestore;
+
+  /// No description provided for @membershipSosFree.
+  ///
+  /// In en, this message translates to:
+  /// **'SOS always works, even without a membership: your circle and emergency contacts are still alerted.'**
+  String get membershipSosFree;
+
+  /// No description provided for @membershipOpenSos.
+  ///
+  /// In en, this message translates to:
+  /// **'Open SOS'**
+  String get membershipOpenSos;
+
+  /// No description provided for @membershipPauseSharing.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause location sharing'**
+  String get membershipPauseSharing;
+
+  /// No description provided for @membershipWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to SafeCircle!'**
+  String get membershipWelcome;
+
+  /// No description provided for @membershipNothingToRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'No membership found for this account.'**
+  String get membershipNothingToRestore;
+
+  /// No description provided for @membershipPurchaseFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The purchase didn\'t go through. Please try again.'**
+  String get membershipPurchaseFailed;
+
+  /// No description provided for @membershipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Membership'**
+  String get membershipLabel;
+
+  /// No description provided for @membershipActiveSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Active · manage or cancel'**
+  String get membershipActiveSub;
+
+  /// No description provided for @membershipInactiveSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Not active · start your free trial'**
+  String get membershipInactiveSub;
+
+  /// No description provided for @termsMembershipTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'4. Membership'**
+  String get termsMembershipTitle;
+
+  /// No description provided for @termsMembershipBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Most of SafeCircle needs a monthly membership; SOS is always free. New members get a free trial. The membership renews automatically through the App Store or Google Play until you cancel it there, at least 24 hours before the end of the current period. Unused trial time ends when you subscribe.'**
+  String get termsMembershipBody;
 }
 
 class _AppLocalizationsDelegate

@@ -2162,4 +2162,106 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get notNow => 'Pas maintenant';
+
+  @override
+  String get membershipTitle => 'Gardez votre cercle près de vous';
+
+  @override
+  String get membershipSubtitle =>
+      'L\'abonnement SafeCircle débloque tout ce qui vous garde connecté à vos proches.';
+
+  @override
+  String get membershipPerkMap => 'Position en direct avec vos cercles';
+
+  @override
+  String get membershipPerkJourneys =>
+      'Trajets avec points d\'étape et alertes de retard';
+
+  @override
+  String get membershipPerkCircles => 'Des cercles pour la famille et les amis';
+
+  @override
+  String get membershipPerkAlerts => 'Alertes quand un proche a besoin d\'aide';
+
+  @override
+  String membershipTrialPrice(int days, String price) {
+    return '$days jours gratuits, puis $price/mois';
+  }
+
+  @override
+  String membershipPrice(String price) {
+    return '$price/mois';
+  }
+
+  @override
+  String get membershipCancelAnytime => 'Résiliable à tout moment';
+
+  @override
+  String get membershipStartTrial => 'Commencer l\'essai gratuit';
+
+  @override
+  String get membershipSubscribe => 'S\'abonner';
+
+  @override
+  String get membershipWorking => 'Un instant…';
+
+  @override
+  String membershipFinePrintTrial(String store, int days) {
+    return 'À la fin de l\'essai gratuit de $days jours, le paiement est débité sur votre compte $store. L\'abonnement se renouvelle chaque mois sauf résiliation au moins 24 heures avant la fin de la période en cours. Gérez-le ou résiliez-le dans les réglages de votre compte $store.';
+  }
+
+  @override
+  String membershipFinePrint(String store) {
+    return 'Le paiement est débité sur votre compte $store. L\'abonnement se renouvelle chaque mois sauf résiliation au moins 24 heures avant la fin de la période en cours. Gérez-le ou résiliez-le dans les réglages de votre compte $store.';
+  }
+
+  @override
+  String get membershipStoreApple => 'identifiant Apple';
+
+  @override
+  String get membershipStoreGoogle => 'Google Play';
+
+  @override
+  String get membershipUnavailable =>
+      'Impossible de charger l\'abonnement pour le moment. Vérifiez votre connexion et réessayez.';
+
+  @override
+  String get membershipRestore => 'Restaurer les achats';
+
+  @override
+  String get membershipSosFree =>
+      'Le SOS fonctionne toujours, même sans abonnement : votre cercle et vos contacts d\'urgence sont quand même alertés.';
+
+  @override
+  String get membershipOpenSos => 'Ouvrir le SOS';
+
+  @override
+  String get membershipPauseSharing => 'Mettre en pause le partage de position';
+
+  @override
+  String get membershipWelcome => 'Bienvenue sur SafeCircle !';
+
+  @override
+  String get membershipNothingToRestore =>
+      'Aucun abonnement trouvé pour ce compte.';
+
+  @override
+  String get membershipPurchaseFailed =>
+      'L\'achat n\'a pas abouti. Veuillez réessayer.';
+
+  @override
+  String get membershipLabel => 'Abonnement';
+
+  @override
+  String get membershipActiveSub => 'Actif · gérer ou résilier';
+
+  @override
+  String get membershipInactiveSub => 'Inactif · commencez votre essai gratuit';
+
+  @override
+  String get termsMembershipTitle => '4. Abonnement';
+
+  @override
+  String get termsMembershipBody =>
+      'La plupart de SafeCircle nécessite un abonnement mensuel ; le SOS reste toujours gratuit. Les nouveaux membres bénéficient d\'un essai gratuit. L\'abonnement se renouvelle automatiquement via l\'App Store ou Google Play jusqu\'à sa résiliation sur ces plateformes, au moins 24 heures avant la fin de la période en cours. La période d\'essai non utilisée prend fin lors de l\'abonnement.';
 }

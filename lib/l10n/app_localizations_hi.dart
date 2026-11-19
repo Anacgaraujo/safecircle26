@@ -2140,4 +2140,107 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get notNow => 'अभी नहीं';
+
+  @override
+  String get membershipTitle => 'अपने सर्कल को पास रखें';
+
+  @override
+  String get membershipSubtitle =>
+      'SafeCircle सदस्यता वह सब अनलॉक करती है जो आपको और आपके लोगों को जोड़े रखता है।';
+
+  @override
+  String get membershipPerkMap => 'अपने सर्कल के साथ लाइव लोकेशन';
+
+  @override
+  String get membershipPerkJourneys => 'चेक-इन और देरी अलर्ट के साथ यात्राएँ';
+
+  @override
+  String get membershipPerkCircles => 'परिवार और दोस्तों के लिए सर्कल';
+
+  @override
+  String get membershipPerkAlerts =>
+      'जब आपके सर्कल में किसी को मदद चाहिए तो अलर्ट';
+
+  @override
+  String membershipTrialPrice(int days, String price) {
+    return '$days दिन मुफ़्त, फिर $price/महीना';
+  }
+
+  @override
+  String membershipPrice(String price) {
+    return '$price/महीना';
+  }
+
+  @override
+  String get membershipCancelAnytime => 'कभी भी रद्द करें';
+
+  @override
+  String get membershipStartTrial => 'मुफ़्त ट्रायल शुरू करें';
+
+  @override
+  String get membershipSubscribe => 'सदस्यता लें';
+
+  @override
+  String get membershipWorking => 'एक पल…';
+
+  @override
+  String membershipFinePrintTrial(String store, int days) {
+    return '$days दिन के मुफ़्त ट्रायल के बाद भुगतान आपके $store खाते से लिया जाएगा। सदस्यता हर महीने अपने-आप नवीनीकृत होती है, जब तक कि मौजूदा अवधि खत्म होने से कम से कम 24 घंटे पहले रद्द न की जाए। इसे अपने $store खाते की सेटिंग में प्रबंधित या रद्द करें।';
+  }
+
+  @override
+  String membershipFinePrint(String store) {
+    return 'भुगतान आपके $store खाते से लिया जाता है। सदस्यता हर महीने अपने-आप नवीनीकृत होती है, जब तक कि मौजूदा अवधि खत्म होने से कम से कम 24 घंटे पहले रद्द न की जाए। इसे अपने $store खाते की सेटिंग में प्रबंधित या रद्द करें।';
+  }
+
+  @override
+  String get membershipStoreApple => 'Apple ID';
+
+  @override
+  String get membershipStoreGoogle => 'Google Play';
+
+  @override
+  String get membershipUnavailable =>
+      'सदस्यता अभी लोड नहीं हो सकी। अपना कनेक्शन जाँचें और फिर कोशिश करें।';
+
+  @override
+  String get membershipRestore => 'खरीदारी बहाल करें';
+
+  @override
+  String get membershipSosFree =>
+      'SOS हमेशा काम करता है, सदस्यता के बिना भी: आपके सर्कल और आपातकालीन संपर्कों को फिर भी अलर्ट मिलता है।';
+
+  @override
+  String get membershipOpenSos => 'SOS खोलें';
+
+  @override
+  String get membershipPauseSharing => 'लोकेशन शेयरिंग रोकें';
+
+  @override
+  String get membershipWelcome => 'SafeCircle में आपका स्वागत है!';
+
+  @override
+  String get membershipNothingToRestore =>
+      'इस खाते के लिए कोई सदस्यता नहीं मिली।';
+
+  @override
+  String get membershipPurchaseFailed =>
+      'खरीदारी पूरी नहीं हुई। कृपया फिर से कोशिश करें।';
+
+  @override
+  String get membershipLabel => 'सदस्यता';
+
+  @override
+  String get membershipActiveSub => 'सक्रिय · प्रबंधित या रद्द करें';
+
+  @override
+  String get membershipInactiveSub =>
+      'निष्क्रिय · अपना मुफ़्त ट्रायल शुरू करें';
+
+  @override
+  String get termsMembershipTitle => '4. सदस्यता';
+
+  @override
+  String get termsMembershipBody =>
+      'SafeCircle के ज़्यादातर हिस्से के लिए मासिक सदस्यता चाहिए; SOS हमेशा मुफ़्त है। नए सदस्यों को मुफ़्त ट्रायल मिलता है। सदस्यता App Store या Google Play के ज़रिए अपने-आप नवीनीकृत होती है, जब तक कि आप मौजूदा अवधि खत्म होने से कम से कम 24 घंटे पहले वहाँ इसे रद्द न करें। सदस्यता लेने पर बचा हुआ ट्रायल समय खत्म हो जाता है।';
 }

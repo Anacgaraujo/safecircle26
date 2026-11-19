@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:safecircle/core/notifications/push_service.dart';
+import 'package:safecircle/features/membership/data/membership_store.dart';
 import 'package:safecircle/features/journeys/data/journey_monitor.dart';
 import 'package:safecircle/features/live_map/data/tracking_service.dart';
 
@@ -12,6 +13,7 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) => AuthRepository(
       beforeSignOut: () async {
         JourneyMonitor.instance.stop();
         await PushService.instance.unregister();
+        await RevenueCatMembershipStore.instance.signOut();
         await TrackingService.instance.stop(markPaused: false);
       },
     ));

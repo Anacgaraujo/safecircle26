@@ -61,6 +61,13 @@ The same alerts and circle invitations also arrive as push notifications
 (Firebase Cloud Messaging), even when the app is closed.
 Setup: [docs/PUSH.md](docs/PUSH.md).
 
+## Membership
+
+SafeCircle is $0.99/month with a 3-day free trial, sold through the App Store
+and Google Play via RevenueCat. SOS always stays free. Until the RevenueCat
+keys are set, the membership is off and everyone has full access.
+Setup: [docs/MEMBERSHIP.md](docs/MEMBERSHIP.md).
+
 ## Map tiles
 
 Maps use MapTiler raster tiles. Copy `config/maps.example.json` to

@@ -2031,4 +2031,100 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get notNow => '以后再说';
+
+  @override
+  String get membershipTitle => '让你的圈子时刻相伴';
+
+  @override
+  String get membershipSubtitle => 'SafeCircle 会员可解锁所有让你与亲友保持联系的功能。';
+
+  @override
+  String get membershipPerkMap => '与圈子实时共享位置';
+
+  @override
+  String get membershipPerkJourneys => '行程签到与超时提醒';
+
+  @override
+  String get membershipPerkCircles => '家人和朋友的圈子';
+
+  @override
+  String get membershipPerkAlerts => '圈子里有人需要帮助时提醒你';
+
+  @override
+  String membershipTrialPrice(int days, String price) {
+    return '免费试用 $days 天，之后 $price/月';
+  }
+
+  @override
+  String membershipPrice(String price) {
+    return '$price/月';
+  }
+
+  @override
+  String get membershipCancelAnytime => '可随时取消';
+
+  @override
+  String get membershipStartTrial => '开始免费试用';
+
+  @override
+  String get membershipSubscribe => '订阅';
+
+  @override
+  String get membershipWorking => '请稍候…';
+
+  @override
+  String membershipFinePrintTrial(String store, int days) {
+    return '$days 天免费试用结束后，将从你的 $store 账户扣款。除非在当前周期结束前至少 24 小时取消，会员将每月自动续订。可在 $store 账户设置中管理或取消。';
+  }
+
+  @override
+  String membershipFinePrint(String store) {
+    return '将从你的 $store 账户扣款。除非在当前周期结束前至少 24 小时取消，会员将每月自动续订。可在 $store 账户设置中管理或取消。';
+  }
+
+  @override
+  String get membershipStoreApple => 'Apple 账户';
+
+  @override
+  String get membershipStoreGoogle => 'Google Play';
+
+  @override
+  String get membershipUnavailable => '暂时无法加载会员信息。请检查网络后重试。';
+
+  @override
+  String get membershipRestore => '恢复购买';
+
+  @override
+  String get membershipSosFree => '即使没有会员，SOS 也始终可用：你的圈子和紧急联系人仍会收到提醒。';
+
+  @override
+  String get membershipOpenSos => '打开 SOS';
+
+  @override
+  String get membershipPauseSharing => '暂停位置共享';
+
+  @override
+  String get membershipWelcome => '欢迎加入 SafeCircle！';
+
+  @override
+  String get membershipNothingToRestore => '此账户没有找到会员。';
+
+  @override
+  String get membershipPurchaseFailed => '购买未完成，请重试。';
+
+  @override
+  String get membershipLabel => '会员';
+
+  @override
+  String get membershipActiveSub => '已生效 · 管理或取消';
+
+  @override
+  String get membershipInactiveSub => '未生效 · 开始免费试用';
+
+  @override
+  String get termsMembershipTitle => '4. 会员';
+
+  @override
+  String get termsMembershipBody =>
+      'SafeCircle 的大部分功能需要按月订阅会员；SOS 始终免费。新会员可享受免费试用。会员会通过 App Store 或 Google Play 自动续订，直到你在当前周期结束前至少 24 小时在相应平台取消。订阅后，未使用的试用期将结束。';
 }

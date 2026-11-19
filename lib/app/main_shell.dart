@@ -25,6 +25,8 @@ import 'package:safecircle/features/journeys/presentation/friends_journeys_scree
 import 'package:safecircle/features/journeys/presentation/journey_flow_screen.dart';
 import 'package:safecircle/features/live_map/application/live_sharing.dart';
 import 'package:safecircle/features/live_map/presentation/map_home_screen.dart';
+import 'package:safecircle/features/membership/application/membership_controller.dart';
+import 'package:safecircle/features/membership/presentation/membership_paywall.dart';
 import 'package:safecircle/features/profile/data/user_repository.dart';
 import 'package:safecircle/features/profile/presentation/profile_screen.dart';
 import 'package:safecircle/l10n/l10n.dart';
@@ -85,9 +87,12 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
       (next.value ?? const []).forEach(notifications.notifyInvite);
     });
 
+    final uid = ref.read(sessionProvider).uid;
+    unawaited(ref.read(membershipProvider.notifier).start(uid));
+
     final push = PushService.instance;
     push.onOpen = _openPush;
-    unawaited(push.register(ref.read(sessionProvider).uid));
+    unawaited(push.register(uid));
     final pending = push.takePendingOpen();
     if (pending != null) WidgetsBinding.instance.addPostFrameCallback((_) => _openPush(pending));
   }
@@ -133,7 +138,13 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
   @override
   Widget build(BuildContext context) {
     final tab = ref.watch(mainTabProvider);
-    final Widget body = switch (tab) {
+    // Without a membership, SOS (Emergency) and the profile (account,
+    // emergency contacts, membership) stay open; the rest shows the paywall.
+    final locked = !ref.watch(membershipProvider).hasAccess &&
+        (tab == ScTab.home || tab == ScTab.circles);
+    final Widget body = locked
+        ? MembershipPaywall(onOpenSos: () => _select(ScTab.emergency))
+        : switch (tab) {
       ScTab.home => _mapHome
           ? MapHomeScreen(
               onGoCircles: () => _select(ScTab.circles),
@@ -146,7 +157,7 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
       ScTab.circles => const CirclesScreen(),
       ScTab.emergency => const EmergencyScreen(),
       ScTab.profile => ProfileScreen(onGoCircles: () => _select(ScTab.circles)),
-    };
+          };
 
     final circles = ref.watch(myCirclesProvider).value;
     final showCoachmark = tab == ScTab.home && !_mapHome && (circles?.isEmpty ?? false);
@@ -156,8 +167,12 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
       bottomNavigationBar: ScBottomNav(
         active: tab,
         onTab: _select,
-        onFab: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const JourneyFlow()),
+        onFab: () => requireMembership(
+          context,
+          ref,
+          () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const JourneyFlow()),
+          ),
         ),
         coachmark: showCoachmark ? context.l10n.addYourFirstCircle : null,
         mapHome: _mapHome,

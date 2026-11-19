@@ -16,6 +16,7 @@ class LegalDocScreen extends StatelessWidget {
             (l.termsServiceTitle, l.termsServiceBody),
             (l.termsResponsibilitiesTitle, l.termsResponsibilitiesBody),
             (l.termsAlertsTitle, l.termsAlertsBody),
+            (l.termsMembershipTitle, l.termsMembershipBody),
           ]
         : [
             (l.privacyCollectTitle, l.privacyCollectBody),

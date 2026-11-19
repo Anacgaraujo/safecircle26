@@ -2154,4 +2154,107 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get notNow => 'Agora não';
+
+  @override
+  String get membershipTitle => 'Mantenha seu círculo por perto';
+
+  @override
+  String get membershipSubtitle =>
+      'A assinatura SafeCircle libera tudo o que mantém você e seu pessoal conectados.';
+
+  @override
+  String get membershipPerkMap => 'Localização em tempo real com seus círculos';
+
+  @override
+  String get membershipPerkJourneys =>
+      'Trajetos com check-ins e alertas de atraso';
+
+  @override
+  String get membershipPerkCircles => 'Círculos para família e amigos';
+
+  @override
+  String get membershipPerkAlerts =>
+      'Alertas quando alguém do seu círculo precisa de ajuda';
+
+  @override
+  String membershipTrialPrice(int days, String price) {
+    return '$days dias grátis, depois $price/mês';
+  }
+
+  @override
+  String membershipPrice(String price) {
+    return '$price/mês';
+  }
+
+  @override
+  String get membershipCancelAnytime => 'Cancele quando quiser';
+
+  @override
+  String get membershipStartTrial => 'Começar teste grátis';
+
+  @override
+  String get membershipSubscribe => 'Assinar';
+
+  @override
+  String get membershipWorking => 'Um momento…';
+
+  @override
+  String membershipFinePrintTrial(String store, int days) {
+    return 'Após o teste grátis de $days dias, o pagamento é cobrado na sua conta $store. A assinatura é renovada todo mês, a menos que seja cancelada pelo menos 24 horas antes do fim do período atual. Gerencie ou cancele nas configurações da sua conta $store.';
+  }
+
+  @override
+  String membershipFinePrint(String store) {
+    return 'O pagamento é cobrado na sua conta $store. A assinatura é renovada todo mês, a menos que seja cancelada pelo menos 24 horas antes do fim do período atual. Gerencie ou cancele nas configurações da sua conta $store.';
+  }
+
+  @override
+  String get membershipStoreApple => 'Apple ID';
+
+  @override
+  String get membershipStoreGoogle => 'Google Play';
+
+  @override
+  String get membershipUnavailable =>
+      'Não foi possível carregar a assinatura agora. Verifique sua conexão e tente de novo.';
+
+  @override
+  String get membershipRestore => 'Restaurar compras';
+
+  @override
+  String get membershipSosFree =>
+      'O SOS sempre funciona, mesmo sem assinatura: seu círculo e seus contatos de emergência continuam sendo avisados.';
+
+  @override
+  String get membershipOpenSos => 'Abrir SOS';
+
+  @override
+  String get membershipPauseSharing => 'Pausar compartilhamento de localização';
+
+  @override
+  String get membershipWelcome => 'Bem-vindo ao SafeCircle!';
+
+  @override
+  String get membershipNothingToRestore =>
+      'Nenhuma assinatura encontrada para esta conta.';
+
+  @override
+  String get membershipPurchaseFailed =>
+      'A compra não foi concluída. Tente novamente.';
+
+  @override
+  String get membershipLabel => 'Assinatura';
+
+  @override
+  String get membershipActiveSub => 'Ativa · gerenciar ou cancelar';
+
+  @override
+  String get membershipInactiveSub => 'Inativa · comece seu teste grátis';
+
+  @override
+  String get termsMembershipTitle => '4. Assinatura';
+
+  @override
+  String get termsMembershipBody =>
+      'A maior parte do SafeCircle requer uma assinatura mensal; o SOS é sempre gratuito. Novos assinantes ganham um teste grátis. A assinatura é renovada automaticamente pela App Store ou Google Play até que você a cancele lá, pelo menos 24 horas antes do fim do período atual. O tempo de teste não usado termina quando você assina.';
 }
