@@ -4,8 +4,14 @@ const { parsePhoneNumberFromString } = require('libphonenumber-js');
 const DEFAULT_COUNTRY = 'US';
 const MAX_NAME = 40;
 
-/// The circle members who should get a text: they have a valid phone number
-/// and haven't joined yet. Returns [{ phone (E.164), name, email }], one per
+/// True when the person agreed to get texts at their number (the app's
+/// consent checkbox). Carrier A2P rules: never text anyone without it.
+function hasSmsConsent(person) {
+  return Boolean(person && person.smsConsent === true);
+}
+
+/// The circle members who should get a text: they agreed to texts, have a
+/// valid phone number and haven't joined yet. Returns [{ phone (E.164), name, email }], one per
 /// phone number.
 function recipientsToText(circle) {
   const joined = new Set(circle.memberIds || []);
@@ -13,6 +19,7 @@ function recipientsToText(circle) {
   const out = [];
   for (const m of circle.members || []) {
     if (m.uid && joined.has(m.uid)) continue;
+    if (!hasSmsConsent(m)) continue;
     const phone = toE164(m.digits, m.countryCode);
     if (!phone || seen.has(phone)) continue;
     seen.add(phone);
@@ -64,4 +71,4 @@ function resendWaitSeconds({ lastSentMs, nowMs, cooldownMinutes }) {
   return left > 0 ? Math.ceil(left / 1000) : 0;
 }
 
-module.exports = { recipientsToText, toE164, inviteMessage, dayKey, allowedCount, resendWaitSeconds };
+module.exports = { hasSmsConsent, recipientsToText, toE164, inviteMessage, dayKey, allowedCount, resendWaitSeconds };

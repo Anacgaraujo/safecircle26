@@ -3460,6 +3460,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter your PIN to pause.'**
   String get enterPinToPause;
+
+  /// No description provided for @smsConsentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'They agreed to get SafeCircle texts at this number (invitations and safety alerts). Msg & data rates may apply. They can reply STOP to opt out.'**
+  String get smsConsentLabel;
+
+  /// No description provided for @profilePhoneSmsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'By adding your number, you agree to get SafeCircle texts about your circles\' safety alerts. Msg & data rates may apply. Reply STOP to opt out.'**
+  String get profilePhoneSmsNote;
+
+  /// No description provided for @privacySmsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Text messages'**
+  String get privacySmsTitle;
+
+  /// No description provided for @privacySmsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We text a number only after the person agreed to it, and only for circle invitations and safety alerts — never marketing. Mobile numbers and opt-in consent are never sold or shared with third parties or affiliates for marketing. Reply STOP to any text to opt out, or HELP for help.'**
+  String get privacySmsBody;
+
+  /// No description provided for @resendNoConsent.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} hasn\'t agreed to get texts yet. Once they agree, edit their details and tick the texting box.'**
+  String resendNoConsent(String name);
 }
 
 class _AppLocalizationsDelegate

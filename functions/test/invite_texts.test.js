@@ -1,6 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
+  hasSmsConsent,
   recipientsToText,
   toE164,
   inviteMessage,
@@ -16,15 +17,17 @@ test('formats national numbers as E.164', () => {
   assert.equal(toE164('123', 'US'), null);
 });
 
-test('texts members with a phone who have not joined, once per number', () => {
+test('texts consenting members with a phone who have not joined, once per number', () => {
+  const ok = { smsConsent: true };
   const circle = {
     memberIds: ['owner', 'joined'],
     members: [
-      { name: 'Bia', digits: '4155552671', countryCode: 'US', email: 'Bia@Example.com' },
-      { name: 'Bia again', digits: '415 555 2671', countryCode: 'US' },
-      { name: 'Carlos', digits: '4155550000', countryCode: 'US', uid: 'joined' },
-      { name: 'No phone', digits: '', countryCode: 'US' },
-      { name: 'Bad phone', digits: '12', countryCode: 'US' },
+      { name: 'Bia', digits: '4155552671', countryCode: 'US', email: 'Bia@Example.com', ...ok },
+      { name: 'Bia again', digits: '415 555 2671', countryCode: 'US', ...ok },
+      { name: 'Carlos', digits: '4155550000', countryCode: 'US', uid: 'joined', ...ok },
+      { name: 'No consent', digits: '4155551111', countryCode: 'US' },
+      { name: 'No phone', digits: '', countryCode: 'US', ...ok },
+      { name: 'Bad phone', digits: '12', countryCode: 'US', ...ok },
     ],
   };
   assert.deepEqual(recipientsToText(circle), [
@@ -56,4 +59,11 @@ test('resend cooldown', () => {
   assert.equal(resendWaitSeconds({ lastSentMs: 0, nowMs: now, cooldownMinutes: 5 }), 0);
   assert.equal(resendWaitSeconds({ lastSentMs: now - 60_000, nowMs: now, cooldownMinutes: 5 }), 240);
   assert.equal(resendWaitSeconds({ lastSentMs: now - 300_000, nowMs: now, cooldownMinutes: 5 }), 0);
+});
+
+test('only an explicit yes counts as texting consent', () => {
+  assert.equal(hasSmsConsent({ smsConsent: true }), true);
+  assert.equal(hasSmsConsent({ smsConsent: 'true' }), false);
+  assert.equal(hasSmsConsent({}), false);
+  assert.equal(hasSmsConsent(null), false);
 });

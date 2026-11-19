@@ -164,6 +164,9 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
                         phoneDigits = d;
                       },
                     ),
+                    const SizedBox(height: 6),
+                    Text(l10n.profilePhoneSmsNote,
+                        style: ScText.sans(size: 12, weight: FontWeight.w500, color: ScColors.textMuted, height: 17)),
                     const SizedBox(height: 16),
                   ] else
                     for (final f in fields) ...[

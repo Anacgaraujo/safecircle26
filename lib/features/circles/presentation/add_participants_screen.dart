@@ -137,7 +137,10 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
                     for (var i = 0; i < members.length; i++) ...[
                       PersonRow(
                         person: members[i],
-                        onEdit: () => setState(() => editIndex = i),
+                        onEdit: () {
+                          setState(() => editIndex = i);
+                          _formKey.currentState?.load(members[i]);
+                        },
                         onDelete: () => setState(() => members.removeAt(i)),
                       ),
                       const SizedBox(height: 10),

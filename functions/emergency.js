@@ -9,7 +9,7 @@ const logger = require('firebase-functions/logger');
 const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 
 const { TWILIO_SECRETS, sendSms, reserveTexts } = require('./sms');
-const { toE164 } = require('./invite_texts');
+const { toE164, hasSmsConsent } = require('./invite_texts');
 const {
   alertMessage,
   allClearMessage,
@@ -67,8 +67,8 @@ async function alertRecipients(db, uid, watcherIds) {
     : [];
   return collectPhones(
     [
-      contacts.docs.map((d) => d.data()),
-      members,
+      contacts.docs.map((d) => d.data()).filter(hasSmsConsent),
+      members.filter(hasSmsConsent),
       profiles.filter((p) => p.exists && p.data().phone).map((p) => ({ phone: p.data().phone })),
     ],
     { exclude: [toE164(ownPhone)], max: EMERGENCY_RECIPIENTS_MAX.value() },
@@ -148,11 +148,11 @@ exports.textNewEmergencyContact = onDocumentWritten(
   { document: 'users/{uid}/contacts/{contactId}', ...options },
   async (event) => {
     const after = event.data.after.exists ? event.data.after.data() : null;
-    if (!after) return;
+    if (!after || !hasSmsConsent(after)) return;
     const phone = toE164(after.digits, after.countryCode);
     if (!phone) return;
     const before = event.data.before.exists ? event.data.before.data() : null;
-    if (before && toE164(before.digits, before.countryCode) === phone) return;
+    if (before && hasSmsConsent(before) && toE164(before.digits, before.countryCode) === phone) return;
 
     const { uid } = event.params;
     const db = getFirestore();

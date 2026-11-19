@@ -1284,5 +1284,17 @@
   "countryMX": "Mexico",
   "countryCN": "China",
   "countryIN": "India",
-  "enterPinToPause": "Enter your PIN to pause."
+  "enterPinToPause": "Enter your PIN to pause.",
+  "smsConsentLabel": "They agreed to get SafeCircle texts at this number (invitations and safety alerts). Msg & data rates may apply. They can reply STOP to opt out.",
+  "profilePhoneSmsNote": "By adding your number, you agree to get SafeCircle texts about your circles' safety alerts. Msg & data rates may apply. Reply STOP to opt out.",
+  "privacySmsTitle": "Text messages",
+  "privacySmsBody": "We text a number only after the person agreed to it, and only for circle invitations and safety alerts — never marketing. Mobile numbers and opt-in consent are never sold or shared with third parties or affiliates for marketing. Reply STOP to any text to opt out, or HELP for help.",
+  "resendNoConsent": "{name} hasn't agreed to get texts yet. Once they agree, edit their details and tick the texting box.",
+  "@resendNoConsent": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

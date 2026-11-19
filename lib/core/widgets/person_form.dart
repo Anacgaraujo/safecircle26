@@ -28,17 +28,36 @@ class PersonFormState extends State<PersonForm> {
   late String countryCode;
   late String digits;
   String? photo;
+  late bool smsConsent;
+  Person? _base;
 
   int _phoneKey = 0;
 
   @override
   void initState() {
     super.initState();
-    nameCtrl = TextEditingController(text: widget.initial?.name ?? '');
-    emailCtrl = TextEditingController(text: widget.initial?.email ?? '');
-    countryCode = widget.initial?.countryCode ?? kDefaultCountry;
-    digits = widget.initial?.digits ?? '';
-    photo = widget.initial?.image;
+    nameCtrl = TextEditingController();
+    emailCtrl = TextEditingController();
+    _fill(widget.initial);
+  }
+
+  void _fill(Person? p) {
+    _base = p;
+    nameCtrl.text = p?.name ?? '';
+    emailCtrl.text = p?.email ?? '';
+    countryCode = p?.countryCode ?? kDefaultCountry;
+    digits = p?.digits ?? '';
+    photo = p?.image;
+    smsConsent = p?.smsConsent ?? false;
+  }
+
+  /// Fills the form with [person] to edit them.
+  void load(Person person) {
+    setState(() {
+      _fill(person);
+      _phoneKey++;
+    });
+    _notify();
   }
 
   @override
@@ -49,21 +68,19 @@ class PersonFormState extends State<PersonForm> {
   }
 
   Person buildPerson() => Person(
+        id: _base?.id,
         name: nameCtrl.text.trim(),
         countryCode: countryCode,
         digits: digits,
         image: photo,
         email: emailCtrl.text.trim().isEmpty ? null : emailCtrl.text.trim().toLowerCase(),
-        uid: widget.initial?.uid,
+        uid: _base?.uid,
+        smsConsent: digits.isNotEmpty && smsConsent,
       );
 
   void reset() {
     setState(() {
-      nameCtrl.clear();
-      emailCtrl.clear();
-      digits = '';
-      countryCode = kDefaultCountry;
-      photo = null;
+      _fill(null);
       _phoneKey++;
     });
     widget.onChanged(buildPerson());
@@ -167,9 +184,20 @@ class PersonFormState extends State<PersonForm> {
           onChanged: (code, d) {
             countryCode = code;
             digits = d;
+            setState(() {});
             _notify();
           },
         ),
+        if (digits.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          SmsConsentTile(
+            value: smsConsent,
+            onChanged: (v) {
+              setState(() => smsConsent = v);
+              _notify();
+            },
+          ),
+        ],
 
         if (widget.showEmailField) ...[
           const SizedBox(height: 16),
@@ -194,6 +222,48 @@ class PersonFormState extends State<PersonForm> {
           ),
         ],
       ],
+    );
+  }
+}
+
+/// "They agreed to get texts" checkbox shown under a phone number. Unchecked
+/// by default; without it the servers never text the number.
+class SmsConsentTile extends StatelessWidget {
+  const SmsConsentTile({super.key, required this.value, required this.onChanged});
+
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      key: const ValueKey('sms-consent'),
+      borderRadius: BorderRadius.circular(10),
+      onTap: () => onChanged(!value),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 32,
+              height: 24,
+              child: Checkbox(
+                value: value,
+                activeColor: ScColors.brand,
+                onChanged: (v) => onChanged(v ?? false),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                context.l10n.smsConsentLabel,
+                style: ScText.sans(size: 13, weight: FontWeight.w500, color: ScColors.textSecondary, height: 18),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -25,7 +25,9 @@ Future<Map<String, dynamic>> _sendInviteTextsViaFunction(Map<String, dynamic> re
         .call<Map<String, dynamic>>(request);
     return result.data;
   } on FirebaseFunctionsException catch (e) {
-    if (e.code == 'failed-precondition') return {'joined': true};
+    if (e.code == 'failed-precondition') {
+      return e.message == 'no-consent' ? {'noConsent': true} : {'joined': true};
+    }
     rethrow;
   }
 }
@@ -39,6 +41,7 @@ class ResendResult {
     this.textFailed = false,
     this.joined = false,
     this.hasAccount = false,
+    this.noConsent = false,
   });
 
   final bool texted;
@@ -49,6 +52,8 @@ class ResendResult {
   final bool joined;
   /// They have a SafeCircle account, so the in-app invitation reaches them.
   final bool hasAccount;
+  /// No text sent: they haven't agreed to get texts (consent box unticked).
+  final bool noConsent;
 
   String message(String firstName) {
     if (joined) return appL10n.resendAlreadyJoined(firstName);
@@ -58,6 +63,9 @@ class ResendResult {
       return appL10n.resendTooSoon(firstName, minutes);
     }
     if (limited) return appL10n.resendLimited;
+    if (noConsent) {
+      return hasAccount ? appL10n.resendInApp(firstName) : appL10n.resendNoConsent(firstName);
+    }
     if (textFailed) {
       return hasAccount ? appL10n.resendFailedInAppWaiting(firstName) : appL10n.resendFailed(firstName);
     }
@@ -112,12 +120,14 @@ class CircleService {
         id != null && email.isNotEmpty && await _circles.sendInvite(circle: circle, toEmail: email);
     final send = _sendTexts;
     if (id == null || send == null || person.digits.isEmpty) return ResendResult(hasAccount: hasAccount);
+    if (!person.smsConsent) return ResendResult(noConsent: true, hasAccount: hasAccount);
     try {
       final reply = await send({
         'circleId': id,
         'resend': {'countryCode': person.countryCode, 'digits': person.digits},
       }).timeout(const Duration(seconds: 20));
       if (reply['joined'] == true) return const ResendResult(joined: true);
+      if (reply['noConsent'] == true) return ResendResult(noConsent: true, hasAccount: hasAccount);
       return ResendResult(
         texted: ((reply['sent'] as num?) ?? 0) > 0,
         retryAfter: (reply['retryAfter'] as num?)?.toInt() ?? 0,

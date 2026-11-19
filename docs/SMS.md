@@ -27,6 +27,19 @@ Examples:
 > Ana added you to their SafeCircle circle "Family". Get the app: <link> and
 > sign up with bia@example.com to join. Reply STOP to opt out.
 
+How people opt in (carrier A2P rules):
+
+- Circle participants and emergency contacts are texted only when the user
+  ticked **"They agreed to get SafeCircle texts at this number"** under their
+  phone number (`smsConsent: true`, unticked by default). The servers skip
+  every number without it, including older records saved before the box
+  existed; edit the person and tick the box to start texting them.
+- Users' own profile numbers count as consent: the profile form says adding
+  the number means agreeing to safety-alert texts.
+- The public pages Twilio reviewers check live in `site/` (Firebase Hosting):
+  `/privacy`, `/terms` and `/sms`, which shows the opt-in flow and sample texts.
+  Deploy them with `firebase deploy --only hosting`.
+
 How it stays safe and cheap:
 
 - Phone numbers are always read on the server (circles, contacts, profiles),

@@ -1970,4 +1970,24 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get enterPinToPause => '输入 PIN 码以暂停。';
+
+  @override
+  String get smsConsentLabel =>
+      '对方已同意在此号码接收 SafeCircle 短信（邀请和安全警报）。可能产生短信和数据费用。对方可回复 STOP 退订。';
+
+  @override
+  String get profilePhoneSmsNote =>
+      '添加号码即表示你同意接收有关你圈子安全警报的 SafeCircle 短信。可能产生短信和数据费用。回复 STOP 退订。';
+
+  @override
+  String get privacySmsTitle => '短信';
+
+  @override
+  String get privacySmsBody =>
+      '只有在对方同意后，我们才会向该号码发送短信，且仅用于圈子邀请和安全警报，绝不用于营销。手机号码和同意记录绝不会出售或分享给第三方或关联方用于营销。回复任意短信 STOP 即可退订，回复 HELP 获取帮助。';
+
+  @override
+  String resendNoConsent(String name) {
+    return '$name 尚未同意接收短信。对方同意后，请编辑其信息并勾选短信选项。';
+  }
 }

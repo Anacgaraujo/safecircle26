@@ -12,6 +12,7 @@ class Person {
     this.image,
     this.uid,
     this.email,
+    this.smsConsent = false,
   });
 
   String? id;
@@ -23,6 +24,10 @@ class Person {
 
   String? uid;
   String? email;
+
+  /// The person agreed to get SafeCircle texts at this number. The servers
+  /// never text a number without it (carrier A2P opt-in rules).
+  bool smsConsent;
 
   String get fullPhone =>
       digits.isEmpty ? countryByCode(countryCode).dial : formatPhone(countryCode, digits);
@@ -36,6 +41,7 @@ class Person {
         if (image != null) 'image': image,
         if (uid != null) 'uid': uid,
         if (email != null) 'email': email,
+        'smsConsent': smsConsent,
       };
 
   factory Person.fromMap(Map<String, dynamic> m, {String? id}) => Person(
@@ -46,6 +52,7 @@ class Person {
         image: m['image'] as String?,
         uid: m['uid'] as String?,
         email: m['email'] as String?,
+        smsConsent: m['smsConsent'] == true,
       );
 }
 

@@ -2066,4 +2066,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enterPinToPause => 'Enter your PIN to pause.';
+
+  @override
+  String get smsConsentLabel =>
+      'They agreed to get SafeCircle texts at this number (invitations and safety alerts). Msg & data rates may apply. They can reply STOP to opt out.';
+
+  @override
+  String get profilePhoneSmsNote =>
+      'By adding your number, you agree to get SafeCircle texts about your circles\' safety alerts. Msg & data rates may apply. Reply STOP to opt out.';
+
+  @override
+  String get privacySmsTitle => 'Text messages';
+
+  @override
+  String get privacySmsBody =>
+      'We text a number only after the person agreed to it, and only for circle invitations and safety alerts — never marketing. Mobile numbers and opt-in consent are never sold or shared with third parties or affiliates for marketing. Reply STOP to any text to opt out, or HELP for help.';
+
+  @override
+  String resendNoConsent(String name) {
+    return '$name hasn\'t agreed to get texts yet. Once they agree, edit their details and tick the texting box.';
+  }
 }

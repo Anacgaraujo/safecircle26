@@ -2100,4 +2100,24 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get enterPinToPause => 'Saisissez votre PIN pour suspendre.';
+
+  @override
+  String get smsConsentLabel =>
+      'Cette personne a accepté de recevoir des SMS SafeCircle à ce numéro (invitations et alertes de sécurité). Des frais de messagerie et de données peuvent s\'appliquer. Elle peut répondre STOP pour se désabonner.';
+
+  @override
+  String get profilePhoneSmsNote =>
+      'En ajoutant votre numéro, vous acceptez de recevoir des SMS SafeCircle concernant les alertes de sécurité de vos cercles. Des frais de messagerie et de données peuvent s\'appliquer. Répondez STOP pour vous désabonner.';
+
+  @override
+  String get privacySmsTitle => 'SMS';
+
+  @override
+  String get privacySmsBody =>
+      'Nous n\'envoyons de SMS à un numéro qu\'après l\'accord de la personne, et uniquement pour les invitations à un cercle et les alertes de sécurité — jamais de marketing. Les numéros de mobile et les consentements ne sont jamais vendus ni partagés avec des tiers ou affiliés à des fins marketing. Répondez STOP à n\'importe quel SMS pour vous désabonner, ou HELP pour obtenir de l\'aide.';
+
+  @override
+  String resendNoConsent(String name) {
+    return '$name n\'a pas encore accepté de recevoir des SMS. Une fois son accord donné, modifiez ses informations et cochez la case SMS.';
+  }
 }

@@ -20,6 +20,7 @@ class LegalDocScreen extends StatelessWidget {
         : [
             (l.privacyCollectTitle, l.privacyCollectBody),
             (l.privacyWhoTitle, l.privacyWhoBody),
+            (l.privacySmsTitle, l.privacySmsBody),
             (l.privacyControlTitle, l.privacyControlBody),
           ];
     return Scaffold(

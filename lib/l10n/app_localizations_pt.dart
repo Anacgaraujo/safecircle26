@@ -2092,4 +2092,24 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get enterPinToPause => 'Digite seu PIN para pausar.';
+
+  @override
+  String get smsConsentLabel =>
+      'A pessoa concordou em receber mensagens do SafeCircle neste número (convites e alertas de segurança). Podem ser cobradas tarifas de mensagens e dados. Ela pode responder STOP para cancelar.';
+
+  @override
+  String get profilePhoneSmsNote =>
+      'Ao adicionar seu número, você concorda em receber mensagens do SafeCircle sobre os alertas de segurança dos seus círculos. Podem ser cobradas tarifas de mensagens e dados. Responda STOP para cancelar.';
+
+  @override
+  String get privacySmsTitle => 'Mensagens de texto';
+
+  @override
+  String get privacySmsBody =>
+      'Só enviamos mensagens a um número depois que a pessoa concorda, e apenas para convites de círculo e alertas de segurança — nunca marketing. Números de celular e consentimentos nunca são vendidos nem compartilhados com terceiros ou afiliados para marketing. Responda STOP a qualquer mensagem para cancelar, ou HELP para ajuda.';
+
+  @override
+  String resendNoConsent(String name) {
+    return '$name ainda não concordou em receber mensagens. Quando concordar, edite os dados e marque a caixa de mensagens.';
+  }
 }

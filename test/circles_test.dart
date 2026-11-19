@@ -69,7 +69,8 @@ void main() {
         requests.add(req);
         return reply;
       });
-      final bia = Person(name: 'Bia Souza', email: 'bia@example.com', countryCode: 'US', digits: '4155552671');
+      final bia = Person(
+          name: 'Bia Souza', email: 'bia@example.com', countryCode: 'US', digits: '4155552671', smsConsent: true);
       final circle = Circle(name: 'Family', members: [bia]);
       await svc.saveAndInvite(circle, isNew: true);
 
@@ -86,6 +87,21 @@ void main() {
 
       reply = {'joined': true};
       expect((await svc.resendInvitation(circle, bia)).message('Bia'), 'Bia already joined this circle.');
+    });
+
+    test('resend never texts someone who has not agreed to texts', () async {
+      var texted = false;
+      final svc = CircleService(circles(), sendTexts: (_) async {
+        texted = true;
+        return {'sent': 1};
+      });
+      final carlos = Person(name: 'Carlos', email: 'carlos@example.com', countryCode: 'US', digits: '4155550000');
+      final circle = Circle(name: 'Family', members: [carlos]);
+      await svc.saveAndInvite(circle, isNew: true);
+
+      expect((await svc.resendInvitation(circle, carlos)).message('Carlos'),
+          "Carlos hasn't agreed to get texts yet. Once they agree, edit their details and tick the texting box.");
+      expect(texted, isFalse);
     });
 
     test('resend without a phone only repeats the in-app invitation', () async {

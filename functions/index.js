@@ -5,7 +5,7 @@ const logger = require('firebase-functions/logger');
 const { initializeApp } = require('firebase-admin/app');
 const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 
-const { recipientsToText, toE164, inviteMessage, resendWaitSeconds } = require('./invite_texts');
+const { recipientsToText, toE164, inviteMessage, resendWaitSeconds, hasSmsConsent } = require('./invite_texts');
 
 initializeApp();
 
@@ -96,6 +96,11 @@ exports.sendCircleInviteTexts = onCall(
 /** Texts one person again, e.g. when they lost the first text. */
 async function resendOne({ db, uid, circleId, circleRef, circle, resend }) {
   const phone = resend && toE164(resend.digits, resend.countryCode);
+  const listed = phone && (circle.members || []).find((m) => toE164(m.digits, m.countryCode) === phone);
+  if (listed && !hasSmsConsent(listed)) {
+    logger.info('Resend refused: no texting consent', { uid, circleId });
+    throw new HttpsError('failed-precondition', 'no-consent');
+  }
   const recipient = phone && recipientsToText(circle).find((r) => r.phone === phone);
   if (!recipient) {
     logger.warn('Resend refused: number not in circle', { uid, circleId });
