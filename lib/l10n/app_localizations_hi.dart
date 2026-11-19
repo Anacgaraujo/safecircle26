@@ -2111,4 +2111,14 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get inviteShareSubject => 'मेरे SafeCircle सर्कल से जुड़ें';
+
+  @override
+  String participantSavedTo(String circle) {
+    return '$circle में सहेजा गया';
+  }
+
+  @override
+  String participantRemovedFrom(String circle) {
+    return '$circle से हटाया गया';
+  }
 }

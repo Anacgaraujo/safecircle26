@@ -3508,6 +3508,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Join my SafeCircle circle'**
   String get inviteShareSubject;
+
+  /// No description provided for @participantSavedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to {circle}'**
+  String participantSavedTo(String circle);
+
+  /// No description provided for @participantRemovedFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from {circle}'**
+  String participantRemovedFrom(String circle);
 }
 
 class _AppLocalizationsDelegate

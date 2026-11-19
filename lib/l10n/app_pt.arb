@@ -566,5 +566,7 @@
   "resendNoConsent": "{name} ainda não concordou em receber mensagens. Quando concordar, edite os dados e marque a caixa de mensagens.",
   "inviteShareMessage": "Adicionei você ao meu círculo do SafeCircle \"{circle}\" para a gente cuidar uns dos outros. Baixe o app: {link} e cadastre-se com {email} para entrar.",
   "inviteShareMessageNoEmail": "Adicionei você ao meu círculo do SafeCircle \"{circle}\" para a gente cuidar uns dos outros. Baixe o app: {link} para entrar.",
-  "inviteShareSubject": "Entre no meu círculo do SafeCircle"
+  "inviteShareSubject": "Entre no meu círculo do SafeCircle",
+  "participantSavedTo": "Salvo em {circle}",
+  "participantRemovedFrom": "Removido de {circle}"
 }

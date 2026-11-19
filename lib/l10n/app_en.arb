@@ -1322,5 +1322,21 @@
         "type": "String"
       }
     }
+  },
+  "participantSavedTo": "Saved to {circle}",
+  "participantRemovedFrom": "Removed from {circle}",
+  "@participantSavedTo": {
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      }
+    }
+  },
+  "@participantRemovedFrom": {
+    "placeholders": {
+      "circle": {
+        "type": "String"
+      }
+    }
   }
 }

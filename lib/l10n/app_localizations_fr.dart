@@ -2133,4 +2133,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get inviteShareSubject => 'Rejoins mon cercle SafeCircle';
+
+  @override
+  String participantSavedTo(String circle) {
+    return 'Enregistré dans $circle';
+  }
+
+  @override
+  String participantRemovedFrom(String circle) {
+    return 'Retiré de $circle';
+  }
 }

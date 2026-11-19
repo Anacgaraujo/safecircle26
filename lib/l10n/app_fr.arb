@@ -566,5 +566,7 @@
   "resendNoConsent": "{name} n'a pas encore accepté de recevoir des SMS. Une fois son accord donné, modifiez ses informations et cochez la case SMS.",
   "inviteShareMessage": "Je t'ai ajouté à mon cercle SafeCircle « {circle} » pour qu'on veille les uns sur les autres. Télécharge l'app : {link} et inscris-toi avec {email} pour rejoindre le cercle.",
   "inviteShareMessageNoEmail": "Je t'ai ajouté à mon cercle SafeCircle « {circle} » pour qu'on veille les uns sur les autres. Télécharge l'app : {link} pour rejoindre le cercle.",
-  "inviteShareSubject": "Rejoins mon cercle SafeCircle"
+  "inviteShareSubject": "Rejoins mon cercle SafeCircle",
+  "participantSavedTo": "Enregistré dans {circle}",
+  "participantRemovedFrom": "Retiré de {circle}"
 }

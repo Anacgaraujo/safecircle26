@@ -32,19 +32,68 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
   bool get _canAdd =>
       _current.name.trim().isNotEmpty && (_current.email ?? '').contains('@');
 
-  void _add() {
-    if (!_canAdd) return;
+  Future<void> _add() async {
+    if (!_canAdd || _saving) return;
+    final members = widget.draft.members;
+    final before = List<Person>.of(members);
     setState(() {
       if (editIndex != null) {
-        widget.draft.members[editIndex!] = _current;
+        members[editIndex!] = _current;
         editIndex = null;
       } else {
-        widget.draft.members.add(_current);
+        members.add(_current);
       }
     });
     _formKey.currentState?.reset();
+    if (widget.isExisting) {
+      await _saveNow(before, (l) => l.participantSavedTo(widget.draft.name));
+    }
   }
 
+  Future<void> _remove(int i) async {
+    if (_saving) return;
+    final before = List<Person>.of(widget.draft.members);
+    setState(() {
+      widget.draft.members.removeAt(i);
+      if (editIndex == i) {
+        editIndex = null;
+        _formKey.currentState?.reset();
+      } else if (editIndex != null && editIndex! > i) {
+        editIndex = editIndex! - 1;
+      }
+    });
+    if (widget.isExisting) {
+      await _saveNow(before, (l) => l.participantRemovedFrom(widget.draft.name));
+    }
+  }
+
+  /// An existing circle has no Save button: each add, edit or removal is
+  /// saved (and new people invited) straight away. On failure the list goes
+  /// back to how it was, so the screen never shows unsaved people.
+  Future<void> _saveNow(List<Person> before, String Function(AppLocalizations) done) async {
+    setState(() => _saving = true);
+    try {
+      final service = ref.read(circleServiceProvider);
+      final missing = await service.saveAndInvite(widget.draft, isNew: false);
+      final texted = await service.sendInviteTexts(widget.draft);
+      if (!mounted) return;
+      final l10n = context.l10n;
+      showScToast(context, [
+        done(l10n),
+        if (texted > 0) l10n.textInvitationsSent(texted),
+        if (missing.isNotEmpty) l10n.noAccountYetFor(missing.join(', ')),
+      ].join(' '));
+    } catch (_) {
+      widget.draft.members
+        ..clear()
+        ..addAll(before);
+      if (mounted) showScToast(context, context.l10n.couldNotSaveCircle);
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  /// Creates a new circle and invites everyone added so far.
   Future<void> _finalize() async {
     if (widget.draft.members.isEmpty || _saving) return;
     setState(() => _saving = true);
@@ -117,7 +166,7 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
                     variant: editIndex != null || members.isEmpty
                         ? ScButtonVariant.primary
                         : ScButtonVariant.secondary,
-                    onPressed: _canAdd ? _add : null,
+                    onPressed: _canAdd && !_saving ? _add : null,
                   ),
                   const SizedBox(height: 24),
                   Text(context.l10n.participantsCount(members.length), style: ScText.micro()),
@@ -141,22 +190,21 @@ class _AddParticipantsScreenState extends ConsumerState<AddParticipantsScreen> {
                           setState(() => editIndex = i);
                           _formKey.currentState?.load(members[i]);
                         },
-                        onDelete: () => setState(() => members.removeAt(i)),
+                        onDelete: () => _remove(i),
                       ),
                       const SizedBox(height: 10),
                     ],
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(26, 8, 26, 20),
-              child: ScButton(
-                label: _saving
-                    ? context.l10n.saving
-                    : (widget.isExisting ? context.l10n.saveCircle : context.l10n.createCircle),
-                onPressed: members.isEmpty || _saving ? null : _finalize,
+            if (!widget.isExisting)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(26, 8, 26, 20),
+                child: ScButton(
+                  label: _saving ? context.l10n.saving : context.l10n.createCircle,
+                  onPressed: members.isEmpty || _saving ? null : _finalize,
+                ),
               ),
-            ),
           ],
         ),
       ),

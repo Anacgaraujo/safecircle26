@@ -566,5 +566,7 @@
   "resendNoConsent": "{name} 尚未同意接收短信。对方同意后，请编辑其信息并勾选短信选项。",
   "inviteShareMessage": "我把你加入了我的 SafeCircle 圈子\"{circle}\"，让我们互相照应。下载应用：{link}，用 {email} 注册即可加入。",
   "inviteShareMessageNoEmail": "我把你加入了我的 SafeCircle 圈子\"{circle}\"，让我们互相照应。下载应用：{link} 即可加入。",
-  "inviteShareSubject": "加入我的 SafeCircle 圈子"
+  "inviteShareSubject": "加入我的 SafeCircle 圈子",
+  "participantSavedTo": "已保存到{circle}",
+  "participantRemovedFrom": "已从{circle}移除"
 }

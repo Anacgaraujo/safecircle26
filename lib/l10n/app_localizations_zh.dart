@@ -2004,4 +2004,14 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get inviteShareSubject => '加入我的 SafeCircle 圈子';
+
+  @override
+  String participantSavedTo(String circle) {
+    return '已保存到$circle';
+  }
+
+  @override
+  String participantRemovedFrom(String circle) {
+    return '已从$circle移除';
+  }
 }
