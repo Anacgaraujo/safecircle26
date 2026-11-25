@@ -25,14 +25,16 @@ class UserRepository extends FirestoreRepository {
   DocumentReference<Map<String, dynamic>> get _secrets =>
       _user(uid).collection('private').doc('secrets');
 
+  /// Writes the account's public and private profile. [name] is left as it
+  /// is when null, so a repair never overwrites the name chosen at sign-up.
   Future<void> createUserDoc({
     required String uid,
-    required String name,
+    required String? name,
     required String email,
     String phone = '',
   }) async {
     await _user(uid).set({
-      'name': name,
+      if (name != null) 'name': name,
       'emailHash': emailHash(email),
       if (phone.isNotEmpty) 'phoneHash': phoneHash(phone),
       'lookupV': kLookupVersion,

@@ -88,8 +88,10 @@ class SessionLoader {
       unawaited(() async {
         try {
           final latest = await readDoc();
-          final safeName = (latest?['name'] ?? name) as String;
-          await users.createUserDoc(uid: user.uid, name: safeName, email: email, phone: phone);
+          // Never write the email-based fallback name: right after sign-up
+          // the real name may still be on its way, and this would replace it.
+          await users.createUserDoc(
+              uid: user.uid, name: latest?['name'] as String?, email: email, phone: phone);
         } catch (_) {}
       }());
     }
