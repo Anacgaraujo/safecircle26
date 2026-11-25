@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safecircle/core/theme/sc_theme.dart';
 import 'package:safecircle/core/widgets/feather_icons.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
+import 'package:safecircle/features/circles/data/circle_repository.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
 import 'package:safecircle/features/contacts/data/contacts_repository.dart';
 import 'package:safecircle/features/contacts/presentation/contacts_screen.dart';
@@ -20,11 +21,17 @@ class SosView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final contacts = ref.watch(contactsProvider);
-    return _buildBody(context, contacts.value ?? const <Person>[], contacts.hasValue);
+    final circles = ref.watch(myCirclesProvider);
+    // SOS always alerts the emergency contacts and, when the person is in a
+    // circle with others, that circle too; either one is enough to send it.
+    final inCircle = (circles.value ?? const <Circle>[]).any((c) => c.memberIds.length > 1);
+    return _buildBody(context, contacts.value ?? const <Person>[], contacts.hasValue,
+        inCircle: inCircle);
   }
 
-  Widget _buildBody(BuildContext context, List<Person> contacts, bool loaded) {
-    final enabled = contacts.isNotEmpty;
+  Widget _buildBody(BuildContext context, List<Person> contacts, bool loaded,
+      {required bool inCircle}) {
+    final enabled = contacts.isNotEmpty || inCircle;
     return Container(
       decoration: const BoxDecoration(
         gradient: RadialGradient(
@@ -76,7 +83,7 @@ class SosView extends ConsumerWidget {
                       style: ScText.sans(size: 14.5, weight: FontWeight.w500, color: ScColors.textSubtle, height: 21),
                     ),
                   ),
-                  if (loaded && !enabled) ...[
+                  if (loaded && contacts.isEmpty) ...[
                     const SizedBox(height: 14),
                     ScButton(
                       label: context.l10n.addEmergencyContact,

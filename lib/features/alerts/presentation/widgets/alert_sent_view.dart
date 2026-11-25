@@ -107,12 +107,23 @@ class AlertSentView extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 24),
+              // How many people got the alert in the app (circle members, plus
+              // emergency contacts who use SafeCircle). Emergency contacts are
+              // listed below on their own: they're texted whether or not
+              // they're in a circle.
               ScSectionLabel(
                 reached > 0
                     ? context.l10n.alertedInApp(reached)
                     : context.l10n.noOneToAlert,
-                icon: FeatherIcons.users,
+                icon: FeatherIcons.bell,
               ),
+              if (contacts.isNotEmpty) ...[
+                const SizedBox(height: 20),
+                ScSectionLabel(
+                  context.l10n.yourEmergencyContactsCount(contacts.length),
+                  icon: FeatherIcons.users,
+                ),
+              ],
               const SizedBox(height: 12),
               for (var i = 0; i < contacts.length; i++) ...[
                 _NotifiedRow(person: contacts[i], delayMs: 120 + i * 100),
