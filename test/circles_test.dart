@@ -107,7 +107,7 @@ void main() {
       expect(texted, isFalse);
       expect(inviteShareMessage(circle, carlos),
           'I added you to my SafeCircle circle "Family" so we can look out for each other. '
-          'Get the app: $kAppStoreUrl and sign up with carlos@example.com to join.');
+          'Get the app: $kAppInviteUrl and sign up with carlos@example.com to join.');
     });
 
     test('resend without a phone only repeats the in-app invitation', () async {

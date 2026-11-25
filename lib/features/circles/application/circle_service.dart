@@ -80,15 +80,16 @@ class ResendResult {
   }
 }
 
-/// Where an invitation sends someone to get the app.
-const kAppStoreUrl = 'https://apps.apple.com/app/id1534615814';
+/// Where an invitation sends someone to get the app (the website links to
+/// the stores, so one link works on iPhone and Android).
+const kAppInviteUrl = 'https://safecircle.me';
 
 /// The invitation the owner sends from their own phone (share sheet).
 String inviteShareMessage(Circle circle, Person person) {
   final email = (person.email ?? '').trim();
   return email.isNotEmpty
-      ? appL10n.inviteShareMessage(circle.name, kAppStoreUrl, email)
-      : appL10n.inviteShareMessageNoEmail(circle.name, kAppStoreUrl);
+      ? appL10n.inviteShareMessage(circle.name, kAppInviteUrl, email)
+      : appL10n.inviteShareMessageNoEmail(circle.name, kAppInviteUrl);
 }
 
 class CircleService {
