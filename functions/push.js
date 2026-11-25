@@ -22,7 +22,12 @@ async function pushTo(db, uids, { title, body }, data, context) {
   for (const d of docs) {
     for (const token of (d.exists && d.data().tokens) || []) owners.push({ token, ref: d.ref });
   }
-  if (!owners.length) return 0;
+  if (!owners.length) {
+    // Usually: the person never allowed notifications, or hasn't opened a
+    // build with push since installing it.
+    logger.info('No phones to push', { ...context, people: ids.length });
+    return 0;
+  }
 
   let sent = 0;
   for (let i = 0; i < owners.length; i += 500) {
@@ -40,13 +45,14 @@ async function pushTo(db, uids, { title, body }, data, context) {
       if (r.success) return;
       const code = r.error && r.error.code;
       if (DEAD_TOKEN_ERRORS.has(code)) dead.push(batch[j]);
-      else logger.warn('Push failed', { ...context, code });
+      logger.warn('Push failed', { ...context, code, message: r.error && r.error.message });
     });
     // Forget phones that uninstalled the app or signed out elsewhere.
     await Promise.all(
       dead.map((o) => o.ref.set({ tokens: FieldValue.arrayRemove(o.token) }, { merge: true })),
     );
   }
+  logger.info('Pushed', { ...context, phones: owners.length, sent });
   return sent;
 }
 
