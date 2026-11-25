@@ -602,5 +602,6 @@
   "membershipActiveSub": "Actif · gérer ou résilier",
   "membershipInactiveSub": "Inactif · commencez votre essai gratuit",
   "termsMembershipTitle": "4. Abonnement",
-  "termsMembershipBody": "La plupart de SafeCircle nécessite un abonnement mensuel ; le SOS reste toujours gratuit. Les nouveaux membres bénéficient d'un essai gratuit. L'abonnement se renouvelle automatiquement via l'App Store ou Google Play jusqu'à sa résiliation sur ces plateformes, au moins 24 heures avant la fin de la période en cours. La période d'essai non utilisée prend fin lors de l'abonnement."
+  "termsMembershipBody": "La plupart de SafeCircle nécessite un abonnement mensuel ; le SOS reste toujours gratuit. Les nouveaux membres bénéficient d'un essai gratuit. L'abonnement se renouvelle automatiquement via l'App Store ou Google Play jusqu'à sa résiliation sur ces plateformes, au moins 24 heures avant la fin de la période en cours. La période d'essai non utilisée prend fin lors de l'abonnement.",
+  "alertAllClearTitle": "{name} va bien"
 }

@@ -2231,4 +2231,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get termsMembershipBody =>
       'Most of SafeCircle needs a monthly membership; SOS is always free. New members get a free trial. The membership renews automatically through the App Store or Google Play until you cancel it there, at least 24 hours before the end of the current period. Unused trial time ends when you subscribe.';
+
+  @override
+  String alertAllClearTitle(String name) {
+    return '$name is OK';
+  }
 }

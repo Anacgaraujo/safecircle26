@@ -2127,4 +2127,9 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get termsMembershipBody =>
       'SafeCircle 的大部分功能需要按月订阅会员；SOS 始终免费。新会员可享受免费试用。会员会通过 App Store 或 Google Play 自动续订，直到你在当前周期结束前至少 24 小时在相应平台取消。订阅后，未使用的试用期将结束。';
+
+  @override
+  String alertAllClearTitle(String name) {
+    return '$name 已安全';
+  }
 }

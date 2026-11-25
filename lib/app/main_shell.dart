@@ -61,6 +61,10 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
     ref.listenManual(incomingAlertsProvider, (_, next) {
       final alerts = next.value;
       if (alerts == null) return;
+      final open = {for (final a in alerts) a.id};
+      for (final gone in _incoming.where((a) => !open.contains(a.id))) {
+        notifications.notifyAllClear(gone);
+      }
       _incoming = alerts;
       alerts.forEach(notifications.notifyAlert);
     });

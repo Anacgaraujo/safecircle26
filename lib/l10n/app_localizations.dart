@@ -3724,6 +3724,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Most of SafeCircle needs a monthly membership; SOS is always free. New members get a free trial. The membership renews automatically through the App Store or Google Play until you cancel it there, at least 24 hours before the end of the current period. Unused trial time ends when you subscribe.'**
   String get termsMembershipBody;
+
+  /// Notification title when a friend's SOS or missed check-in is resolved.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is OK'**
+  String alertAllClearTitle(String name);
 }
 
 class _AppLocalizationsDelegate

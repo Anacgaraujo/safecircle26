@@ -2257,4 +2257,9 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get termsMembershipBody =>
       'A maior parte do SafeCircle requer uma assinatura mensal; o SOS é sempre gratuito. Novos assinantes ganham um teste grátis. A assinatura é renovada automaticamente pela App Store ou Google Play até que você a cancele lá, pelo menos 24 horas antes do fim do período atual. O tempo de teste não usado termina quando você assina.';
+
+  @override
+  String alertAllClearTitle(String name) {
+    return '$name está bem';
+  }
 }

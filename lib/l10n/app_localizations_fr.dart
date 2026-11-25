@@ -2264,4 +2264,9 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get termsMembershipBody =>
       'La plupart de SafeCircle nécessite un abonnement mensuel ; le SOS reste toujours gratuit. Les nouveaux membres bénéficient d\'un essai gratuit. L\'abonnement se renouvelle automatiquement via l\'App Store ou Google Play jusqu\'à sa résiliation sur ces plateformes, au moins 24 heures avant la fin de la période en cours. La période d\'essai non utilisée prend fin lors de l\'abonnement.';
+
+  @override
+  String alertAllClearTitle(String name) {
+    return '$name va bien';
+  }
 }

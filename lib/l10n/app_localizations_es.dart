@@ -2255,4 +2255,9 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get termsMembershipBody =>
       'Casi todo SafeCircle requiere una membresía mensual; el SOS siempre es gratis. Los nuevos miembros tienen una prueba gratis. La membresía se renueva automáticamente a través de la App Store o Google Play hasta que la canceles allí, al menos 24 horas antes del final del periodo actual. El tiempo de prueba no usado termina al suscribirte.';
+
+  @override
+  String alertAllClearTitle(String name) {
+    return '$name está bien';
+  }
 }

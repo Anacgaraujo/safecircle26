@@ -1413,5 +1413,14 @@
   "membershipActiveSub": "Active · manage or cancel",
   "membershipInactiveSub": "Not active · start your free trial",
   "termsMembershipTitle": "4. Membership",
-  "termsMembershipBody": "Most of SafeCircle needs a monthly membership; SOS is always free. New members get a free trial. The membership renews automatically through the App Store or Google Play until you cancel it there, at least 24 hours before the end of the current period. Unused trial time ends when you subscribe."
+  "termsMembershipBody": "Most of SafeCircle needs a monthly membership; SOS is always free. New members get a free trial. The membership renews automatically through the App Store or Google Play until you cancel it there, at least 24 hours before the end of the current period. Unused trial time ends when you subscribe.",
+  "alertAllClearTitle": "{name} is OK",
+  "@alertAllClearTitle": {
+    "description": "Notification title when a friend's SOS or missed check-in is resolved.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

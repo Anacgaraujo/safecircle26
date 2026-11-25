@@ -217,6 +217,22 @@ class NotificationService {
     } catch (_) {}
   }
 
+  /// Replaces a friend's "needs help" notification once their SOS or missed
+  /// check-in is resolved. The server's all-clear push covers a closed app;
+  /// while it is open pushes are hidden, so this shows it instead. Panic
+  /// alerts never get an all-clear, as on the server.
+  Future<void> notifyAllClear(SafetyAlert alert) async {
+    if (!_ready || alert.type == 'panic') return;
+    if (!_notified.add('clear-${alert.id}')) return;
+    try {
+      await _show(
+        alert.id.hashCode & 0x7fffffff,
+        appL10n.alertAllClearTitle(alert.fromFirstName),
+        '${alert.kindLabel} · ${appL10n.markedResolved}',
+      );
+    } catch (_) {}
+  }
+
   Future<void> notifyInvite(CircleInvite invite) async {
     if (!_ready) return;
     final id = invite.id;

@@ -2243,4 +2243,9 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get termsMembershipBody =>
       'SafeCircle के ज़्यादातर हिस्से के लिए मासिक सदस्यता चाहिए; SOS हमेशा मुफ़्त है। नए सदस्यों को मुफ़्त ट्रायल मिलता है। सदस्यता App Store या Google Play के ज़रिए अपने-आप नवीनीकृत होती है, जब तक कि आप मौजूदा अवधि खत्म होने से कम से कम 24 घंटे पहले वहाँ इसे रद्द न करें। सदस्यता लेने पर बचा हुआ ट्रायल समय खत्म हो जाता है।';
+
+  @override
+  String alertAllClearTitle(String name) {
+    return '$name ठीक है';
+  }
 }
