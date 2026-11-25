@@ -182,10 +182,17 @@ class TrackingService implements LocationSharing {
       );
     }
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
+      // Keeps updating after the user switches apps (UIBackgroundModes
+      // "location" with "While Using" permission), with the blue location
+      // indicator showing. iOS's automatic pausing is off: once paused in
+      // the background it doesn't resume until the app is opened again,
+      // which would freeze the person on the circle's map.
       return AppleSettings(
         accuracy: LocationAccuracy.high,
         distanceFilter: 25,
-        pauseLocationUpdatesAutomatically: true,
+        activityType: ActivityType.other,
+        pauseLocationUpdatesAutomatically: false,
+        allowBackgroundLocationUpdates: true,
         showBackgroundLocationIndicator: true,
       );
     }

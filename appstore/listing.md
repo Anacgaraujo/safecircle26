@@ -116,6 +116,7 @@ Data **linked to the user**, used for **App Functionality**, **not** used for tr
 - **Contacts**: only if the user picks emergency contacts from their address book
 - **User Content**: Photos (profile photo)
 - **Identifiers**: User ID (Firebase Auth)
+- **Purchases**: Purchase History (membership, via RevenueCat)
 
 ---
 
@@ -124,16 +125,18 @@ Data **linked to the user**, used for **App Functionality**, **not** used for tr
 ```
 SafeCircle is a personal-safety app. Location is shared only with circles the user has joined.
 
-Demo account (has a circle with a second test member and emergency contacts):
-  Email: <create a demo account and put it here>
-  Password: <demo password>
+Demo account (Alex Morgan, in the "Family" circle with a second test member, Jamie Rivera, and two emergency contacts):
+  Email: review@safecircle.me
+  Password: <add the demo password here, only in App Store Connect>
   Safety PIN: 1234   Panic PIN: 9999
 
-Background location is used while sharing is on and during an active journey, so the circle can see where the user is and an overdue check-in can include the last known position. The user can pause sharing at any time.
+Background location is used while sharing is on and during an active journey, so the circle can see where the user is and an overdue check-in can include the last known position. The app only asks for "While Using" permission; updates continue after switching apps with the blue location indicator showing, and stop if the app is closed. The user can pause sharing at any time.
+
+Membership: SafeCircle is $0.99/month with a 3-day free trial (subscription org.SafeCircle.membership.monthly). SOS is always free, so it can be tested without subscribing. Sign in with a sandbox account to test the purchase.
 
 SMS: emergency contacts are texted (via Twilio) only when the user sends an SOS, misses a check-in, enters the panic PIN, or adds them as a contact. Every text includes opt-out instructions.
 
-To test without sending real alerts, please use the demo account; its contacts are test numbers.
+To test without sending real alerts, please use the demo account: its emergency contacts are fictional 555 numbers that have not agreed to texts, so an SOS from it never texts anyone.
 ```
 
 ---
