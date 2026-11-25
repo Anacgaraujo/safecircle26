@@ -146,6 +146,10 @@ class TrackingService implements LocationSharing {
   Future<void> stop({bool markPaused = true}) async {
     _running = false;
     running.value = false;
+    // Pausing clears the position from the status doc, so the first fix
+    // after resuming must publish at once instead of waiting out the
+    // 5-minute gap; otherwise the person vanishes from every map.
+    _lastPublish = null;
     if (_delegates) {
       BackgroundLocationService.stop();
       if (markPaused) {
