@@ -46,6 +46,8 @@ class FakeStore implements MembershipStore {
       active ? PurchaseOutcome.subscribed : PurchaseOutcome.nothingToRestore;
 }
 
+const _plan = MembershipPlan(price: r'$0.99', hasFreeTrial: true);
+
 ProviderContainer _container(FakeStore store) {
   final c = ProviderContainer(overrides: [membershipStoreProvider.overrideWithValue(store)]);
   addTearDown(c.dispose);
@@ -66,10 +68,16 @@ void main() {
       await member.read(membershipProvider.notifier).start('ana');
       expect(member.read(membershipProvider), MembershipStatus.active);
 
-      final other = _container(FakeStore());
+      final other = _container(FakeStore(plan_: _plan));
       await other.read(membershipProvider.notifier).start('zed');
       expect(other.read(membershipProvider), MembershipStatus.inactive);
       expect(other.read(membershipProvider).hasAccess, isFalse);
+    });
+
+    test('with nothing on sale yet, nobody is locked out', () async {
+      final c = _container(FakeStore());
+      await c.read(membershipProvider.notifier).start('ana');
+      expect(c.read(membershipProvider), MembershipStatus.unavailable);
     });
 
     test('a store that cannot be reached never locks anyone out', () async {
@@ -88,7 +96,7 @@ void main() {
     });
 
     test('subscribing unlocks the app; cancelling the purchase does not', () async {
-      final store = FakeStore()..nextPurchase = PurchaseOutcome.cancelled;
+      final store = FakeStore(plan_: _plan)..nextPurchase = PurchaseOutcome.cancelled;
       final c = _container(store);
       final membership = c.read(membershipProvider.notifier);
       await membership.start('ana');

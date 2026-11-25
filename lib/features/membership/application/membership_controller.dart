@@ -31,7 +31,14 @@ class MembershipController extends Notifier<MembershipStatus> {
     }
     _sub ??= _store.activeChanges.listen(_set);
     try {
-      _set(await _store.signIn(uid));
+      if (await _store.signIn(uid)) {
+        state = MembershipStatus.active;
+        return;
+      }
+      // Only lock the app when there is a membership to buy. With nothing
+      // on sale (store not set up yet, product not approved, store down) a
+      // paywall would lock people out with no way in.
+      state = await _store.plan() == null ? MembershipStatus.unavailable : MembershipStatus.inactive;
     } catch (e) {
       // The store couldn't be reached at all: don't lock anyone out of a
       // safety app for it. The listener corrects this once it can.

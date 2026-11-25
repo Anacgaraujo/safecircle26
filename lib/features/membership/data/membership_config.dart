@@ -5,7 +5,7 @@
 /// `goog_`). They are meant to ship inside the app, so they live here rather
 /// than in a secret store. While a key is empty the membership is switched
 /// off on that platform and everyone keeps full access.
-const kRevenueCatAppleKey = '';
+const kRevenueCatAppleKey = 'appl_TmNPVjDBsLOWaeJVzKiUWhTEgkE';
 const kRevenueCatGoogleKey = '';
 
 /// The RevenueCat entitlement the monthly subscription grants.
