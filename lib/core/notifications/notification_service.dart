@@ -6,6 +6,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
+import 'package:safecircle/core/notifications/push_service.dart';
 import 'package:safecircle/core/platform/web_notifier.dart';
 import 'package:safecircle/features/journeys/domain/journey.dart';
 import 'package:safecircle/features/alerts/domain/safety_alert.dart';
@@ -58,7 +59,11 @@ class NotificationService {
           android: AndroidInitializationSettings('ic_stat_safecircle'),
           iOS: DarwinInitializationSettings(),
         ),
+        onDidReceiveNotificationResponse: _tapped,
       );
+      // A tap on one of these notifications that launched the app.
+      final launch = await _plugin.getNotificationAppLaunchDetails();
+      if (launch?.didNotificationLaunchApp ?? false) _tapped(launch!.notificationResponse);
       // Push notifications (FCM) arrive on this channel while the app is
       // closed, so it must exist before the first one.
       await _plugin
@@ -77,6 +82,10 @@ class NotificationService {
 
   bool get isReady => _ready;
 
+  /// Opens what a tapped notification is about (see PushTarget.fromPayload).
+  static void _tapped(NotificationResponse? response) =>
+      PushService.instance.openTarget(PushTarget.fromPayload(response?.payload));
+
   bool get webGranted => kIsWeb && WebNotifier.granted;
 
   Future<bool> requestWebPermission() async {
@@ -84,12 +93,12 @@ class NotificationService {
     return WebNotifier.requestPermission();
   }
 
-  Future<void> _show(int id, String title, String body) async {
+  Future<void> _show(int id, String title, String body, {String? payload}) async {
     if (kIsWeb) {
       WebNotifier.show(title, body);
       return;
     }
-    await _plugin.show(id, title, body, _details);
+    await _plugin.show(id, title, body, _details, payload: payload);
   }
 
   int _reminderId(String journeyId, int index, {bool lastCall = false}) =>
@@ -136,12 +145,12 @@ class NotificationService {
     final when = tz.TZDateTime.from(at, tz.local);
     try {
       await _plugin.zonedSchedule(id, title, body, when, _details,
-          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle);
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle, payload: 'journey');
     } catch (e) {
       debugPrint('[SafeCircle] exact reminder failed ($e), falling back to inexact');
       try {
         await _plugin.zonedSchedule(id, title, body, when, _details,
-            androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle);
+            androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle, payload: 'journey');
       } catch (e2) {
         debugPrint('[SafeCircle] reminder scheduling failed: $e2');
       }
@@ -213,6 +222,7 @@ class NotificationService {
         alert.headline,
         '${alert.kindLabel} · ${alert.timeText}'
             '${alert.location.isEmpty ? '' : ' · ${alert.location}'}',
+        payload: 'alert:${alert.id}',
       );
     } catch (_) {}
   }
@@ -242,6 +252,7 @@ class NotificationService {
         id.hashCode & 0x7fffffff,
         appL10n.circleInvite,
         appL10n.inviteNotificationBody(invite.summary),
+        payload: 'invite',
       );
     } catch (_) {}
   }

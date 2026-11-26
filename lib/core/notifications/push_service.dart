@@ -13,8 +13,18 @@ sealed class PushTarget {
         'alert' when (data['alertId'] ?? '').toString().isNotEmpty =>
           AlertTarget(data['alertId'].toString()),
         'invite' => const InviteTarget(),
+        'journey' => const JourneyTarget(),
         _ => null,
       };
+
+  /// Reads the payload of the app's own notifications (NotificationService):
+  /// `alert:<id>`, `invite` or `journey`.
+  static PushTarget? fromPayload(String? payload) {
+    if (payload == null || payload.isEmpty) return null;
+    final i = payload.indexOf(':');
+    final kind = i < 0 ? payload : payload.substring(0, i);
+    return fromData({'kind': kind, if (i >= 0) 'alertId': payload.substring(i + 1)});
+  }
 }
 
 class AlertTarget extends PushTarget {
@@ -24,6 +34,11 @@ class AlertTarget extends PushTarget {
 
 class InviteTarget extends PushTarget {
   const InviteTarget();
+}
+
+/// The user's own journey: a check-in reminder was tapped.
+class JourneyTarget extends PushTarget {
+  const JourneyTarget();
 }
 
 /// Registers this phone for push notifications (Firebase Cloud Messaging).
@@ -110,8 +125,10 @@ class PushService {
     return t;
   }
 
-  void _open(Map<String, dynamic> data) {
-    final target = PushTarget.fromData(data);
+  void _open(Map<String, dynamic> data) => openTarget(PushTarget.fromData(data));
+
+  /// Opens [target] now, or once the app is ready to show it.
+  void openTarget(PushTarget? target) {
     if (target == null) return;
     final handler = onOpen;
     if (handler == null) {

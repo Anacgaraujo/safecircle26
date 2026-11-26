@@ -106,6 +106,10 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
     switch (target) {
       case InviteTarget():
         _select(ScTab.circles);
+      case JourneyTarget():
+        // The journey screen picks up the active journey and its check-in.
+        final nav = Navigator.of(context)..popUntil((r) => r.isFirst);
+        await nav.push(MaterialPageRoute(builder: (_) => const JourneyFlow()));
       case AlertTarget(:final alertId):
         try {
           final snap = await FirebaseFirestore.instance.collection('alerts').doc(alertId).get();
