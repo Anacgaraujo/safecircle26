@@ -21,6 +21,7 @@ const push = require('./push');
 exports.pushAlert = push.pushAlert;
 exports.pushAllClear = push.pushAllClear;
 exports.pushInvite = push.pushInvite;
+exports.pushPlaceEvent = push.pushPlaceEvent;
 
 // Non-secret settings live in functions/.env.
 const APP_INVITE_URL = defineString('APP_INVITE_URL', { default: '' });

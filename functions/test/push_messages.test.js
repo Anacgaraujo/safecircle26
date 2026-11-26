@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { alertPush, allClearPush, invitePush } = require('../push_messages');
+const { alertPush, allClearPush, invitePush, placePush } = require('../push_messages');
 
 const ana = { fromName: 'Ana Souza', location: 'Union Square' };
 
@@ -37,4 +37,12 @@ test('invitation push', () => {
     'Ana Souza invited you to their circle "Family". Tap to answer.',
   );
   assert.equal(invitePush({}).body, 'Someone invited you to their circle. Tap to answer.');
+});
+
+test('arrivals and departures', () => {
+  const e = { userName: 'Ana Souza', placeName: 'Home' };
+  assert.deepEqual(placePush({ ...e, type: 'arrive' }), { title: 'SafeCircle', body: 'Ana arrived at Home' });
+  assert.equal(placePush({ ...e, type: 'leave' }).body, 'Ana left Home');
+  assert.equal(placePush({ ...e, type: 'lowBattery' }), null);
+  assert.equal(placePush({ ...e, type: 'arrive', placeName: '' }), null);
 });

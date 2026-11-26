@@ -66,10 +66,22 @@ function invitePush(invite) {
   };
 }
 
+/** "Ana arrived at Home" / "Ana left School", or null for other activity. */
+function placePush(event) {
+  if (!event || !['arrive', 'leave'].includes(event.type)) return null;
+  const place = smsSafe(event.placeName);
+  if (!place) return null;
+  const who = firstName(event.userName);
+  return {
+    title: 'SafeCircle',
+    body: event.type === 'arrive' ? `${who} arrived at ${place}` : `${who} left ${place}`,
+  };
+}
+
 /** Error codes meaning the token is gone for good and should be forgotten. */
 const DEAD_TOKEN_ERRORS = new Set([
   'messaging/registration-token-not-registered',
   'messaging/invalid-registration-token',
 ]);
 
-module.exports = { alertPush, allClearPush, invitePush, PUSHED_ALERTS, ALL_CLEAR_PUSHES, DEAD_TOKEN_ERRORS };
+module.exports = { alertPush, allClearPush, invitePush, placePush, PUSHED_ALERTS, ALL_CLEAR_PUSHES, DEAD_TOKEN_ERRORS };

@@ -7,7 +7,7 @@ const logger = require('firebase-functions/logger');
 const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 const { getMessaging } = require('firebase-admin/messaging');
 
-const { alertPush, allClearPush, invitePush, DEAD_TOKEN_ERRORS } = require('./push_messages');
+const { alertPush, allClearPush, invitePush, placePush, DEAD_TOKEN_ERRORS } = require('./push_messages');
 const { lookupHash } = require('./emergency');
 const { toE164 } = require('./invite_texts');
 
@@ -121,6 +121,40 @@ exports.pushAllClear = onDocumentUpdated({ document: 'alerts/{alertId}', ...opti
   if (!(await claim(db, `allclear_${alertId}`))) return;
   const watchers = await alertAudience(db, after);
   await pushTo(db, watchers, message, { kind: 'alert', alertId }, { alertId, allClear: true });
+});
+
+/** Everyone who shares a circle with `uid` (members and owners). */
+async function circleMates(db, uid) {
+  const [memberOf, owned] = await Promise.all([
+    db.collection('circles').where('memberIds', 'array-contains', uid).get(),
+    db.collection('circles').where('ownerId', '==', uid).get(),
+  ]);
+  const ids = new Set();
+  for (const c of [...memberOf.docs, ...owned.docs]) {
+    for (const id of c.data().memberIds || []) ids.add(id);
+    if (c.data().ownerId) ids.add(c.data().ownerId);
+  }
+  ids.delete(uid);
+  return ids;
+}
+
+/**
+ * Someone arrived at or left a place: push the people the app shows it to.
+ * The phone writes `viewerIds`, so only those really in a circle with the
+ * person are pushed.
+ */
+exports.pushPlaceEvent = onDocumentCreated({ document: 'activity/{eventId}', ...options }, async (event) => {
+  const activity = event.data && event.data.data();
+  const message = placePush(activity);
+  if (!message || !activity.userId) return;
+  // Old events (a phone catching up after being offline) aren't news.
+  if (Date.now() - Number(activity.atMillis || 0) > 30 * 60 * 1000) return;
+  const db = getFirestore();
+  const { eventId } = event.params;
+  if (!(await claim(db, `place_${eventId}`))) return;
+  const mates = await circleMates(db, activity.userId);
+  const viewers = (activity.viewerIds || []).filter((id) => mates.has(id));
+  await pushTo(db, viewers, message, { kind: 'place' }, { eventId, type: activity.type });
 });
 
 /** A SafeCircle user was invited to a circle. */
