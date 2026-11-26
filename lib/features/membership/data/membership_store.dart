@@ -59,6 +59,9 @@ class RevenueCatMembershipStore implements MembershipStore {
       await Purchases.configure(PurchasesConfiguration(_key)..appUserID = uid);
       Purchases.addCustomerInfoUpdateListener((info) => _changes.add(_isActive(info)));
       _configured = true;
+      // Ask RevenueCat afresh on launch: the saved copy can be minutes old
+      // and miss a membership bought on another phone or granted by support.
+      await Purchases.invalidateCustomerInfoCache();
       return _isActive(await Purchases.getCustomerInfo());
     }
     return _isActive((await Purchases.logIn(uid)).customerInfo);
