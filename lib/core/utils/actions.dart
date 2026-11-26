@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -26,13 +26,29 @@ Future<void> callPhone(BuildContext context, String? phone) {
   return _launch(context, Uri(scheme: 'tel', path: digits), context.l10n.couldNotOpenDialer);
 }
 
+/// A link that opens the phone's messaging app addressed to [numbers].
+/// iPhones don't understand Android's `smsto:`, and take several
+/// recipients only through `sms://open?addresses=`.
+Uri smsUri(Iterable<String> numbers, {String? body, TargetPlatform? platform}) {
+  final ios = (platform ?? defaultTargetPlatform) == TargetPlatform.iOS && !kIsWeb;
+  final to = numbers.join(',');
+  final text = body == null || body.isEmpty ? '' : body;
+  if (ios) {
+    final multiple = numbers.length > 1;
+    final base = multiple ? 'sms://open?addresses=$to' : 'sms:$to';
+    if (text.isEmpty) return Uri.parse(base);
+    return Uri.parse('$base${multiple ? '&' : '&'}body=${Uri.encodeComponent(text)}');
+  }
+  return Uri(scheme: 'smsto', path: to, queryParameters: text.isEmpty ? null : {'body': text});
+}
+
 Future<void> messagePhone(BuildContext context, String? phone) {
   final digits = (phone ?? '').replaceAll(RegExp(r'[^\d+]'), '');
   if (digits.isEmpty) {
     showScToast(context, context.l10n.noPhoneNumber);
     return Future.value();
   }
-  return _launch(context, Uri(scheme: 'smsto', path: digits), context.l10n.couldNotOpenMessages);
+  return _launch(context, smsUri([digits]), context.l10n.couldNotOpenMessages);
 }
 
 Future<void> messageGroup(BuildContext context, Iterable<String?> phones, {String? body}) {
@@ -44,12 +60,7 @@ Future<void> messageGroup(BuildContext context, Iterable<String?> phones, {Strin
     showScToast(context, context.l10n.noPhoneNumbers);
     return Future.value();
   }
-  final uri = Uri(
-    scheme: 'smsto',
-    path: list.join(','),
-    queryParameters: body == null || body.isEmpty ? null : {'body': body},
-  );
-  return _launch(context, uri, context.l10n.couldNotOpenMessages);
+  return _launch(context, smsUri(list, body: body), context.l10n.couldNotOpenMessages);
 }
 
 Future<void> openInMaps(BuildContext context, double? lat, double? lng, {String? label}) {
