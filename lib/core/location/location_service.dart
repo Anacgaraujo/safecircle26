@@ -69,6 +69,44 @@ class LocationService {
 
   Future<String> labelFor(ScLocation loc) => _label(loc.lat, loc.lng);
 
+  /// Places matching a typed address, best match first (at most 5).
+  Future<List<ScLocation>> search(String address) async {
+    final q = address.trim();
+    if (q.isEmpty || kIsWeb) return const [];
+    try {
+      final found = await locationFromAddress(q).timeout(const Duration(seconds: 8));
+      final results = <ScLocation>[];
+      for (final f in found.take(5)) {
+        results.add(ScLocation(
+          lat: f.latitude,
+          lng: f.longitude,
+          label: await _addressLabel(f.latitude, f.longitude, fallback: q),
+        ));
+      }
+      return results;
+    } catch (_) {
+      // Not found, or the phone's geocoder is unavailable.
+      return const [];
+    }
+  }
+
+  /// A full street address for search results ("12 Main St, Springfield, NJ").
+  Future<String> _addressLabel(double lat, double lng, {required String fallback}) async {
+    try {
+      final marks = await placemarkFromCoordinates(lat, lng).timeout(const Duration(seconds: 4));
+      if (marks.isNotEmpty) {
+        final p = marks.first;
+        final parts = <String>{
+          if ((p.street ?? '').isNotEmpty) p.street! else if ((p.name ?? '').isNotEmpty) p.name!,
+          if ((p.locality ?? '').isNotEmpty) p.locality!,
+          if ((p.administrativeArea ?? '').isNotEmpty) p.administrativeArea!,
+        };
+        if (parts.isNotEmpty) return parts.join(', ');
+      }
+    } catch (_) {}
+    return fallback;
+  }
+
   Future<String> _label(double lat, double lng) async {
     if (kIsWeb) return '${lat.toStringAsFixed(4)}, ${lng.toStringAsFixed(4)}';
     try {

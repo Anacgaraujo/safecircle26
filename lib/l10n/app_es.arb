@@ -603,5 +603,9 @@
   "membershipInactiveSub": "Inactiva · empieza tu prueba gratis",
   "termsMembershipTitle": "4. Membresía",
   "termsMembershipBody": "Casi todo SafeCircle requiere una membresía mensual; el SOS siempre es gratis. Los nuevos miembros tienen una prueba gratis. La membresía se renueva automáticamente a través de la App Store o Google Play hasta que la canceles allí, al menos 24 horas antes del final del periodo actual. El tiempo de prueba no usado termina al suscribirte.",
-  "alertAllClearTitle": "{name} está bien"
+  "alertAllClearTitle": "{name} está bien",
+  "placeAddress": "Dirección",
+  "searchAddressHint": "Escribe una dirección y busca",
+  "addressNotFound": "No se encontró esa dirección",
+  "placeAlertsGoTo": "CÍRCULO QUE RECIBE LAS ALERTAS"
 }

@@ -1422,5 +1422,9 @@
         "type": "String"
       }
     }
-  }
+  },
+  "placeAddress": "Address",
+  "searchAddressHint": "Type an address, then search",
+  "addressNotFound": "Couldn't find that address",
+  "placeAlertsGoTo": "CIRCLE THAT GETS THE ALERTS"
 }

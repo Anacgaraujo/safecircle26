@@ -2262,4 +2262,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String alertAllClearTitle(String name) {
     return '$name está bem';
   }
+
+  @override
+  String get placeAddress => 'Endereço';
+
+  @override
+  String get searchAddressHint => 'Digite um endereço e pesquise';
+
+  @override
+  String get addressNotFound => 'Endereço não encontrado';
+
+  @override
+  String get placeAlertsGoTo => 'CÍRCULO QUE RECEBE OS ALERTAS';
 }

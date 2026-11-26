@@ -6,6 +6,7 @@ import 'package:safecircle/core/utils/formatters.dart';
 import 'package:safecircle/core/widgets/async_view.dart';
 import 'package:safecircle/core/widgets/feather_icons.dart';
 import 'package:safecircle/core/widgets/sc_widgets.dart';
+import 'package:safecircle/features/circles/data/circle_repository.dart';
 import 'package:safecircle/features/circles/domain/circle.dart';
 import 'package:safecircle/features/live_map/domain/tracking.dart';
 import 'package:safecircle/features/places/application/place_service.dart';
@@ -16,10 +17,18 @@ import 'package:safecircle/l10n/l10n.dart';
 
 class PlacesScreen extends ConsumerWidget {
   const PlacesScreen({super.key, required this.circle});
+
+  /// The circle on the map; new places start in it.
   final Circle? circle;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final circles = [
+      for (final c in ref.watch(myCirclesProvider).value ?? const <Circle>[])
+        if (c.id != null) c,
+    ];
+    Circle? circleOf(Place p) => circles.where((c) => c.id == p.circleId).firstOrNull;
+    final start = circle ?? circles.firstOrNull;
     return Scaffold(
       backgroundColor: ScColors.canvas,
       body: SafeArea(
@@ -54,8 +63,8 @@ class PlacesScreen extends ConsumerWidget {
               child: ScAsyncView(
                 value: ref.watch(placesProvider),
                 data: (all) {
-                  final places =
-                      all.where((p) => circle == null || p.circleId == circle!.id).toList();
+                  // Every place in the user's circles, each labelled with its circle.
+                  final places = all;
                   if (places.isEmpty) {
                     return Center(
                       child: Padding(
@@ -78,8 +87,9 @@ class PlacesScreen extends ConsumerWidget {
                     separatorBuilder: (_, __) => const SizedBox(height: 12),
                     itemBuilder: (context, i) => _PlaceCard(
                       place: places[i],
-                      circle: circle,
-                      onEdit: () => _openSheet(context, circle, places[i]),
+                      circle: circleOf(places[i]),
+                      showCircle: circles.length > 1,
+                      onEdit: () => _openSheet(context, circleOf(places[i]) ?? start, places[i]),
                     ),
                   );
                 },
@@ -90,9 +100,7 @@ class PlacesScreen extends ConsumerWidget {
               child: ScButton(
                 label: context.l10n.addPlace,
                 leftIcon: FeatherIcons.plus,
-                onPressed: circle == null
-                    ? null
-                    : () => _openSheet(context, circle, null),
+                onPressed: start == null ? null : () => _openSheet(context, start, null),
               ),
             ),
           ],
@@ -115,9 +123,11 @@ class PlacesScreen extends ConsumerWidget {
 }
 
 class _PlaceCard extends ConsumerWidget {
-  const _PlaceCard({required this.place, required this.circle, required this.onEdit});
+  const _PlaceCard(
+      {required this.place, required this.circle, required this.showCircle, required this.onEdit});
   final Place place;
   final Circle? circle;
+  final bool showCircle;
   final VoidCallback onEdit;
 
   @override
@@ -185,7 +195,12 @@ class _PlaceCard extends ConsumerWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text(place.ruleLabel,
+                  child: Text(
+                      showCircle && circle != null
+                          ? '${place.ruleLabel} · ${circle!.name}'
+                          : place.ruleLabel,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: ScText.sans(
                           size: 12.5, weight: FontWeight.w700, color: ScColors.textSecondary)),
                 ),

@@ -2248,4 +2248,16 @@ class AppLocalizationsHi extends AppLocalizations {
   String alertAllClearTitle(String name) {
     return '$name ठीक है';
   }
+
+  @override
+  String get placeAddress => 'पता';
+
+  @override
+  String get searchAddressHint => 'पता लिखें, फिर खोजें';
+
+  @override
+  String get addressNotFound => 'यह पता नहीं मिला';
+
+  @override
+  String get placeAlertsGoTo => 'अलर्ट पाने वाला सर्कल';
 }

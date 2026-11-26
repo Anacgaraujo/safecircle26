@@ -3730,6 +3730,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} is OK'**
   String alertAllClearTitle(String name);
+
+  /// No description provided for @placeAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get placeAddress;
+
+  /// No description provided for @searchAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type an address, then search'**
+  String get searchAddressHint;
+
+  /// No description provided for @addressNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t find that address'**
+  String get addressNotFound;
+
+  /// No description provided for @placeAlertsGoTo.
+  ///
+  /// In en, this message translates to:
+  /// **'CIRCLE THAT GETS THE ALERTS'**
+  String get placeAlertsGoTo;
 }
 
 class _AppLocalizationsDelegate

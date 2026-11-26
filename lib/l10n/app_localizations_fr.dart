@@ -2269,4 +2269,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String alertAllClearTitle(String name) {
     return '$name va bien';
   }
+
+  @override
+  String get placeAddress => 'Adresse';
+
+  @override
+  String get searchAddressHint => 'Saisissez une adresse, puis recherchez';
+
+  @override
+  String get addressNotFound => 'Adresse introuvable';
+
+  @override
+  String get placeAlertsGoTo => 'CERCLE QUI REÇOIT LES ALERTES';
 }

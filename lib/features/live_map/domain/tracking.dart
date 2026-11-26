@@ -103,7 +103,7 @@ class Place {
         viewerIds = viewerIds ?? [];
 
   String? id;
-  final String circleId;
+  String circleId;
   String name;
   String icon;
   double lat;

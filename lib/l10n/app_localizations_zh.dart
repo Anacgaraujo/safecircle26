@@ -2132,4 +2132,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String alertAllClearTitle(String name) {
     return '$name 已安全';
   }
+
+  @override
+  String get placeAddress => '地址';
+
+  @override
+  String get searchAddressHint => '输入地址后搜索';
+
+  @override
+  String get addressNotFound => '找不到该地址';
+
+  @override
+  String get placeAlertsGoTo => '接收提醒的圈子';
 }

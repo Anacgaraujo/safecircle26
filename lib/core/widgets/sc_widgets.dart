@@ -275,6 +275,8 @@ class ScInput extends StatelessWidget {
     this.controller,
     this.keyboardType,
     this.onChanged,
+    this.onSubmitted,
+    this.textInputAction,
   });
 
   final String label;
@@ -285,6 +287,8 @@ class ScInput extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSubmitted;
+  final TextInputAction? textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -313,6 +317,8 @@ class ScInput extends StatelessWidget {
                   obscureText: obscure,
                   keyboardType: keyboardType,
                   onChanged: onChanged,
+                  onSubmitted: onSubmitted,
+                  textInputAction: textInputAction,
                   style: ScText.sans(size: 16, weight: FontWeight.w500),
                   decoration: InputDecoration(
                     isCollapsed: true,

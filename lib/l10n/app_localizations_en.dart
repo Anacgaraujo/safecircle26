@@ -2236,4 +2236,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String alertAllClearTitle(String name) {
     return '$name is OK';
   }
+
+  @override
+  String get placeAddress => 'Address';
+
+  @override
+  String get searchAddressHint => 'Type an address, then search';
+
+  @override
+  String get addressNotFound => 'Couldn\'t find that address';
+
+  @override
+  String get placeAlertsGoTo => 'CIRCLE THAT GETS THE ALERTS';
 }

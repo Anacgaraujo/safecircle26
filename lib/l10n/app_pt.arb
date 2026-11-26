@@ -603,5 +603,9 @@
   "membershipInactiveSub": "Inativa · comece seu teste grátis",
   "termsMembershipTitle": "4. Assinatura",
   "termsMembershipBody": "A maior parte do SafeCircle requer uma assinatura mensal; o SOS é sempre gratuito. Novos assinantes ganham um teste grátis. A assinatura é renovada automaticamente pela App Store ou Google Play até que você a cancele lá, pelo menos 24 horas antes do fim do período atual. O tempo de teste não usado termina quando você assina.",
-  "alertAllClearTitle": "{name} está bem"
+  "alertAllClearTitle": "{name} está bem",
+  "placeAddress": "Endereço",
+  "searchAddressHint": "Digite um endereço e pesquise",
+  "addressNotFound": "Endereço não encontrado",
+  "placeAlertsGoTo": "CÍRCULO QUE RECEBE OS ALERTAS"
 }
