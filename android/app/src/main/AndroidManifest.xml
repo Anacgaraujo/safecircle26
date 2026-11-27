@@ -15,7 +15,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+    <!-- Google Play only allows USE_EXACT_ALARM for alarm-clock and calendar
+         apps. Check-in reminders use SCHEDULE_EXACT_ALARM when the user allows
+         it and fall back to inexact timing; the server sends the missed
+         check-in alert either way. Removed so no plugin adds it back. -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" tools:node="remove"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <application
         android:label="SafeCircle"
