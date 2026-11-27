@@ -2,7 +2,7 @@ name: safecircle
 description: "SafeCircle: personal safety and live location sharing for your trusted circle."
 publish_to: 'none'
 
-version: 83.0.2+1
+version: 83.0.2+2
 
 environment:
   sdk: ^3.6.0
