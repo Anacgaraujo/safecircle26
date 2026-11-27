@@ -125,6 +125,20 @@ void main() {
       expect(find.text('Add emergency contact'), findsOneWidget);
     });
 
+    testWidgets('fits a short screen (folded phone) by scrolling', (tester) async {
+      // About a folded phone's height once the app bar and tabs are taken.
+      tester.view.physicalSize = const Size(1080, 1500);
+      tester.view.devicePixelRatio = 2.625;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(host(open: const [], contacts: const []));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(find.text('Add emergency contact'), findsOneWidget);
+      await tester.dragUntilVisible(find.textContaining('YOUR EMERGENCY CONTACTS'),
+          find.byType(SingleChildScrollView), const Offset(0, -100));
+      expect(find.textContaining('YOUR EMERGENCY CONTACTS'), findsOneWidget);
+    });
+
     testWidgets('an SOS still open shows the alert as sent', (tester) async {
       final open = SafetyAlert(
         id: 'a1',

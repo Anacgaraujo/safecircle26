@@ -96,7 +96,13 @@ class ScButton extends StatelessWidget {
               Icon(leftIcon, size: 19, color: fg),
               const SizedBox(width: 9),
             ],
-            Text(label, style: ScText.sans(size: 16, weight: FontWeight.w800, color: fg)),
+            // A long label (or translation) shrinks to fit instead of overflowing.
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(label, style: ScText.sans(size: 16, weight: FontWeight.w800, color: fg)),
+              ),
+            ),
             if (rightIcon != null) ...[
               const SizedBox(width: 9),
               Icon(rightIcon, size: 19, color: fg),

@@ -60,77 +60,86 @@ class SosView extends ConsumerWidget {
               ],
             ),
           ),
+          // Centered when it fits; scrolls on short screens (small or
+          // folded phones, landscape) instead of overflowing.
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(26, 6, 26, 8),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _SosButton(
-                    hold: hold,
-                    enabled: enabled,
-                    onHoldStart: onHoldStart,
-                    onHoldEnd: onHoldEnd,
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: 300,
-                    child: Text(
-                      enabled
-                          ? context.l10n.sosHint
-                          : context.l10n.sosNeedsContact,
-                      textAlign: TextAlign.center,
-                      style: ScText.sans(size: 14.5, weight: FontWeight.w500, color: ScColors.textSubtle, height: 21),
-                    ),
-                  ),
-                  if (loaded && contacts.isEmpty) ...[
-                    const SizedBox(height: 14),
-                    ScButton(
-                      label: context.l10n.addEmergencyContact,
-                      variant: ScButtonVariant.secondary,
-                      fullWidth: false,
-                      leftIcon: FeatherIcons.userPlus,
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const EmergencyContactsScreen()),
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: ScSectionLabel(
-                      context.l10n.yourEmergencyContactsCount(contacts.length),
-                      icon: FeatherIcons.users,
-                    ),
-                  ),
-                  const SizedBox(height: 11),
-                  SizedBox(
-                    height: 44,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: contacts.length,
-                      separatorBuilder: (_, __) => const SizedBox(width: 8),
-                      itemBuilder: (_, i) {
-                        final c = contacts[i];
-                        return Container(
-                          padding: const EdgeInsets.fromLTRB(7, 7, 13, 7),
-                          decoration: BoxDecoration(
-                            color: ScColors.surfaceCard,
-                            borderRadius: BorderRadius.circular(999),
-                            boxShadow: ScShadows.card,
+            child: LayoutBuilder(
+              builder: (context, box) => SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(26, 6, 26, 8),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: box.maxHeight - 14),
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _SosButton(
+                          hold: hold,
+                          enabled: enabled,
+                          onHoldStart: onHoldStart,
+                          onHoldEnd: onHoldEnd,
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: 300,
+                          child: Text(
+                            enabled
+                                ? context.l10n.sosHint
+                                : context.l10n.sosNeedsContact,
+                            textAlign: TextAlign.center,
+                            style: ScText.sans(size: 14.5, weight: FontWeight.w500, color: ScColors.textSubtle, height: 21),
                           ),
-                          child: Row(
-                            children: [
-                              ScAvatar(image: c.image, name: c.name, size: 30),
-                              const SizedBox(width: 9),
-                              Text(c.firstName, style: ScText.sans(size: 14, weight: FontWeight.w700)),
-                            ],
+                        ),
+                        if (loaded && contacts.isEmpty) ...[
+                          const SizedBox(height: 14),
+                          ScButton(
+                            label: context.l10n.addEmergencyContact,
+                            variant: ScButtonVariant.secondary,
+                            fullWidth: false,
+                            leftIcon: FeatherIcons.userPlus,
+                            onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => const EmergencyContactsScreen()),
+                            ),
                           ),
-                        );
-                      },
+                        ],
+                        const SizedBox(height: 20),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: ScSectionLabel(
+                            context.l10n.yourEmergencyContactsCount(contacts.length),
+                            icon: FeatherIcons.users,
+                          ),
+                        ),
+                        const SizedBox(height: 11),
+                        SizedBox(
+                          height: 44,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: contacts.length,
+                            separatorBuilder: (_, __) => const SizedBox(width: 8),
+                            itemBuilder: (_, i) {
+                              final c = contacts[i];
+                              return Container(
+                                padding: const EdgeInsets.fromLTRB(7, 7, 13, 7),
+                                decoration: BoxDecoration(
+                                  color: ScColors.surfaceCard,
+                                  borderRadius: BorderRadius.circular(999),
+                                  boxShadow: ScShadows.card,
+                                ),
+                                child: Row(
+                                  children: [
+                                    ScAvatar(image: c.image, name: c.name, size: 30),
+                                    const SizedBox(width: 9),
+                                    Text(c.firstName, style: ScText.sans(size: 14, weight: FontWeight.w700)),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ),
